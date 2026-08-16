@@ -153,14 +153,17 @@ a { color: inherit; text-decoration: none; }
 .btn--block { width: 100%; }
 
 .btn--accent { background: var(--accent); color: var(--accent-ink); }
-.btn--accent:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0,113,227,0.32); }
-.btn--accent:active { transform: translateY(0); }
-
 .btn--dark { background: var(--ink); color: var(--paper); }
-.btn--dark:hover { background: #26262b; transform: translateY(-1px); }
-
 .btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
-.btn--ghost:hover { border-color: var(--ink); background: rgba(11,11,13,0.03); }
+
+/* the lift belongs to a pointer. On a touchscreen there is nothing to un-hover,
+   so a tapped button would keep the raised state until you tapped elsewhere. */
+@media (hover: hover) {
+  .btn--accent:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0,113,227,0.32); }
+  .btn--accent:active { transform: translateY(0); }
+  .btn--dark:hover { background: #26262b; transform: translateY(-1px); }
+  .btn--ghost:hover { border-color: var(--ink); background: rgba(11,11,13,0.03); }
+}
 
 :focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 /* round targets keep a round focus ring */
@@ -306,7 +309,10 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 0 0 1.5px var(--line-2), inset 0 1px 2px rgba(255,255,255,0.35);
   transition: box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
 }
-.swatch:hover { transform: translateY(-1px); }
+@media (hover: hover) {
+  .swatch:hover { transform: translateY(-1px); box-shadow: 0 0 0 1.5px var(--ink-3), inset 0 1px 2px rgba(255,255,255,0.35); }
+  .swatch.is-active:hover { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); }
+}
 .swatch.is-active { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); }
 
 .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
