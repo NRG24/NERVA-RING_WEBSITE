@@ -1,0 +1,21 @@
+# dependencies / build output
+node_modules/
+dist/
+*.log
+
+# macOS
+.DS_Store
+
+# env (never commit real secrets; .env.example is tracked)
+.env
+.env.local
+.env.*.local
+
+# heavy raw source media — GitHub rejects files >100MB, and the Linux cloud
+# agent can't use the macOS tools (sips/avconvert/qlmanage) to re-derive them.
+# The web-optimized versions live in nerva-site/public and nerva-site/src/assets.
+Pictures of NERVA Ring/
+
+# Vite dep cache
+.vite/
+**/.vite/
