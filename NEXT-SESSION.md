@@ -1,6 +1,18 @@
 # NERVA Website — Session Handoff
 
-_Last updated: 2026-08-15. Read this first, then `memory/nerva-site-design.md`._
+_Last updated: 2026-08-16. Read this first, then `memory/nerva-site-design.md`._
+
+## 2026-08-16 polish pass (branch `claude/polish-2026-08-16`, PR open)
+Design/copy polish pass. Reworked the footer (was a generic multi-column
+links + copyright block, the most recognizable AI footer fingerprint) into
+a brand row with inline nav links, one editorial sentence, and a bottom
+mono "plate" strip styled like a hardware spec label. Gave the Design
+(blueprint) section an asymmetric two-column intro instead of the
+stacked headline-then-content shape repeated elsewhere. Cut two leftover
+`actually` intensifiers from the copy. Note: the fixed dock bar covers the
+last ~70px of the page at all times, since nothing after `<main>` gets the
+dock-clearance padding; the footer plate now carries its own bottom
+padding to stay clear of it. Keep that in mind if the footer changes again.
 
 ## What this is
 Marketing / "follow the build" site for the **NERVA smart ring** — a solo-built

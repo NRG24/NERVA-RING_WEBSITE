@@ -348,7 +348,7 @@ const PILLARS = [
   {
     k: 'Battery',
     title: 'Weeks, not days',
-    body: 'A wake-on-finger architecture keeps the ring asleep until a finger is actually detected, targeting roughly a month of standby from a 22 mAh cell.',
+    body: 'A wake-on-finger architecture keeps the ring asleep until a finger is detected, targeting roughly a month of standby from a 22 mAh cell.',
   },
   {
     k: 'Build',
@@ -592,8 +592,8 @@ function App() {
 
         {/* ---------------- BLUEPRINT ---------------- */}
         <section className="section section--tint blueprint" id="design">
-          <div className="wrap">
-            <Reveal className="lead">
+          <div className="wrap bp-layout">
+            <Reveal className="bp-layout__intro">
               <h2 className="display">Designed down to the last line.</h2>
               <p className="lead__sub">
                 The housing, the flex-PCB wrap, the sensor placement: every millimeter modeled
@@ -602,7 +602,7 @@ function App() {
               </p>
             </Reveal>
 
-            <Reveal className="bp">
+            <Reveal className="bp" delay={90}>
               <div className="bp__frame">
                 <img
                   src={blueprint}
@@ -681,7 +681,7 @@ function App() {
           <div className="wrap cta__inner">
             <Reveal>
               <h2 className="display display--light">
-                Get told when the prototype actually works.
+                Get told when the prototype works, not when it’s supposed to.
               </h2>
               <p className="cta__lede">
                 No countdown, no pre-order. Just an occasional note when a milestone lands:
@@ -696,35 +696,31 @@ function App() {
 
       {/* ---------------- FOOTER ---------------- */}
       <footer className="foot">
-        <div className="wrap foot__inner">
-          <div className="foot__brand">
-            <a className="brand" href="#top">
-              <span className="brand__mark" aria-hidden="true" />
-              NERVA
-            </a>
-            <p>
-              A smart ring that measures your nervous system, not just your heart. Solo-engineered
-              hardware, currently in functional prototyping.
-            </p>
-          </div>
-          <div className="foot__cols">
-            <div className="foot__col">
-              <h4>Product</h4>
-              <a href="#signals">Sensing</a>
-              <a href="#inside">Inside the ring</a>
-              <a href="#spec">Hardware</a>
-            </div>
-            <div className="foot__col">
-              <h4>The build</h4>
-              <a href="#status">Build status</a>
-              <a href="#follow">Follow updates</a>
-              <a href="#top">Overview</a>
-            </div>
-          </div>
+        <div className="wrap foot__row">
+          <a className="brand" href="#top">
+            <span className="brand__mark" aria-hidden="true" />
+            NERVA
+          </a>
+          <nav className="foot__links" aria-label="Footer">
+            {NAV.map((l) => (
+              <a key={l.href} href={l.href}>{l.label}</a>
+            ))}
+            <a href="#follow">Follow updates</a>
+          </nav>
         </div>
-        <div className="wrap foot__legal">
-          <span>© 2026 NERVA · solo-built hardware</span>
-          <span>Prototype renders · specs subject to change</span>
+        <div className="wrap">
+          <p className="foot__note">
+            One person, a soldering iron, and a nervous system worth measuring. NERVA is built
+            in the open, one revision at a time, mechanical and electrical and firmware all in
+            the same head.
+          </p>
+        </div>
+        <div className="foot__plate">
+          <div className="wrap foot__plate-inner">
+            <span>NERVA · REV PROTOTYPE</span>
+            <span>Solo-built · not yet for sale</span>
+            <span>© 2026</span>
+          </div>
         </div>
       </footer>
 
