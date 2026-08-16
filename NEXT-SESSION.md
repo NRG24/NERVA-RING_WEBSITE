@@ -2,17 +2,31 @@
 
 _Last updated: 2026-08-16. Read this first, then `memory/nerva-site-design.md`._
 
-## 2026-08-16 polish pass (branch `claude/polish-2026-08-16`, PR open)
-Design/copy polish pass. Reworked the footer (was a generic multi-column
-links + copyright block, the most recognizable AI footer fingerprint) into
-a brand row with inline nav links, one editorial sentence, and a bottom
-mono "plate" strip styled like a hardware spec label. Gave the Design
-(blueprint) section an asymmetric two-column intro instead of the
-stacked headline-then-content shape repeated elsewhere. Cut two leftover
-`actually` intensifiers from the copy. Note: the fixed dock bar covers the
-last ~70px of the page at all times, since nothing after `<main>` gets the
-dock-clearance padding; the footer plate now carries its own bottom
-padding to stay clear of it. Keep that in mind if the footer changes again.
+## 2026-08-16 polish pass (branch `claude/polish-2026-08-16`, PR #1)
+Two passes landed on this branch, the second building on the first.
+
+**Footer** is now a **drawing title block** (`.colophon` / `.titleblock`),
+echoing the Fusion sheet in the Design section: hairline-ruled cells for
+drawing, stage, builder, and contact, with the section index as one
+horizontal row. The first pass's brand-row + dark "spec plate" footer was
+replaced by this. Cell spans (`.tb--w2/w3/w4/w6`) must tile each row of the
+6-column grid exactly, or the leftover gap renders as a solid hairline block.
+
+**Section rhythm** no longer repeats headline+sub everywhere: Design uses a
+split lead (`.lead--split`), Hardware opens headline-only with its caveat as
+a footnote under the table, Build status gained a segment meter counted off
+the `LEDGER` array (`TALLY`), so the tally cannot drift from the list. The
+first pass's side-by-side blueprint intro was dropped: it shrank the 2600px
+CAD sheet to ~740px and the title-block text stopped being legible.
+
+**Dock-bar clearance** is now `body { padding-bottom: 64px }`. It used to sit
+on `main`, which left a white band under the dark CTA while still covering
+the footer. Anything appended after the footer inherits the clearance now.
+
+Also: `[id] { scroll-margin-top }` so anchor jumps clear the sticky nav;
+`.display` capped below the hero title; mono pill badges dropped from the
+ledger tags and dock-bar stage label; focus rings made round on round
+targets and white-on-dark inside the black sections.
 
 ## What this is
 Marketing / "follow the build" site for the **NERVA smart ring** — a solo-built
