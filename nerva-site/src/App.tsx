@@ -329,7 +329,7 @@ const INSIDE = [
   {
     k: 'Electrodermal',
     title: 'Continuous stress (GSR)',
-    body: 'Two dry gold-plated electrodes built into the flex PCB track galvanic skin response in real time. It is the same signal used in clinical stress research.',
+    body: 'Two dry gold-plated electrodes built into the flex PCB read galvanic skin response continuously. It is the same signal used in clinical stress research.',
   },
   {
     k: 'Connectivity',
@@ -348,7 +348,7 @@ const PILLARS = [
   {
     k: 'Battery',
     title: 'Weeks, not days',
-    body: 'A wake-on-finger architecture keeps the ring asleep until a finger is detected, targeting roughly a month of standby from a 22 mAh cell.',
+    body: 'A wake-on-finger architecture keeps the ring asleep between checks and only spins up full sensing once a finger is on it, targeting roughly a month of standby from a 22 mAh cell.',
   },
   {
     k: 'Build',
@@ -385,6 +385,13 @@ const LEDGER = [
   { s: 'todo', label: 'Small-batch hand-assembled production run', tag: 'Planned' },
   { s: 'todo', label: 'Beta testing / crowdfunding phase', tag: 'Planned' },
 ] as const
+
+/* counted off the ledger above, so the tally can never drift from the list */
+const TALLY = {
+  done: LEDGER.filter((r) => r.s === 'done').length,
+  wip: LEDGER.filter((r) => r.s === 'wip').length,
+  todo: LEDGER.filter((r) => r.s === 'todo').length,
+}
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -536,9 +543,9 @@ function App() {
               <Reveal className="sig-note sig-note--eda" delay={80}>
                 <h3>The nerves</h3>
                 <p>
-                  Two dry gold electrodes track skin conductance in real time, the sympathetic
-                  arousal signal that clinical stress research relies on. This is the read most
-                  rings leave on the table, and where <b>NERVA</b> earns its name.
+                  Two dry gold electrodes read skin conductance straight off the inner band, the
+                  sympathetic arousal signal clinical stress research relies on. This is the read
+                  most rings leave on the table, and where <b>NERVA</b> earns its name.
                 </p>
               </Reveal>
             </div>
@@ -592,17 +599,17 @@ function App() {
 
         {/* ---------------- BLUEPRINT ---------------- */}
         <section className="section section--tint blueprint" id="design">
-          <div className="wrap bp-layout">
-            <Reveal className="bp-layout__intro">
+          <div className="wrap">
+            <Reveal className="lead lead--split">
               <h2 className="display">Designed down to the last line.</h2>
               <p className="lead__sub">
                 The housing, the flex-PCB wrap, the sensor placement: every millimeter modeled
-                from first principles in Fusion 360, down to how the flex PCB folds around the
+                from first principles in Fusion 360, down to how the flex folds around the
                 inner wall.
               </p>
             </Reveal>
 
-            <Reveal className="bp" delay={90}>
+            <Reveal className="bp">
               <div className="bp__frame">
                 <img
                   src={blueprint}
@@ -623,12 +630,8 @@ function App() {
         {/* ---------------- DATASHEET ---------------- */}
         <section className="section" id="spec">
           <div className="wrap">
-            <Reveal className="lead">
+            <Reveal className="lead lead--tight">
               <h2 className="display">A ring-sized system, spec by spec.</h2>
-              <p className="lead__sub">
-                The parts and approaches behind the build. A working summary that will drift as
-                the design evolves.
-              </p>
             </Reveal>
 
             <Reveal>
@@ -647,6 +650,10 @@ function App() {
                   </div>
                 ))}
               </div>
+              <p className="datasheet__foot">
+                Part choices reflect where the design stands today. Anything still marked TBD is
+                open, and this table will drift as the boards come back.
+              </p>
             </Reveal>
           </div>
         </section>
@@ -660,6 +667,16 @@ function App() {
                 NERVA is an early-stage, solo-built hardware project in functional prototyping.
                 Here is exactly what is done and what isn’t.
               </p>
+              <div className="tally">
+                <div className="tally__bar" aria-hidden="true">
+                  {LEDGER.map((row) => (
+                    <span key={row.label} className={`tally__seg tally__seg--${row.s}`} />
+                  ))}
+                </div>
+                <p className="tally__read">
+                  {TALLY.done} done · {TALLY.wip} in progress · {TALLY.todo} still ahead
+                </p>
+              </div>
             </Reveal>
 
             <Reveal>
@@ -681,7 +698,7 @@ function App() {
           <div className="wrap cta__inner">
             <Reveal>
               <h2 className="display display--light">
-                Get told when the prototype works, not when it’s supposed to.
+                Follow it from schematic to first working prototype.
               </h2>
               <p className="cta__lede">
                 No countdown, no pre-order. Just an occasional note when a milestone lands:
@@ -694,33 +711,53 @@ function App() {
         </section>
       </main>
 
-      {/* ---------------- FOOTER ---------------- */}
-      <footer className="foot">
-        <div className="wrap foot__row">
-          <a className="brand" href="#top">
-            <span className="brand__mark" aria-hidden="true" />
-            NERVA
-          </a>
-          <nav className="foot__links" aria-label="Footer">
-            {NAV.map((l) => (
-              <a key={l.href} href={l.href}>{l.label}</a>
-            ))}
-            <a href="#follow">Follow updates</a>
-          </nav>
-        </div>
+      {/* ---------------- FOOTER (drawing title block) ---------------- */}
+      <footer className="colophon">
         <div className="wrap">
-          <p className="foot__note">
-            One person, a soldering iron, and a nervous system worth measuring. NERVA is built
-            in the open, one revision at a time, mechanical and electrical and firmware all in
-            the same head.
-          </p>
-        </div>
-        <div className="foot__plate">
-          <div className="wrap foot__plate-inner">
-            <span>NERVA · REV PROTOTYPE</span>
-            <span>Solo-built · not yet for sale</span>
-            <span>© 2026</span>
+          <div className="colophon__head">
+            <a className="brand" href="#top">
+              <span className="brand__mark" aria-hidden="true" />
+              NERVA
+            </a>
+            <p className="colophon__line">
+              One person, one soldering iron, and a nervous system worth measuring.
+            </p>
           </div>
+
+          <div className="titleblock">
+            <div className="tb tb--w4">
+              <span className="tb__k">Drawing</span>
+              <b className="tb__v">NERVA Ring · housing + flex-PCB assembly</b>
+            </div>
+            <div className="tb tb--w2">
+              <span className="tb__k">Stage</span>
+              <b className="tb__v">Functional prototyping</b>
+            </div>
+            <div className="tb tb--w3">
+              <span className="tb__k">Built by</span>
+              <b className="tb__v">Ryan Schreiber, solo</b>
+            </div>
+            <div className="tb tb--w3">
+              <span className="tb__k">Contact</span>
+              <b className="tb__v">
+                <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+              </b>
+            </div>
+            <div className="tb tb--w6">
+              <span className="tb__k">On this sheet</span>
+              <nav className="tb__index" aria-label="Footer">
+                {NAV.map((l) => (
+                  <a key={l.href} href={l.href}>{l.label}</a>
+                ))}
+                <a href="#follow">Updates</a>
+              </nav>
+            </div>
+          </div>
+
+          <p className="colophon__fine">
+            Renders and drawings on this page come from the working Fusion model. Nothing here is
+            for sale, and the specs move as the design does. © 2026 NERVA.
+          </p>
         </div>
       </footer>
 
