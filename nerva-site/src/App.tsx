@@ -77,6 +77,21 @@ const EDA_D =
   'M0 42 L140 42 C210 42 232 23 300 23 C360 23 382 42 460 42 ' +
   'L560 42 C620 42 642 15 710 15 C762 15 784 42 862 42 L1000 40'
 
+function HeartIcon() {
+  return (
+    <svg className="sig-note__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 20.2C12 20.2 3.8 15.1 3.8 9.1C3.8 6.1 6.1 3.8 9 3.8C10.5 3.8 11.7 4.5 12 5.4C12.3 4.5 13.5 3.8 15 3.8C17.9 3.8 20.2 6.1 20.2 9.1C20.2 15.1 12 20.2 12 20.2Z" />
+    </svg>
+  )
+}
+function NerveIcon() {
+  return (
+    <svg className="sig-note__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 12h4l2.5 7L13 4l2.5 8H22" />
+    </svg>
+  )
+}
+
 function Trace({ d, kind }: { d: string; kind: 'hr' | 'eda' }) {
   return (
     <svg className="inst__trace" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
@@ -91,7 +106,6 @@ function SignalInstrument() {
     <div className="instrument" role="img" aria-label="A live-style readout showing a fast pulsatile heart-rate trace above a slow-drifting skin-conductance trace.">
       <div className="inst__head">
         <span className="inst__live">Dual-signal readout</span>
-        <span className="inst__cap">Illustrative traces</span>
       </div>
       <div className="inst__row">
         <div className="inst__name">Heart rate<span className="inst__sub">Optical PPG · SpO₂</span></div>
@@ -322,43 +336,20 @@ const FINISHES = [
 /* the ring, read inside-out */
 const INSIDE = [
   {
-    k: 'Optical',
     title: 'Heart rate & SpO₂',
     body: 'A MAX30102-class PPG sensor reads pulse and blood oxygen straight from the finger, one of the most vascularized, signal-rich sites on the body.',
   },
   {
-    k: 'Electrodermal',
     title: 'Continuous stress (GSR)',
     body: 'Two dry gold-plated electrodes built into the flex PCB read galvanic skin response continuously. It is the same signal used in clinical stress research.',
   },
   {
-    k: 'Connectivity',
     title: 'Bluetooth LE 5',
     body: 'A u-blox ANNA-B402 module with an antenna tuned to the ring’s form factor keeps the companion app in sync without draining the cell.',
   },
   {
-    k: 'Charging',
     title: '2-pin pogo dock',
     body: 'Charges on a standard 2-pin dock, with circuit protection against sweat bridging the contacts. It is the approach used across the smart-ring industry.',
-  },
-]
-
-/* three editorial pillars over the dark render */
-const PILLARS = [
-  {
-    k: 'Battery',
-    title: 'Weeks, not days',
-    body: 'A wake-on-finger architecture keeps the ring asleep between checks and only spins up full sensing once a finger is on it, targeting roughly a month of standby from a 22 mAh cell.',
-  },
-  {
-    k: 'Build',
-    title: 'Sealed & waterproof',
-    body: 'The internal flex assembly is fully potted in clear resin inside the housing. No seams, no gaps, and safe for hand-washing and showering.',
-  },
-  {
-    k: 'Engineering',
-    title: 'Solo, full-stack',
-    body: 'Mechanical, electrical, and firmware designed in-house from first principles, not assembled from an off-the-shelf reference design.',
   },
 ]
 
@@ -533,7 +524,7 @@ function App() {
 
             <div className="sig-notes">
               <Reveal className="sig-note sig-note--hr">
-                <h3>The heart</h3>
+                <h3><HeartIcon />The heart</h3>
                 <p>
                   Optical PPG reads pulse and blood oxygen from the finger, a dense, well-perfused
                   site that gives clean signal. It is what most rings already measure, and
@@ -541,7 +532,7 @@ function App() {
                 </p>
               </Reveal>
               <Reveal className="sig-note sig-note--eda" delay={80}>
-                <h3>The nerves</h3>
+                <h3><NerveIcon />The nerves</h3>
                 <p>
                   Two dry gold electrodes read skin conductance straight off the inner band, the
                   sympathetic arousal signal clinical stress research relies on. This is the read
@@ -572,27 +563,11 @@ function App() {
               <div className="inside__list">
                 {INSIDE.map((item, i) => (
                   <Reveal key={item.title} className="feat" delay={i * 60}>
-                    <span className="feat__k">{item.k}</span>
                     <h3>{item.title}</h3>
                     <p>{item.body}</p>
                   </Reveal>
                 ))}
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ---------------- PILLARS (dark, continues) ---------------- */}
-        <section className="pillars">
-          <div className="wrap">
-            <div className="pillars__grid">
-              {PILLARS.map((p, i) => (
-                <Reveal key={p.title} className="pillar" delay={i * 60}>
-                  <span className="pillar__k">{p.k}</span>
-                  <h3>{p.title}</h3>
-                  <p>{p.body}</p>
-                </Reveal>
-              ))}
             </div>
           </div>
         </section>
@@ -765,7 +740,6 @@ function App() {
       <div className="dockbar">
         <div className="dockbar__inner">
           <div className="dockbar__meta">
-            <span className="dockbar__mark" aria-hidden="true" />
             <b>NERVA Ring</b>
             <span className="dockbar__desc">nervous-system sensing</span>
             <span className="dockbar__stage">Prototype</span>
