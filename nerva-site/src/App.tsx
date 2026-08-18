@@ -189,7 +189,7 @@ function FilmScroll() {
   }, [])
 
   return (
-    <section ref={sectionRef as any} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="NERVA sensor architecture film">
+    <section ref={sectionRef as any} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="NERVA Ring sensor architecture film">
       <div className="film__sticky">
         <video
           ref={videoRef}
@@ -408,9 +408,9 @@ function App() {
       {/* ---------------- NAV ---------------- */}
       <header className="nav">
         <div className="nav__inner">
-          <a className="brand" href="#top" aria-label="NERVA home">
-            <span className="brand__mark" aria-hidden="true" />
-            NERVA
+          <a className="brand" href="#top" aria-label="NERVA Ring home">
+            <img className="brand__mark" src="/favicon.png" alt="" width={24} height={24} />
+            NERVA Ring
           </a>
           <nav className="nav__links" aria-label="Primary">
             {NAV.map((l) => (
@@ -456,7 +456,7 @@ function App() {
                 src={active.img}
                 width={1400}
                 height={1270}
-                alt={`The NERVA smart ring in ${active.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs on the inner band.`}
+                alt={`The NERVA Ring in ${active.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs on the inner band.`}
               />
             </div>
 
@@ -466,7 +466,7 @@ function App() {
                 The ring that reads your nervous system.
               </h1>
               <p className="hero__lede">
-                Most wearables measure your heart. NERVA also reads your nervous system:
+                Most wearables measure your heart. NERVA Ring also reads your nervous system:
                 heart rate and blood oxygen paired with continuous skin-conductance sensing,
                 for a live view of stress, recovery, and arousal. All from a single ring no
                 bigger than a normal one.
@@ -536,8 +536,8 @@ function App() {
                 <h3>The heart</h3>
                 <p>
                   Optical PPG reads pulse and blood oxygen from the finger, a dense, well-perfused
-                  site that gives clean signal. It is what most rings already measure, and NERVA
-                  measures it too.
+                  site that gives clean signal. It is what most rings already measure, and
+                  NERVA Ring measures it too.
                 </p>
               </Reveal>
               <Reveal className="sig-note sig-note--eda" delay={80}>
@@ -545,7 +545,7 @@ function App() {
                 <p>
                   Two dry gold electrodes read skin conductance straight off the inner band, the
                   sympathetic arousal signal clinical stress research relies on. This is the read
-                  most rings leave on the table, and where <b>NERVA</b> earns its name.
+                  most rings leave on the table, and where <b>NERVA Ring</b> earns its name.
                 </p>
               </Reveal>
             </div>
@@ -566,7 +566,7 @@ function App() {
                   width={1100}
                   height={1100}
                   loading="lazy"
-                  alt="Close view inside the NERVA ring band, exposing the flex PCB, gold electrodes, and the green and red optical sensor LEDs."
+                  alt="Close view inside the NERVA Ring band, exposing the flex PCB, gold electrodes, and the green and red optical sensor LEDs."
                 />
               </Reveal>
               <div className="inside__list">
@@ -616,7 +616,7 @@ function App() {
                   width={2600}
                   height={1838}
                   loading="lazy"
-                  alt="Engineering drawing of the NERVA ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
+                  alt="Engineering drawing of the NERVA Ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
                 />
               </div>
               <div className="bp__meta">
@@ -637,7 +637,7 @@ function App() {
             <Reveal>
               <div className="datasheet">
                 <div className="datasheet__bar">
-                  <span>NERVA · rev. prototype</span>
+                  <span>NERVA Ring · rev. prototype</span>
                   <span className="ds-mono">flex-PCB / resin-potted</span>
                 </div>
                 {SPECS.map((s) => (
@@ -664,7 +664,7 @@ function App() {
             <Reveal className="lead">
               <h2 className="display">An honest build log, not a launch page.</h2>
               <p className="lead__sub">
-                NERVA is an early-stage, solo-built hardware project in functional prototyping.
+                NERVA Ring is an early-stage, solo-built hardware project in functional prototyping.
                 Here is exactly what is done and what isn’t.
               </p>
               <div className="tally">
@@ -716,8 +716,8 @@ function App() {
         <div className="wrap">
           <div className="colophon__head">
             <a className="brand" href="#top">
-              <span className="brand__mark" aria-hidden="true" />
-              NERVA
+              <img className="brand__mark" src="/favicon.png" alt="" width={24} height={24} />
+              NERVA Ring
             </a>
             <p className="colophon__line">
               One person, one soldering iron, and a nervous system worth measuring.
@@ -756,7 +756,7 @@ function App() {
 
           <p className="colophon__fine">
             Renders and drawings on this page come from the working Fusion model. Nothing here is
-            for sale, and the specs move as the design does. © 2026 NERVA.
+            for sale, and the specs move as the design does. © 2026 NERVA Ring.
           </p>
         </div>
       </footer>
@@ -766,8 +766,8 @@ function App() {
         <div className="dockbar__inner">
           <div className="dockbar__meta">
             <span className="dockbar__mark" aria-hidden="true" />
-            <b>NERVA</b>
-            <span className="dockbar__desc">nervous-system sensing ring</span>
+            <b>NERVA Ring</b>
+            <span className="dockbar__desc">nervous-system sensing</span>
             <span className="dockbar__stage">Prototype</span>
           </div>
           <a className="btn btn--accent" href="#follow">Follow the build</a>

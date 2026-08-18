@@ -111,9 +111,9 @@ export default function Buy() {
 
       <header className="nav">
         <div className="nav__inner">
-          <a className="brand" href="/" aria-label="NERVA home">
+          <a className="brand" href="/" aria-label="NERVA Ring home">
             <span className="brand__mark" aria-hidden="true" />
-            NERVA
+            NERVA Ring
           </a>
           <a className="btn btn--ghost" href="/">Back to the build</a>
         </div>
@@ -129,7 +129,7 @@ export default function Buy() {
                 src={art}
                 width={1400}
                 height={1270}
-                alt={`The NERVA ring in ${(finish || 'graphite').toLowerCase()}, showing the flex PCB and sensor LEDs inside the band.`}
+                alt={`The NERVA Ring in ${(finish || 'graphite').toLowerCase()}, showing the flex PCB and sensor LEDs inside the band.`}
               />
             </div>
             <div className="buy__strip">
@@ -275,7 +275,7 @@ export default function Buy() {
               <div className="row">
                 <b>It is a prototype</b>
                 <p>
-                  NERVA is in functional prototyping. Firmware for the full sensing pipeline is
+                  NERVA Ring is in functional prototyping. Firmware for the full sensing pipeline is
                   not written yet, and no unit has been through prototype testing.
                 </p>
               </div>
@@ -302,9 +302,9 @@ export default function Buy() {
         <div className="wrap shopfoot__inner">
           <a className="brand" href="/">
             <span className="brand__mark" aria-hidden="true" />
-            NERVA
+            NERVA Ring
           </a>
-          <p>© 2026 NERVA. Store layout preview, not a live shop.</p>
+          <p>© 2026 NERVA Ring. Store layout preview, not a live shop.</p>
         </div>
       </footer>
     </>
