@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# /buy.html is kept crawlable (not disallowed) so its own
+# <meta name="robots" content="noindex, nofollow"> tag can be seen and
+# honored — disallowing it here would block crawlers before they ever
+# reach that tag.
+
+Sitemap: https://nervaring.com/sitemap.xml

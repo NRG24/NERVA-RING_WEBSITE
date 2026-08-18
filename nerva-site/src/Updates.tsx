@@ -35,25 +35,27 @@ const FAQ = [
   },
 ] as const
 
-/* dated log, newest first. add a new entry here each time something ships */
+/* Newest first. Add a dated entry here each time something ships — the
+   `date` field is the one part of this file that must never be guessed;
+   leave it unset until the real date of that milestone is known. */
 const LOG = [
   {
-    date: '2026-08',
+    date: null,
     title: 'Housing & flex-PCB wrap modeled in Fusion 360',
     body: 'The internal flex assembly now has a modeled wrap path around the inner circumference, along with the resin-potting and waterproofing process it will go through.',
   },
   {
-    date: '2026-06',
+    date: null,
     title: 'BLE module and antenna layout complete',
     body: 'A u-blox ANNA-B402 module with an antenna tuned to the ring form factor is locked in, keeping the companion app in sync without draining the cell.',
   },
   {
-    date: '2026-04',
+    date: null,
     title: 'GSR analog front end designed and tuned',
     body: 'A custom transimpedance-amplifier circuit on a dual op-amp is tuned for the low-current, low-noise range that skin conductance sits in.',
   },
   {
-    date: '2026-02',
+    date: null,
     title: 'Power architecture finalized',
     body: 'A single BQ25120A PMIC handles the 1.8 V MCU rail, a switched 3.3 V sensor rail, plus battery charging, monitoring, and load-switching.',
   },
@@ -153,7 +155,7 @@ export default function Updates() {
             <div className="log">
               {LOG.map((entry) => (
                 <div className="log__row" key={entry.title}>
-                  <span className="log__date">{entry.date}</span>
+                  <span className="log__date">{entry.date ?? 'Undated'}</span>
                   <div>
                     <b>{entry.title}</b>
                     <p>{entry.body}</p>

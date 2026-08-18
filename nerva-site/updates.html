@@ -39,6 +39,81 @@
       href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Static JSON-LD so search engines can read the FAQ without running JS.
+         Keep this in sync with the FAQ array in src/Updates.tsx by hand. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does NERVA actually measure?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Heart rate and blood oxygen from an optical PPG sensor, plus continuous skin conductance (GSR/EDA) from two dry gold electrodes built into the inner band. Most rings stop at the first pair; the electrodermal channel is what NERVA adds."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is NERVA available to buy right now?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. NERVA is in functional prototyping. There is a store preview at /buy.html so you can see how checkout will look, but nothing on that page can be ordered and no payment details are collected anywhere on the site."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "When does it launch?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "There is no fixed launch date yet. The build stands between firmware and prototype testing right now; see the timeline on this page for what has to happen before a date is meaningful."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How much will it cost?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Not decided. Pricing follows the production run, since the housing material and small-batch assembly cost are both still open questions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How long does the battery last?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The target is roughly a month of standby from a 22 mAh cell, using a wake-on-finger architecture that keeps the ring asleep until a finger is on it. That is a design target, not a measured result yet, since full firmware is not written."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is it waterproof?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The internal flex assembly is potted in clear resin inside the housing, with no seams or gaps, which is designed to make it safe for hand-washing and showering. It has not yet been through formal waterproofing testing."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Who is building this?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "One person: Ryan Schreiber. Mechanical, electrical, and firmware design are all done in-house, from first principles, rather than assembled from an off-the-shelf reference design."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I find out when something changes?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Join the build list on the main site, or check this page, which stays current as the build log changes. You can also reach out directly at hello@nervaring.com."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
