@@ -223,8 +223,10 @@ a { color: inherit; text-decoration: none; }
   background: var(--ink); transform: scaleX(0); transform-origin: left center;
   transition: transform 0.24s var(--ease-out);
 }
-.nav__links a:hover { color: var(--ink); }
-.nav__links a:hover::after { transform: scaleX(1); }
+@media (hover: hover) {
+  .nav__links a:hover { color: var(--ink); }
+  .nav__links a:hover::after { transform: scaleX(1); }
+}
 @media (prefers-reduced-motion: reduce) { .nav__links a::after { transition: none; } }
 .nav__right { display: flex; align-items: center; gap: 12px; }
 .nav__toggle {
@@ -547,22 +549,32 @@ a { color: inherit; text-decoration: none; }
   margin: 10px 0 0; font-weight: 700; font-size: clamp(1.2rem, 1rem + 0.7vw, 1.5rem);
   letter-spacing: -0.02em;
 }
-.feat p { margin: 8px 0 0; color: rgba(255,255,255,0.66); max-width: 44ch; font-size: 15.5px; }
+.feat p { margin: 8px 0 0; color: rgba(255,255,255,0.66); max-width: 46ch; font-size: 16px; line-height: 1.62; }
 
-/* pillars (continues dark) */
+/* constraints (continues dark) — a standfirst against run-in notes, not three
+   equal boxes. The rules echo the feature list above so the dark band reads
+   as one spread rather than two unrelated layouts. */
 .pillars { background: var(--void); color: var(--paper); padding: 0 0 clamp(72px, 9vw, 130px); }
 .pillars__grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-  background: var(--line-dk);
-  border: 1px solid var(--line-dk); border-radius: var(--radius); overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(26px, 5vw, 78px);
+  align-items: start;
+  padding-top: clamp(30px, 4vw, 54px);
+  border-top: 1px solid var(--line-dk);
 }
-.pillar { background: var(--void); padding: clamp(28px, 3vw, 40px); }
-.pillar__k {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: rgba(255,255,255,0.5);
+.pillars__lead p {
+  margin: 0; max-width: 21ch;
+  font-weight: 700;
+  font-size: clamp(1.16rem, 1rem + 0.8vw, 1.55rem);
+  line-height: 1.28; letter-spacing: -0.028em;
 }
-.pillar h3 { margin: 12px 0 0; font-weight: 700; font-size: 1.35rem; letter-spacing: -0.02em; }
-.pillar p { margin: 12px 0 0; color: rgba(255,255,255,0.64); font-size: 15px; }
+.pillars__list { display: flex; flex-direction: column; }
+.pillar { padding: 22px 0; border-top: 1px solid var(--line-dk); }
+.pillar:first-child { border-top: 0; padding-top: 0; }
+.pillar:last-child { padding-bottom: 0; }
+.pillar p { margin: 0; max-width: 56ch; color: rgba(255,255,255,0.66); font-size: 16px; line-height: 1.62; }
+.pillar b { color: var(--paper); font-weight: 700; letter-spacing: -0.015em; }
 
 /* ============================================================
    BLUEPRINT / ENGINEERING DRAWING
@@ -606,7 +618,7 @@ a { color: inherit; text-decoration: none; }
   padding: 26px 30px; border-top: 1px solid var(--line);
   transition: background 0.2s var(--ease);
 }
-.drow:hover { background: var(--paper-3); }
+@media (hover: hover) { .drow:hover { background: var(--paper-3); } }
 .drow:nth-child(2) { border-top: 0; }
 .drow__k {
   font-weight: 700; font-size: 1.05rem; letter-spacing: -0.015em;
@@ -648,7 +660,7 @@ a { color: inherit; text-decoration: none; }
   padding: 20px 30px; border-top: 1px solid var(--line);
   transition: background 0.2s var(--ease);
 }
-.lrow:hover { background: var(--paper-3); }
+@media (hover: hover) { .lrow:hover { background: var(--paper-3); } }
 .lrow:first-child { border-top: 0; }
 .lrow__mark {
   width: 15px; height: 15px; border-radius: 50%; justify-self: center;
@@ -744,7 +756,13 @@ a { color: inherit; text-decoration: none; }
   font-weight: 600; font-size: 15px; letter-spacing: -0.012em; color: var(--ink);
 }
 .tb__v a { border-bottom: 1px solid var(--line-2); transition: border-color 0.18s var(--ease); }
-.tb__v a:hover { border-color: var(--ink); }
+
+/* the drawing's NOTES field: the fine print belongs inside the block, not
+   loose underneath it, so the footer reads as one artifact */
+.tb__note {
+  margin: 7px 0 0; max-width: 76ch;
+  font-size: 14px; line-height: 1.62; color: var(--ink-2);
+}
 
 .tb__index { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 8px; }
 .tb__index a {
@@ -758,13 +776,18 @@ a { color: inherit; text-decoration: none; }
   background: var(--ink); transform: scaleX(0); transform-origin: left center;
   transition: transform 0.24s var(--ease-out);
 }
-.tb__index a:hover { color: var(--ink); }
-.tb__index a:hover::after { transform: scaleX(1); }
+@media (hover: hover) {
+  .tb__v a:hover { border-color: var(--ink); }
+  .tb__index a:hover { color: var(--ink); }
+  .tb__index a:hover::after { transform: scaleX(1); }
+}
 @media (prefers-reduced-motion: reduce) { .tb__index a::after { transition: none; } }
 
+/* stamped like the revision line on the drawing sheet above */
 .colophon__fine {
-  margin: 22px 0 0; max-width: 68ch;
-  font-size: 13.5px; line-height: 1.6; color: var(--ink-3);
+  margin: 20px 0 0;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3);
 }
 
 /* ============================================================
@@ -807,6 +830,8 @@ a { color: inherit; text-decoration: none; }
   .inside__grid { grid-template-columns: 1fr; gap: 32px; }
   .inside__stage { max-width: 460px; }
   .pillars__grid { grid-template-columns: 1fr; }
+  /* the standfirst measure is set for a narrow column; stacked it can breathe */
+  .pillars__lead p { max-width: 34ch; }
   .drow { grid-template-columns: 1fr; gap: 8px; }
   .drow__k { flex-direction: row; align-items: baseline; gap: 10px; }
 

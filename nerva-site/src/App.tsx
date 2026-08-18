@@ -343,21 +343,18 @@ const INSIDE = [
   },
 ]
 
-/* three editorial pillars over the dark render */
+/* what the ring-scale constraints force, written as run-in notes rather than cards */
 const PILLARS = [
   {
-    k: 'Battery',
     title: 'Weeks, not days',
     body: 'A wake-on-finger architecture keeps the ring asleep between checks and only spins up full sensing once a finger is on it, targeting roughly a month of standby from a 22 mAh cell.',
   },
   {
-    k: 'Build',
-    title: 'Sealed & waterproof',
-    body: 'The internal flex assembly is fully potted in clear resin inside the housing. No seams, no gaps, and safe for hand-washing and showering.',
+    title: 'Sealed all the way through',
+    body: 'The internal flex assembly is potted in clear resin inside the housing. No seams, no gaps, and safe for hand-washing and showering.',
   },
   {
-    k: 'Engineering',
-    title: 'Solo, full-stack',
+    title: 'Solo and full-stack',
     body: 'Mechanical, electrical, and firmware designed in-house from first principles, not assembled from an off-the-shelf reference design.',
   },
 ]
@@ -582,17 +579,23 @@ function App() {
           </div>
         </section>
 
-        {/* ---------------- PILLARS (dark, continues) ---------------- */}
+        {/* ---------------- CONSTRAINTS (dark, continues) ---------------- */}
         <section className="pillars">
           <div className="wrap">
             <div className="pillars__grid">
-              {PILLARS.map((p, i) => (
-                <Reveal key={p.title} className="pillar" delay={i * 60}>
-                  <span className="pillar__k">{p.k}</span>
-                  <h3>{p.title}</h3>
-                  <p>{p.body}</p>
-                </Reveal>
-              ))}
+              <Reveal className="pillars__lead">
+                <p>
+                  A 22 mAh cell and a housing with no seams decide most of this design.
+                  Three things follow from that.
+                </p>
+              </Reveal>
+              <div className="pillars__list">
+                {PILLARS.map((p, i) => (
+                  <Reveal key={p.title} className="pillar" delay={i * 60}>
+                    <p><b>{p.title}.</b> {p.body}</p>
+                  </Reveal>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -631,7 +634,7 @@ function App() {
         <section className="section" id="spec">
           <div className="wrap">
             <Reveal className="lead lead--tight">
-              <h2 className="display">A ring-sized system, spec by spec.</h2>
+              <h2 className="display">Every part, and why it is there.</h2>
             </Reveal>
 
             <Reveal>
@@ -662,10 +665,10 @@ function App() {
         <section className="section section--tint" id="status">
           <div className="wrap">
             <Reveal className="lead">
-              <h2 className="display">An honest build log, not a launch page.</h2>
+              <h2 className="display">Where the build stands today.</h2>
               <p className="lead__sub">
                 NERVA is an early-stage, solo-built hardware project in functional prototyping.
-                Here is exactly what is done and what isn’t.
+                Every line below is either finished, on the bench, or still ahead of me.
               </p>
               <div className="tally">
                 <div className="tally__bar" aria-hidden="true">
@@ -701,11 +704,12 @@ function App() {
                 Follow it from schematic to first working prototype.
               </h2>
               <p className="cta__lede">
-                No countdown, no pre-order. Just an occasional note when a milestone lands:
+                No countdown and no pre-order. I send a note when a milestone lands:
                 first firmware, first clean EDA trace, first hand-assembled batch.
+                If a board comes back dead, that goes in the note too.
               </p>
               <Signup />
-              <p className="cta__fine">One builder · occasional updates · no spam, ever.</p>
+              <p className="cta__fine">Written by the person building it · no spam</p>
             </Reveal>
           </div>
         </section>
@@ -752,12 +756,16 @@ function App() {
                 <a href="#follow">Updates</a>
               </nav>
             </div>
+            <div className="tb tb--w6">
+              <span className="tb__k">Notes</span>
+              <p className="tb__note">
+                Renders and drawings on this page come from the working Fusion model. Nothing
+                here is for sale, and the specs move as the design does.
+              </p>
+            </div>
           </div>
 
-          <p className="colophon__fine">
-            Renders and drawings on this page come from the working Fusion model. Nothing here is
-            for sale, and the specs move as the design does. © 2026 NERVA.
-          </p>
+          <p className="colophon__fine">© 2026 NERVA · sheet 1 of 1</p>
         </div>
       </footer>
 

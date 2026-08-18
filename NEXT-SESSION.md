@@ -1,6 +1,27 @@
 # NERVA Website — Session Handoff
 
-_Last updated: 2026-08-16. Read this first, then `memory/nerva-site-design.md`._
+_Last updated: 2026-08-18. Read this first, then `memory/nerva-site-design.md`._
+
+## 2026-08-18 polish pass (branch `claude/festive-fermi-8r6xs4`)
+**Pillars are gone.** The dark band's three-up bordered grid was the last
+card-shaped thing on the page, complete with a mono kicker on each cell. It is
+now `.pillars__grid`: a bold standfirst naming the two constraints that drive
+the design (22 mAh cell, seamless housing) against three run-in notes on
+hairline rules, reusing the rule language of the `.feat` list directly above so
+the whole dark band reads as one spread. `PILLARS` lost its `k` field.
+
+**Footer** absorbed the loose fine print as a `Notes` cell (`.tb__note`), so the
+title block is one closed artifact instead of a block plus a trailing
+paragraph. Row spans still tile 6 columns per row: 4+2, 3+3, 6, 6. The
+copyright line is now a mono sheet stamp (`© 2026 NERVA · sheet 1 of 1`).
+
+**Copy:** "An honest build log, not a launch page" was an X-not-Y construction,
+now "Where the build stands today." Datasheet headline is "Every part, and why
+it is there." The CTA moved to first person to match the signup error copy.
+
+**Hover states** are behind `(hover: hover)` everywhere now (nav links, footer
+index, datasheet and ledger rows), matching what the buttons already did, so
+tapped rows on touch do not keep a stuck highlight.
 
 ## 2026-08-16 polish pass (branch `claude/polish-2026-08-16`, PR #1)
 Two passes landed on this branch, the second building on the first.
