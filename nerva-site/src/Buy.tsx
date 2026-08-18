@@ -115,7 +115,10 @@ export default function Buy() {
             <span className="brand__mark" aria-hidden="true" />
             NERVA
           </a>
-          <a className="btn btn--ghost" href="/">Back to the build</a>
+          <div className="nav__right">
+            <a className="btn btn--ghost" href="/updates.html">FAQ &amp; updates</a>
+            <a className="btn btn--ghost" href="/">Back to the build</a>
+          </div>
         </div>
       </header>
 
@@ -282,8 +285,8 @@ export default function Buy() {
               <div className="row">
                 <b>No date</b>
                 <p>
-                  There is no ship date to give you. The build log on the main site tracks what is
-                  finished and what is not, and it stays current.
+                  There is no ship date to give you. The <a href="/updates.html">FAQ &amp; updates</a> page
+                  tracks the launch timeline and what is finished and what is not, and it stays current.
                 </p>
               </div>
               <div className="row">

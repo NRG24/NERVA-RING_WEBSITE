@@ -415,6 +415,7 @@ function App() {
             ))}
           </nav>
           <div className="nav__right">
+            <a className="btn btn--ghost" href="/updates.html">FAQ &amp; updates</a>
             <a className="btn btn--dark" href="#follow">Follow the build</a>
             <button
               className="nav__toggle"
@@ -436,6 +437,7 @@ function App() {
           {NAV.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
           ))}
+          <a href="/updates.html" onClick={() => setMenuOpen(false)}>FAQ &amp; updates</a>
           <a className="btn btn--dark btn--block" href="#follow" onClick={() => setMenuOpen(false)}>
             Follow the build
           </a>
@@ -753,7 +755,7 @@ function App() {
                 {NAV.map((l) => (
                   <a key={l.href} href={l.href}>{l.label}</a>
                 ))}
-                <a href="#follow">Updates</a>
+                <a href="/updates.html">FAQ &amp; updates</a>
               </nav>
             </div>
             <div className="tb tb--w6">
