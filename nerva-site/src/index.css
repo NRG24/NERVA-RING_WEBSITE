@@ -11,7 +11,7 @@
   --paper-3:    #fbfbfd;   /* barely-there tint */
   --ink:        #0a0a0c;   /* near-black text */
   --ink-2:      #55565b;   /* secondary text */
-  --ink-3:      #86868b;   /* muted / captions */
+  --ink-3:      #6e6e73;   /* muted / captions, held at AA on paper and tint */
   --void:       #050506;   /* true-black sections */
   --void-2:     #101013;
   --studio:     #7f8387;   /* product tile bg (matches renders) */
@@ -24,6 +24,13 @@
   --accent-dk:  #0077ed;
 
   --sensor:     #30d158;   /* the green sensor LED, live accent only */
+  --pulse:      #ff5c57;   /* the red optical LED, the PPG trace only */
+  --attn:       #ffb020;   /* on the bench right now */
+  --ink-done:   #1a7a2e;   /* AA-contrast text mates for the two marks above */
+  --ink-attn:   #9a6300;
+  --alert:      #ff6a5e;   /* form errors, on dark only */
+  --alert-2:    #ffb3ac;
+  --ink-lift:   #26262b;   /* dark button, hovered */
 
   --shadow-sm:  0 1px 2px rgba(10,10,12,0.05), 0 6px 16px rgba(10,10,12,0.05);
   --shadow-md:  0 2px 6px rgba(10,10,12,0.05), 0 18px 48px rgba(10,10,12,0.09);
@@ -110,7 +117,7 @@ a { color: inherit; text-decoration: none; }
   max-width: 56ch;
 }
 
-/* intro variants — the page should not open every section the same way */
+/* intro variants: the page should not open every section the same way */
 .lead--tight { margin-bottom: clamp(30px, 3.4vw, 46px); }
 .lead--split {
   max-width: none;
@@ -161,7 +168,7 @@ a { color: inherit; text-decoration: none; }
 @media (hover: hover) {
   .btn--accent:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0,113,227,0.32); }
   .btn--accent:active { transform: translateY(0); }
-  .btn--dark:hover { background: #26262b; transform: translateY(-1px); }
+  .btn--dark:hover { background: var(--ink-lift); transform: translateY(-1px); }
   .btn--ghost:hover { border-color: var(--ink); background: rgba(11,11,13,0.03); }
 }
 
@@ -227,6 +234,10 @@ a { color: inherit; text-decoration: none; }
   .nav__links a:hover { color: var(--ink); }
   .nav__links a:hover::after { transform: scaleX(1); }
 }
+/* where you actually are, not where you might go: the rule stays drawn under
+   the section currently sitting behind the nav */
+.nav__links a[aria-current='true'] { color: var(--ink); }
+.nav__links a[aria-current='true']::after { transform: scaleX(1); }
 @media (prefers-reduced-motion: reduce) { .nav__links a::after { transition: none; } }
 .nav__right { display: flex; align-items: center; gap: 12px; }
 .nav__toggle {
@@ -246,8 +257,14 @@ a { color: inherit; text-decoration: none; }
 .mobile-menu a:not(.btn) {
   padding: 13px 4px; font-size: 18px; font-weight: 600;
   border-bottom: 1px solid var(--line);
+  transition: padding-left 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+}
+.mobile-menu a[aria-current='true'] {
+  padding-left: 14px;
+  box-shadow: inset 2px 0 0 var(--ink);
 }
 .mobile-menu .btn { margin-top: 12px; }
+@media (prefers-reduced-motion: reduce) { .mobile-menu a:not(.btn) { transition: none; } }
 
 /* ============================================================
    HERO
@@ -426,6 +443,12 @@ a { color: inherit; text-decoration: none; }
    ============================================================ */
 .section { padding: clamp(80px, 10vw, 160px) 0; }
 .section--tint { background: var(--paper-2); }
+/* the page should not tick along at one fixed interval. The section that
+   catches you coming out of the black film gets a longer beat; the datasheet
+   pulls up close under the drawing so the two engineering sheets read as a
+   pair rather than as two unrelated stops. */
+.section--beat { padding-top: clamp(100px, 12.5vw, 196px); }
+.section--pair { padding-top: clamp(54px, 6.2vw, 100px); }
 .br-lg { display: none; }
 @media (min-width: 720px) { .br-lg { display: inline; } }
 
@@ -463,7 +486,7 @@ a { color: inherit; text-decoration: none; }
 }
 .inst__cap {
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; color: rgba(255,255,255,0.5);
 }
 .inst__row {
   position: relative; z-index: 1;
@@ -474,7 +497,7 @@ a { color: inherit; text-decoration: none; }
 .inst__sub {
   display: block; margin-top: 4px;
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em;
-  text-transform: uppercase; color: rgba(255,255,255,0.42);
+  text-transform: uppercase; color: rgba(255,255,255,0.52);
 }
 .inst__trace { width: 100%; height: 64px; display: block; }
 .inst__val {
@@ -493,7 +516,7 @@ a { color: inherit; text-decoration: none; }
   filter: drop-shadow(0 0 5px currentColor);
   stroke-dasharray: 150 2000; stroke-dashoffset: 2150;
 }
-.trace-live--hr  { stroke: #ff5c57; color: #ff5c57; animation: sweep 3s linear infinite; }
+.trace-live--hr  { stroke: var(--pulse); color: var(--pulse); animation: sweep 3s linear infinite; }
 .trace-live--eda { stroke: var(--sensor); color: var(--sensor); animation: sweep 5.4s linear infinite; }
 @keyframes sweep { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) {
@@ -512,7 +535,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.02em; display: flex; align-items: center; gap: 11px;
 }
 .sig-note h3::before { content: ''; width: 10px; height: 10px; border-radius: 50%; flex: none; }
-.sig-note--hr h3::before { background: #ff5c57; }
+.sig-note--hr h3::before { background: var(--pulse); }
 .sig-note--eda h3::before { background: var(--sensor); }
 .sig-note p { margin: 14px 0 0; color: var(--ink-2); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; }
 .sig-note b { color: var(--ink); font-weight: 700; }
@@ -551,7 +574,7 @@ a { color: inherit; text-decoration: none; }
 }
 .feat p { margin: 8px 0 0; color: rgba(255,255,255,0.66); max-width: 46ch; font-size: 16px; line-height: 1.62; }
 
-/* constraints (continues dark) — a standfirst against run-in notes, not three
+/* constraints (continues dark): a standfirst against run-in notes, not three
    equal boxes. The rules echo the feature list above so the dark band reads
    as one spread rather than two unrelated layouts. */
 .pillars { background: var(--void); color: var(--paper); padding: 0 0 clamp(72px, 9vw, 130px); }
@@ -644,7 +667,7 @@ a { color: inherit; text-decoration: none; }
 .tally__bar { display: flex; gap: 4px; }
 .tally__seg { height: 5px; flex: 1; border-radius: 2px; background: var(--line-2); }
 .tally__seg--done { background: var(--sensor); }
-.tally__seg--wip { background: #ffb020; }
+.tally__seg--wip { background: var(--attn); }
 .tally__read {
   margin: 12px 0 0;
   font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.07em;
@@ -666,7 +689,7 @@ a { color: inherit; text-decoration: none; }
   width: 15px; height: 15px; border-radius: 50%; justify-self: center;
 }
 .lrow--done .lrow__mark { background: var(--sensor); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
-.lrow--wip .lrow__mark { background: #ffb020; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
+.lrow--wip .lrow__mark { background: var(--attn); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
 .lrow--todo .lrow__mark { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line-2); }
 .lrow__label { font-weight: 500; letter-spacing: -0.01em; }
 .lrow--todo .lrow__label { color: var(--ink-2); }
@@ -676,8 +699,8 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase; color: var(--ink-3);
   white-space: nowrap;
 }
-.lrow--done .lrow__tag { color: #1a7a2e; }
-.lrow--wip .lrow__tag { color: #9a6300; }
+.lrow--done .lrow__tag { color: var(--ink-done); }
+.lrow--wip .lrow__tag { color: var(--ink-attn); }
 
 /* ============================================================
    CTA
@@ -689,11 +712,11 @@ a { color: inherit; text-decoration: none; }
 .signup-wrap { margin: 32px 0 0; }
 .signup { display: flex; gap: 10px; max-width: 460px; }
 .signup__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-.signup input[aria-invalid='true'] { border-color: #ff6a5e; }
+.signup input[aria-invalid='true'] { border-color: var(--alert); }
 .signup .btn[disabled] { opacity: 0.6; cursor: default; }
 .signup__err {
   margin: 12px 0 0; max-width: 46ch;
-  font-size: 14.5px; color: #ffb3ac;
+  font-size: 14.5px; color: var(--alert-2);
 }
 .signup input {
   flex: 1; min-width: 0;
@@ -701,8 +724,12 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--line-dk); background: var(--void-2); color: var(--paper);
   font-family: var(--font-sans); font-size: 16px;
 }
-.signup input::placeholder { color: rgba(255,255,255,0.4); }
-.signup input:focus { outline: none; border-color: var(--accent); }
+.signup input::placeholder { color: rgba(255,255,255,0.5); }
+/* the border warms on any focus, but the keyboard ring survives: only a
+   pointer-driven focus drops the outline */
+.signup input:focus { border-color: var(--accent); }
+.signup input:focus:not(:focus-visible) { outline: none; }
+.signup input:focus-visible { border-radius: 999px; }
 .signup__ok {
   margin: 30px 0 0; font-weight: 600; font-size: 1.1rem;
   display: inline-flex; align-items: center; gap: 10px;
@@ -712,11 +739,11 @@ a { color: inherit; text-decoration: none; }
 }
 .cta__fine {
   margin: 18px 0 0; font-family: var(--font-mono); font-size: 11.5px;
-  letter-spacing: 0.06em; color: rgba(255,255,255,0.4); text-transform: uppercase;
+  letter-spacing: 0.06em; color: rgba(255,255,255,0.5); text-transform: uppercase;
 }
 
 /* ============================================================
-   FOOTER — read as the title block of an engineering drawing,
+   FOOTER: read as the title block of an engineering drawing,
    the same convention the blueprint sheet above already uses.
    ============================================================ */
 .colophon { background: var(--paper); padding: clamp(52px, 6vw, 84px) 0 44px; }
@@ -760,7 +787,7 @@ a { color: inherit; text-decoration: none; }
 /* the drawing's NOTES field: the fine print belongs inside the block, not
    loose underneath it, so the footer reads as one artifact */
 .tb__note {
-  margin: 7px 0 0; max-width: 76ch;
+  margin: 7px 0 0; max-width: 50ch;
   font-size: 14px; line-height: 1.62; color: var(--ink-2);
 }
 
@@ -841,7 +868,11 @@ a { color: inherit; text-decoration: none; }
   /* two-up title block: 6 columns become 2 half-width cells per row */
   .titleblock { grid-template-columns: repeat(2, 1fr); }
   .tb--w2, .tb--w3, .tb--w4 { grid-column: span 1; }
-  .tb--w6 { grid-column: span 2; }
+  /* the index and notes fields take a full row each here, so every row still
+     tiles exactly; a leftover cell would show the container hairline as a
+     solid block */
+  .tb--w6, .tb--index, .tb--notes { grid-column: span 2; }
+  .tb__note { max-width: 76ch; }
 }
 
 @media (max-width: 620px) {
@@ -861,7 +892,7 @@ a { color: inherit; text-decoration: none; }
   .wavebar__inner { gap: 14px; }
   .wavebar__label { display: none; }
   .titleblock { grid-template-columns: 1fr; }
-  .tb--w2, .tb--w3, .tb--w4, .tb--w6 { grid-column: span 1; }
+  .tb--w2, .tb--w3, .tb--w4, .tb--w6, .tb--index, .tb--notes { grid-column: span 1; }
   .signup { flex-direction: column; }
   .signup .btn { width: 100%; }
   .lrow { grid-template-columns: 20px 1fr; gap: 12px; }
