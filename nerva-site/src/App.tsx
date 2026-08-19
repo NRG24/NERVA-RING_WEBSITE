@@ -41,6 +41,43 @@ function Reveal({ children, as: Tag = 'div', className = '', delay = 0 }: {
   )
 }
 
+/* ---------- which section is under the nav right now ----------
+   Read off geometry rather than an IntersectionObserver: sections here are
+   wildly different heights (the scrub film is 340vh), so "last section whose
+   top has passed the nav" tracks the eye better than an intersection ratio. */
+function useActiveSection(ids: readonly string[]) {
+  const [active, setActive] = useState('')
+  useEffect(() => {
+    const nodes = ids
+      .map((id) => document.getElementById(id))
+      .filter((n): n is HTMLElement => Boolean(n))
+    if (!nodes.length) return
+
+    let frame = 0
+    let last = ''
+    const read = () => {
+      frame = 0
+      const line = 96 // a hair below the sticky nav
+      let current = ''
+      for (const n of nodes) {
+        if (n.getBoundingClientRect().top <= line) current = n.id
+      }
+      if (current !== last) { last = current; setActive(current) }
+    }
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(read) }
+
+    read()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    return () => {
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+    }
+  }, [ids])
+  return active
+}
+
 /* ---------- EDA / skin-conductance waveform ---------- */
 function EdaWave() {
   const d =
@@ -313,6 +350,8 @@ const NAV = [
   { href: '#spec', label: 'Hardware' },
   { href: '#status', label: 'Build status' },
 ]
+/* module-level so the hook's dependency identity never changes between renders */
+const NAV_IDS = NAV.map((l) => l.href.slice(1))
 
 const FINISHES = [
   { id: 'graphite', label: 'Graphite', sub: 'Polished PVD-style', img: ringGraphite, swatch: 'linear-gradient(140deg,#3a3d42,#0d0e10 70%)' },
@@ -394,6 +433,38 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('graphite')
   const active = FINISHES.find((f) => f.id === finish)!
+  const here = useActiveSection(NAV_IDS)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+
+  /* Escape closes the mobile menu and hands focus back to the button that
+     opened it; widening past the breakpoint closes it too, so the panel can
+     never be left hanging open under a desktop nav. */
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setMenuOpen(false)
+      toggleRef.current?.focus()
+    }
+    const wide = window.matchMedia('(min-width: 981px)')
+    const onWide = (e: MediaQueryListEvent) => { if (e.matches) setMenuOpen(false) }
+    window.addEventListener('keydown', onKey)
+    wide.addEventListener('change', onWide)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      wide.removeEventListener('change', onWide)
+    }
+  }, [menuOpen])
+
+  /* Warm the finishes you have not picked once the page itself has finished
+     loading, so switching swatches swaps instantly instead of flashing an
+     empty tile while a 400 kB render downloads. */
+  useEffect(() => {
+    const warm = () => FINISHES.forEach((f) => { new Image().src = f.img })
+    if (document.readyState === 'complete') { warm(); return }
+    window.addEventListener('load', warm, { once: true })
+    return () => window.removeEventListener('load', warm)
+  }, [])
 
   return (
     <>
@@ -411,15 +482,23 @@ function App() {
           </a>
           <nav className="nav__links" aria-label="Primary">
             {NAV.map((l) => (
-              <a key={l.href} href={l.href}>{l.label}</a>
+              <a
+                key={l.href}
+                href={l.href}
+                aria-current={here === l.href.slice(1) ? 'true' : undefined}
+              >
+                {l.label}
+              </a>
             ))}
           </nav>
           <div className="nav__right">
             <a className="btn btn--dark" href="#follow">Follow the build</a>
             <button
+              ref={toggleRef}
               className="nav__toggle"
-              aria-label="Menu"
+              aria-label={menuOpen ? 'Close menu' : 'Menu'}
               aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
               onClick={() => setMenuOpen((v) => !v)}
             >
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -432,9 +511,16 @@ function App() {
             </button>
           </div>
         </div>
-        <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        <div className={`mobile-menu ${menuOpen ? 'open' : ''}`} id="mobile-menu">
           {NAV.map((l) => (
-            <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
+            <a
+              key={l.href}
+              href={l.href}
+              aria-current={here === l.href.slice(1) ? 'true' : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              {l.label}
+            </a>
           ))}
           <a className="btn btn--dark btn--block" href="#follow" onClick={() => setMenuOpen(false)}>
             Follow the build
@@ -515,7 +601,7 @@ function App() {
         <FilmScroll />
 
         {/* ---------------- TWO SIGNALS ---------------- */}
-        <section className="section" id="signals">
+        <section className="section section--beat" id="signals">
           <div className="wrap">
             <Reveal className="lead">
               <h2 className="display">
@@ -533,16 +619,17 @@ function App() {
                 <h3>The heart</h3>
                 <p>
                   Optical PPG reads pulse and blood oxygen from the finger, a dense, well-perfused
-                  site that gives clean signal. It is what most rings already measure, and NERVA
-                  measures it too.
+                  site that gives clean signal. Most rings sense this much, and NERVA holds itself
+                  to the same bar here.
                 </p>
               </Reveal>
               <Reveal className="sig-note sig-note--eda" delay={80}>
                 <h3>The nerves</h3>
                 <p>
                   Two dry gold electrodes read skin conductance straight off the inner band, the
-                  sympathetic arousal signal clinical stress research relies on. This is the read
-                  most rings leave on the table, and where <b>NERVA</b> earns its name.
+                  sympathetic arousal signal clinical stress research relies on. Carrying that
+                  alongside the heart signal at ring scale is the hard part, and it is what{' '}
+                  <b>NERVA</b> is built around.
                 </p>
               </Reveal>
             </div>
@@ -631,7 +718,7 @@ function App() {
         </section>
 
         {/* ---------------- DATASHEET ---------------- */}
-        <section className="section" id="spec">
+        <section className="section section--pair" id="spec">
           <div className="wrap">
             <Reveal className="lead lead--tight">
               <h2 className="display">Every part, and why it is there.</h2>
@@ -747,7 +834,7 @@ function App() {
                 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
               </b>
             </div>
-            <div className="tb tb--w6">
+            <div className="tb tb--w3 tb--index">
               <span className="tb__k">On this sheet</span>
               <nav className="tb__index" aria-label="Footer">
                 {NAV.map((l) => (
@@ -756,7 +843,7 @@ function App() {
                 <a href="#follow">Updates</a>
               </nav>
             </div>
-            <div className="tb tb--w6">
+            <div className="tb tb--w3 tb--notes">
               <span className="tb__k">Notes</span>
               <p className="tb__note">
                 Renders and drawings on this page come from the working Fusion model. Nothing
