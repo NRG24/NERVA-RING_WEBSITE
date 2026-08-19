@@ -11,7 +11,7 @@
   --paper-3:    #fbfbfd;   /* barely-there tint */
   --ink:        #0a0a0c;   /* near-black text */
   --ink-2:      #55565b;   /* secondary text */
-  --ink-3:      #86868b;   /* muted / captions */
+  --ink-3:      #6e6e73;   /* muted / captions, held at AA on paper and tint */
   --void:       #050506;   /* true-black sections */
   --void-2:     #101013;
   --studio:     #7f8387;   /* product tile bg (matches renders) */
@@ -486,7 +486,7 @@ a { color: inherit; text-decoration: none; }
 }
 .inst__cap {
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  text-transform: uppercase; color: rgba(255,255,255,0.5);
 }
 .inst__row {
   position: relative; z-index: 1;
@@ -497,7 +497,7 @@ a { color: inherit; text-decoration: none; }
 .inst__sub {
   display: block; margin-top: 4px;
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em;
-  text-transform: uppercase; color: rgba(255,255,255,0.42);
+  text-transform: uppercase; color: rgba(255,255,255,0.52);
 }
 .inst__trace { width: 100%; height: 64px; display: block; }
 .inst__val {
@@ -724,7 +724,7 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--line-dk); background: var(--void-2); color: var(--paper);
   font-family: var(--font-sans); font-size: 16px;
 }
-.signup input::placeholder { color: rgba(255,255,255,0.4); }
+.signup input::placeholder { color: rgba(255,255,255,0.5); }
 /* the border warms on any focus, but the keyboard ring survives: only a
    pointer-driven focus drops the outline */
 .signup input:focus { border-color: var(--accent); }
@@ -739,7 +739,7 @@ a { color: inherit; text-decoration: none; }
 }
 .cta__fine {
   margin: 18px 0 0; font-family: var(--font-mono); font-size: 11.5px;
-  letter-spacing: 0.06em; color: rgba(255,255,255,0.4); text-transform: uppercase;
+  letter-spacing: 0.06em; color: rgba(255,255,255,0.5); text-transform: uppercase;
 }
 
 /* ============================================================

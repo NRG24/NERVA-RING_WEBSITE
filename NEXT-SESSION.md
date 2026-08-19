@@ -1,6 +1,40 @@
 # NERVA Website — Session Handoff
 
-_Last updated: 2026-08-18. Read this first, then `memory/nerva-site-design.md`._
+_Last updated: 2026-08-19. Read this first, then `memory/nerva-site-design.md`._
+
+## 2026-08-19 polish pass (branch `claude/festive-fermi-cj74c5`)
+**Nav marks where you are.** `useActiveSection` reads geometry on scroll (last
+section whose top has passed the nav) rather than using an IntersectionObserver,
+because the sections differ wildly in height and the 340vh scrub film breaks
+ratio-based observers. It sets `aria-current` on the desktop link (rule stays
+drawn) and the mobile row (inset rule). Nothing is marked over the hero or film.
+
+**Mobile menu**: Escape closes it and returns focus to the toggle, crossing back
+above 980px closes it, and the toggle carries `aria-controls="mobile-menu"`.
+
+**Section rhythm** now varies by beat as well as by intro shape: `.section--beat`
+gives `#signals` a longer landing out of the black film, `.section--pair` pulls
+`#spec` up under the drawing so the two engineering sheets read as a pair.
+
+**Footer title block** rows now tile 4+2, 3+3, 3+3. The index and notes fields
+used to be full-width rows filled only across their left half. `.tb--index` and
+`.tb--notes` carry their own span overrides at the two breakpoints, since a row
+that fails to tile shows the container hairline as a solid cell.
+
+**Palette**: every raw hex outside `:root` is now a token (`--pulse`, `--attn`,
+`--ink-done`, `--ink-attn`, `--alert`, `--alert-2`, `--ink-lift`).
+
+**Contrast**: `--ink-3` moved `#86868b` → `#6e6e73` (3.6:1 → 5.1:1 on white,
+4.7:1 on the tint), and the 0.4/0.42 white alphas on the dark sections
+(`.inst__cap`, `.inst__sub`, `.cta__fine`, the signup placeholder) went to
+0.5/0.52. Every small label now clears WCAG AA. Keep new labels at or above
+these values.
+
+**Focus**: the email field used `outline: none` on `:focus`, which took the
+keyboard ring with it. Now only `:focus:not(:focus-visible)` drops it.
+
+**Finish selector** warms the unpicked renders after `window.load`, so swapping
+swatches no longer flashes an empty tile while a 400 kB image downloads.
 
 ## 2026-08-18 polish pass (branch `claude/festive-fermi-8r6xs4`)
 **Pillars are gone.** The dark band's three-up bordered grid was the last
