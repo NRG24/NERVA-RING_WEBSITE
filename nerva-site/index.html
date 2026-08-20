@@ -10,8 +10,14 @@
     <meta name="theme-color" content="#ffffff" />
     <title>NERVA Ring: the ring that reads your nervous system</title>
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- favicon.ico first and unsized: browsers request /favicon.ico on their own,
+         and without a real file there Pages serves index.html as text/html for it.
+         The mark is the reversed lockup (light on teal) rather than the transparent
+         one, because a dark teal mark on a dark tab strip renders as a smudge. -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="canonical" href="https://nervaring.com/" />
 
     <!-- Social sharing. NOTE: update the domain below once the real one is live.
