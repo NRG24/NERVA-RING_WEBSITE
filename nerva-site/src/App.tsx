@@ -108,13 +108,13 @@ function SignalInstrument() {
         <span className="inst__live">Dual-signal readout</span>
       </div>
       <div className="inst__row">
-        <div className="inst__name">Heart rate<span className="inst__sub">Optical PPG · SpO₂</span></div>
+        <div className="inst__name">Heart rate<span className="inst__sub"></span></div>
         <Trace d={HR_D} kind="hr" />
         <div className="inst__val">72<small>bpm</small></div>
       </div>
       <div className="inst__div" />
       <div className="inst__row">
-        <div className="inst__name">Skin conductance<span className="inst__sub">EDA · GSR</span></div>
+        <div className="inst__name">Electrodermal Activity<span className="inst__sub"></span></div>
         <Trace d={EDA_D} kind="eda" />
         <div className="inst__val">4.6<small>µS</small></div>
       </div>
@@ -526,7 +526,7 @@ function App() {
         <section className="section" id="signals">
           <div className="wrap">
             <Reveal className="lead">
-              <h2 className="display">Your electrodermal activity is a hidden direct window into your nervous system.</h2>
+              <h2 className="display">Your electrodermal activity is a hidden window into your nervous system.</h2>
             </Reveal>
 
             <Reveal>
