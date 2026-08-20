@@ -409,7 +409,7 @@ function App() {
     <>
       {/* ---------------- STATUS STRIP ---------------- */}
       <div className="strip">
-        In functional prototyping · solo-built hardware · not yet for sale
+        Functional prototype · built solo · not for sale yet
       </div>
 
       {/* ---------------- NAV ---------------- */}
@@ -474,9 +474,8 @@ function App() {
               </h1>
               <p className="hero__lede">
                 Most wearables measure your heart. NERVA Ring also reads your nervous system:
-                heart rate and blood oxygen paired with continuous skin-conductance sensing,
-                for a live view of stress, recovery, and arousal. All from a single ring no
-                bigger than a normal one.
+                heart rate and blood oxygen paired with continuous electrodermal sensing. NERVA Ring is a ring for everyone, not just athletes.
+                Its electrodermal activity-sensing technology allows for short-term and long-term stress tracking, so you can manage your stress legitimately. 
               </p>
 
               <div className="finish">
