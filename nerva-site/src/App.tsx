@@ -443,6 +443,7 @@ function Signup() {
 }
 
 const NAV = [
+  { href: '#different', label: 'What’s different' },
   { href: '#signals', label: 'Sensing' },
   { href: '#inside', label: 'Inside the ring' },
   { href: '#design', label: 'Design' },
@@ -619,6 +620,71 @@ function App() {
 
         {/* ---------------- CINEMATIC SENSOR FILM ---------------- */}
         <FilmScroll />
+
+        {/* ---------------- WHAT MAKES IT DIFFERENT ----------------
+            Not a feature grid. The difference is a mechanism, so the
+            section draws the mechanism: how far each ring has to travel
+            from a nerve to the number it puts on your screen. */}
+        <section className="section section--tint" id="different">
+          <div className="wrap">
+            <Reveal className="lead lead--split">
+              <h2 className="display">Where your stress number comes from.</h2>
+              <p className="lead__sub">
+                Every ring on the market will show you a stress score. Nearly all of them
+                build it out of your pulse. NERVA Ring reads pulse too, and then it reads
+                the signal that score is standing in for.
+              </p>
+            </Reveal>
+
+            <div className="paths">
+              <Reveal className="path path--inferred">
+                <div>
+                  <h3 className="path__h">Inferred from the heart</h3>
+                  <ol className="path__steps">
+                    <li>Heart rate</li>
+                    <li>Beat-to-beat variation</li>
+                    <li>A model</li>
+                    <li className="path__out">a stress score</li>
+                  </ol>
+                </div>
+                <p className="path__note">
+                  Beat-to-beat variation shifts with sleep, caffeine, alcohol, a cold
+                  coming on, and how hard you trained on Tuesday. Arousal is one of many
+                  hands pushing on it, so the model has to decide for you how much of
+                  today’s change was stress.
+                </p>
+              </Reveal>
+
+              <Reveal className="path path--measured" delay={90}>
+                <div>
+                  <h3 className="path__h">Measured at the skin</h3>
+                  <ol className="path__steps">
+                    <li>Sympathetic nerve</li>
+                    <li>Sweat glands</li>
+                    <li>Skin conductance</li>
+                    <li className="path__out">4.6 µS</li>
+                  </ol>
+                </div>
+                <p className="path__note">
+                  Your sympathetic nerves drive your sweat glands directly, and nothing
+                  else does. Arousal climbs, conductance climbs about a second behind it.
+                  Two dry gold electrodes on the inner band read that in microsiemens, the
+                  same unit a stress lab writes down.
+                </p>
+              </Reveal>
+            </div>
+
+            <Reveal className="caveat">
+              <p>
+                <b>The catch, since this is a build log.</b> Skin conductance is a harder
+                signal to hold onto than pulse. It drifts with temperature, it moves when
+                you move, and a finger is a small place to put two electrodes. That
+                difficulty is most of why the signal is missing from other rings, and most
+                of what the firmware in this one has to do.
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
         {/* ---------------- TWO SIGNALS ---------------- */}
         <section className="section" id="signals">

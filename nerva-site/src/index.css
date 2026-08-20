@@ -9,7 +9,8 @@
    channel, gold = the electrode channel. Neutrals are warmed off the
    usual cool grays so the paper has a temperature under them.
 
-   Type: Hanken Grotesk (display + body) + IBM Plex Mono (data labels)
+   Type: Hanken Grotesk throughout. IBM Plex Mono only for numerals that
+   carry a unit, never for word-labels.
    ============================================================ */
 
 :root {
@@ -95,18 +96,14 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
 /* ============================================================
-   EYEBROWS / DISPLAY TYPE
+   DISPLAY TYPE
+
+   Small labels are set in the sans face, sentence case, in ink dark enough
+   to read as type. Monospace is reserved for numerals carrying a unit (the
+   chart's time axis, the paper speed) where the figures want to line up.
+   Setting word-labels in tracked-out uppercase mono is the single most
+   over-used "technical product" tell going, so none of them do.
    ============================================================ */
-.eyebrow {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-.eyebrow--light { color: rgba(255, 255, 255, 0.55); }
 
 .display {
   font-weight: 800;
@@ -202,15 +199,14 @@ a { color: inherit; text-decoration: none; }
 .strip {
   background: var(--forest);
   color: rgba(214, 245, 226, 0.82);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
   text-align: center;
-  padding: 8px 16px;
-  text-transform: uppercase;
+  padding: 9px 16px;
 }
 /* the one word in the strip that is a live claim gets the LED green */
-.strip b { color: var(--sensor); font-weight: 500; }
+.strip b { color: var(--sensor); font-weight: 600; }
 
 .nav {
   position: sticky; top: 0; z-index: 60;
@@ -345,10 +341,7 @@ a { color: inherit; text-decoration: none; }
   gap: 0 40px; margin: 40px 0 0; padding-top: 28px;
   border-top: 1px solid var(--line);
 }
-.hero__meta dt {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--ink-3);
-}
+.hero__meta dt { font-size: 13px; font-weight: 500; color: var(--ink-2); }
 .hero__meta dd { margin: 6px 0 0; font-weight: 700; font-size: 17px; letter-spacing: -0.02em; }
 /* the two signals that get their own channel further down are named in that
    channel's ink here, so the color means the same thing on both screens */
@@ -364,8 +357,7 @@ a { color: inherit; text-decoration: none; }
   height: 74px; display: flex; align-items: center; gap: 22px;
 }
 .wavebar__label, .wavebar__val {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--ink-3); white-space: nowrap;
+  font-size: 13px; font-weight: 500; color: var(--ink-2); white-space: nowrap;
 }
 .wavebar__val { display: inline-flex; align-items: center; gap: 8px; }
 .wavebar__val::before {
@@ -419,14 +411,10 @@ a { color: inherit; text-decoration: none; }
   display: flex; flex-direction: column; justify-content: space-between;
   padding: clamp(20px, 4vw, 44px);
 }
-.film__tag {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: rgba(255,255,255,0.62);
-}
+.film__tag { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); }
 .film__hint {
   align-self: center; margin-top: auto;
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: rgba(255,255,255,0.82);
+  font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.88);
   display: inline-flex; align-items: center; gap: 10px;
   transition: opacity 0.2s var(--ease);
 }
@@ -453,6 +441,65 @@ a { color: inherit; text-decoration: none; }
 .section--tint { background: var(--paper-2); }
 .br-lg { display: none; }
 @media (min-width: 720px) { .br-lg { display: inline; } }
+
+/* ------------------------------------------------------------
+   THE TWO PATHS TO A STRESS NUMBER
+   Two ruled rows, not two cards: the point is a comparison of
+   distance, so each row runs the full width and the chain of steps
+   is allowed to be as long as it really is. The rule above each row
+   is in that channel's ink, and the last step of each chain carries
+   the argument typographically. One ends in an italic hedge, the
+   other in a figure with a unit on it.
+   ------------------------------------------------------------ */
+.paths { margin-top: clamp(28px, 3.6vw, 46px); }
+
+.path {
+  display: grid;
+  grid-template-columns: minmax(0, 1.24fr) minmax(0, 0.76fr);
+  gap: clamp(18px, 3vw, 46px);
+  padding: clamp(22px, 2.6vw, 30px) 0 clamp(26px, 3vw, 36px);
+  border-top: 2px solid var(--line-2);
+}
+.path--inferred { border-top-color: rgba(192, 50, 43, 0.34); }
+.path--measured { border-top-color: rgba(26, 122, 66, 0.5); }
+
+.path__h {
+  margin: 0; font-weight: 700; letter-spacing: -0.02em;
+  font-size: clamp(1.18rem, 1.05rem + 0.45vw, 1.42rem);
+}
+.path--inferred .path__h { color: var(--pulse-ink); }
+.path--measured .path__h { color: var(--green-ink); }
+
+.path__steps {
+  list-style: none; margin: 20px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  font-size: clamp(1.02rem, 0.97rem + 0.22vw, 1.11rem); line-height: 1.55;
+}
+.path__steps li { color: var(--ink-2); }
+/* the arrow leads its step rather than trailing the one before it, so a chain
+   that wraps starts the next line with the link instead of orphaning it */
+.path__steps li:not(:first-child)::before {
+  content: '\2192';
+  margin: 0 clamp(9px, 1vw, 14px);
+  color: var(--ink-3);
+}
+.path__out { font-weight: 700; }
+/* a guess, set as one */
+.path--inferred .path__out { color: var(--ink-3); font-style: italic; font-weight: 500; }
+/* a reading, with the unit still attached to it */
+.path--measured .path__out { color: var(--green-ink); font-variant-numeric: tabular-nums; }
+
+.path__note { margin: 0; color: var(--ink-2); font-size: 0.98rem; line-height: 1.62; max-width: 46ch; }
+
+/* the honest footnote, marked in the electrode channel's gold */
+.caveat {
+  margin-top: clamp(30px, 4vw, 50px);
+  padding-left: clamp(18px, 2.2vw, 28px);
+  border-left: 3px solid var(--gold);
+  max-width: 76ch;
+}
+.caveat p { margin: 0; color: var(--ink-2); font-size: 1.02rem; line-height: 1.62; }
+.caveat b { color: var(--ink); font-weight: 700; }
 
 /* ------------------------------------------------------------
    CHART-RECORDER STRIP
@@ -507,10 +554,10 @@ a { color: inherit; text-decoration: none; }
   display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
   padding-bottom: 11px;
   border-bottom: 1px solid rgba(122, 94, 52, 0.2);
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.13em;
-  text-transform: uppercase; color: rgba(74, 58, 34, 0.62);
+  font-size: 12.5px; font-weight: 500; color: rgba(74, 58, 34, 0.78);
 }
-.strip-chart__speed { flex: none; }
+/* a measurement, so it keeps the monospace figures */
+.strip-chart__speed { flex: none; font-family: var(--font-mono); font-size: 11.5px; }
 
 /* Lanes and the time axis share one key column so every tick lines up with
    the ink above it. The two channels are still not the same shape: a pulse
@@ -533,8 +580,7 @@ a { color: inherit; text-decoration: none; }
 .lane__name { display: block; font-weight: 700; font-size: 1.02rem; letter-spacing: -0.02em; color: #241a0d; }
 .lane__meta {
   display: block; margin-top: 3px;
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.075em;
-  text-transform: uppercase; color: rgba(74, 58, 34, 0.58);
+  font-size: 12.5px; color: rgba(74, 58, 34, 0.72);
 }
 .lane__val {
   margin-top: 10px; font-weight: 800; font-size: 1.46rem;
@@ -570,8 +616,7 @@ a { color: inherit; text-decoration: none; }
 /* a technician's note against the biggest rise, placed from the data */
 .lane__mark {
   position: absolute; top: 4px; z-index: 2;
-  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.07em;
-  text-transform: uppercase; color: var(--green-ink); white-space: nowrap;
+  font-size: 12px; font-style: italic; color: var(--green-ink); white-space: nowrap;
   transform: rotate(-1.1deg); transform-origin: left center;
 }
 .lane__mark::after {
@@ -662,10 +707,9 @@ a { color: inherit; text-decoration: none; }
 .bp__meta {
   display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   margin-top: 18px;
-  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--ink-3);
+  font-size: 13px; font-weight: 500; color: var(--ink-2);
 }
-.bp__rev { color: var(--ink-2); }
+.bp__rev { color: var(--ink-3); }
 
 /* ============================================================
    BUILD LEDGER
@@ -678,9 +722,7 @@ a { color: inherit; text-decoration: none; }
 .tally__seg--done { background: var(--sensor); }
 .tally__seg--wip { background: var(--gold); }
 .tally__read {
-  margin: 12px 0 0;
-  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.07em;
-  text-transform: uppercase; color: var(--ink-3);
+  margin: 12px 0 0; font-size: 13px; font-weight: 500; color: var(--ink-2);
 }
 
 .ledger {
@@ -702,10 +744,9 @@ a { color: inherit; text-decoration: none; }
 .lrow--todo .lrow__mark { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line-2); }
 .lrow__label { font-weight: 500; letter-spacing: -0.01em; }
 .lrow--todo .lrow__label { color: var(--ink-2); }
-/* plain mono type, not a pill badge */
+/* plain type, not a pill badge */
 .lrow__tag {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--ink-3);
+  font-size: 13px; font-weight: 600; color: var(--ink-3);
   white-space: nowrap;
 }
 .lrow--done .lrow__tag { color: var(--green-ink); }
@@ -745,8 +786,7 @@ a { color: inherit; text-decoration: none; }
 .signup input::placeholder { color: rgba(214, 245, 226, 0.45); }
 .signup input:focus { outline: none; border-color: var(--sensor); }
 .cta__fine {
-  margin: 18px 0 0; font-family: var(--font-mono); font-size: 11.5px;
-  letter-spacing: 0.06em; color: rgba(255,255,255,0.4); text-transform: uppercase;
+  margin: 18px 0 0; font-size: 13px; color: rgba(214, 245, 226, 0.55);
 }
 
 /* ============================================================
@@ -783,9 +823,7 @@ a { color: inherit; text-decoration: none; }
 .tb--w4 { grid-column: span 4; }
 .tb--w6 { grid-column: span 6; }
 .tb__k {
-  display: block;
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--ink-3);
+  display: block; font-size: 12.5px; font-weight: 500; color: var(--ink-2);
 }
 .tb__v {
   display: block; margin-top: 7px;
@@ -821,9 +859,7 @@ a { color: inherit; text-decoration: none; }
 
 /* stamped like the revision line on the drawing sheet above */
 .colophon__fine {
-  margin: 20px 0 0;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--ink-3);
+  margin: 20px 0 0; font-size: 12.5px; color: var(--ink-3);
 }
 
 /* ============================================================
@@ -843,8 +879,7 @@ a { color: inherit; text-decoration: none; }
 .dockbar__meta b { color: var(--ink); font-weight: 800; letter-spacing: 0.02em; }
 .dockbar__desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dockbar__stage {
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--ink-3); flex: none;
+  font-size: 13px; font-weight: 500; color: var(--ink-2); flex: none;
   padding-left: 11px; margin-left: 1px; border-left: 1px solid var(--line-2);
 }
 
@@ -860,6 +895,7 @@ a { color: inherit; text-decoration: none; }
   .hero__stage { aspect-ratio: 1 / 0.78; order: -1; }
   .hero__title { font-size: clamp(2.1rem, 6.4vw, 3rem); }
 
+  .path { grid-template-columns: 1fr; gap: 18px; }
   .sig-notes { grid-template-columns: 1fr; gap: 28px; }
   .sig-note + .sig-note { padding-left: 0; padding-top: 28px; border-left: 0; border-top: 1px solid var(--line); }
   .inside__grid { grid-template-columns: 1fr; gap: 32px; }
@@ -893,12 +929,12 @@ a { color: inherit; text-decoration: none; }
   .lane__name, .lane__meta { grid-column: 1; }
   .lane__val { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin-top: 0; font-size: 1.3rem; }
   /* the lanes below name both channels, so the head does not need to */
-  .strip-chart__head span:first-child { font-size: 0; letter-spacing: 0; }
-  .strip-chart__head span:first-child::before { content: 'Continuous strip'; font-size: 9.5px; letter-spacing: 0.1em; }
+  .strip-chart__head span:first-child { font-size: 0; }
+  .strip-chart__head span:first-child::before { content: 'Continuous strip'; font-size: 11.5px; }
   .lane--pulse .lane__trace { height: 62px; }
   .lane--eda .lane__trace { height: 82px; }
   .strip-chart__sheet { grid-template-columns: 30px minmax(0, 1fr); }
-  .strip-chart__head { font-size: 9.5px; letter-spacing: 0.1em; }
+  .strip-chart__head { font-size: 11.5px; }
   .wavebar__inner { gap: 14px; }
   .wavebar__label { display: none; }
   .titleblock { grid-template-columns: 1fr; }
