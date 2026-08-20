@@ -468,7 +468,6 @@ function App() {
             </div>
 
             <div className="hero__copy">
-              <span className="eyebrow">Smart ring · nervous-system sensing</span>
               <h1 className="hero__title">
                 The ring that reads your nervous system.
               </h1>
@@ -503,7 +502,7 @@ function App() {
               </div>
 
               <dl className="hero__meta">
-                <div><dt>Signals</dt><dd>HR · SpO₂ · EDA</dd></div>
+                <div><dt>Signals</dt><dd>HR · SpO₂ · EDA · HRV</dd></div>
                 <div><dt>Standby target</dt><dd>~1 month</dd></div>
                 <div><dt>Stage</dt><dd>Prototype</dd></div>
               </dl>
@@ -515,7 +514,7 @@ function App() {
         <div className="wavebar" aria-hidden="true">
           <div className="wavebar__inner">
             <span className="wavebar__label">EDA · skin conductance</span>
-            <EdaWave />
+
             <span className="wavebar__val">live µS</span>
           </div>
         </div>
