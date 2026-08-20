@@ -340,7 +340,6 @@ const NAV = [
   { href: '#signals', label: 'Sensing' },
   { href: '#inside', label: 'Inside the ring' },
   { href: '#design', label: 'Design' },
-  { href: '#spec', label: 'Hardware' },
   { href: '#status', label: 'Build status' },
 ]
 
@@ -367,16 +366,6 @@ const INSIDE = [
     title: '2-pin pogo dock',
     body: 'Charges on a standard 2-pin dock, with circuit protection against sweat bridging the contacts. It is the approach used across the smart-ring industry.',
   },
-]
-
-const SPECS = [
-  { k: 'Power management', sub: 'PMIC', v: <>One <b>BQ25120A</b> IC handles the 1.8 V rail for the MCU, a switched 3.3 V rail for sensors, plus battery charging, monitoring, and load-switching.</> },
-  { k: 'Stress sensing', sub: 'GSR AFE', v: <>Custom transimpedance-amplifier circuit on a dual op-amp, tuned for the low-current, low-noise range of skin conductance.</> },
-  { k: 'Optical sensor', sub: 'HR / SpO₂', v: <><b>MAX30102-class</b> sensor run in a custom low-power polling mode instead of its stock always-on mode, to stretch battery life.</> },
-  { k: 'LED drive', sub: 'Boost', v: <>A boost converter (evaluating TI <b>TPS61240</b>) steps up to ~5 V for the green LED, which needs more headroom than the red / IR channels.</> },
-  { k: 'Microcontroller', sub: 'MCU', v: <>Low-power, BLE-capable MCU. Final part still TBD, with leading candidates in the <b>nRF52-class</b> family.</> },
-  { k: 'Mechanical', sub: 'Housing', v: <>Custom Fusion 360 housing with the flex PCB wrapped to the inner circumference. Cast-resin prototype shell; production material not yet finalized.</> },
-  { k: 'Battery', sub: 'Cell', v: <><b>22 mAh</b> cell, sized to fit within the ring band.</> },
 ]
 
 const LEDGER = [
@@ -609,37 +598,6 @@ function App() {
                 <span>NERVA Ring · housing + flex-PCB assembly</span>
                 <span className="bp__rev">Sketch · Rev 5 · Sheet 1/1</span>
               </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ---------------- DATASHEET ---------------- */}
-        <section className="section" id="spec">
-          <div className="wrap">
-            <Reveal className="lead lead--tight">
-              <h2 className="display">Every part, and why it is there.</h2>
-            </Reveal>
-
-            <Reveal>
-              <div className="datasheet">
-                <div className="datasheet__bar">
-                  <span>NERVA Ring · rev. prototype</span>
-                  <span className="ds-mono">flex-PCB / resin-potted</span>
-                </div>
-                {SPECS.map((s) => (
-                  <div className="drow" key={s.k}>
-                    <div className="drow__k">
-                      {s.k}
-                      <small>{s.sub}</small>
-                    </div>
-                    <div className="drow__v">{s.v}</div>
-                  </div>
-                ))}
-              </div>
-              <p className="datasheet__foot">
-                Part choices reflect where the design stands today. Anything still marked TBD is
-                open, and this table will drift as the boards come back.
-              </p>
             </Reveal>
           </div>
         </section>
