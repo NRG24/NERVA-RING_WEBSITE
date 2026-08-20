@@ -108,13 +108,13 @@ function SignalInstrument() {
         <span className="inst__live">Dual-signal readout</span>
       </div>
       <div className="inst__row">
-        <div className="inst__name">Heart rate<span className="inst__sub">Optical PPG · SpO₂</span></div>
+        <div className="inst__name">Heart rate<span className="inst__sub"></span></div>
         <Trace d={HR_D} kind="hr" />
         <div className="inst__val">72<small>bpm</small></div>
       </div>
       <div className="inst__div" />
       <div className="inst__row">
-        <div className="inst__name">Skin conductance<span className="inst__sub">EDA · GSR</span></div>
+        <div className="inst__name">Electrodermal Activity<span className="inst__sub"></span></div>
         <Trace d={EDA_D} kind="eda" />
         <div className="inst__val">4.6<small>µS</small></div>
       </div>
@@ -352,7 +352,7 @@ const FINISHES = [
 const INSIDE = [
   {
     title: 'Heart rate & SpO₂',
-    body: 'A MAX30102-class PPG sensor reads pulse and blood oxygen straight from the finger, one of the most vascularized, signal-rich sites on the body.',
+    body: 'A MAXM86161-class PPG sensor reads pulse and blood oxygen straight from the finger, one of the most vascularized, signal-rich sites on the body.',
   },
   {
     title: 'Continuous stress (GSR)',
@@ -398,7 +398,7 @@ function App() {
     <>
       {/* ---------------- STATUS STRIP ---------------- */}
       <div className="strip">
-        In functional prototyping · solo-built hardware · not yet for sale
+        Functional prototype · built solo · not for sale yet
       </div>
 
       {/* ---------------- NAV ---------------- */}
@@ -457,15 +457,13 @@ function App() {
             </div>
 
             <div className="hero__copy">
-              <span className="eyebrow">Smart ring · nervous-system sensing</span>
               <h1 className="hero__title">
                 The ring that reads your nervous system.
               </h1>
               <p className="hero__lede">
-                Most wearables measure your heart. NERVA Ring also reads your nervous system:
-                heart rate and blood oxygen paired with continuous skin-conductance sensing,
-                for a live view of stress, recovery, and arousal. All from a single ring no
-                bigger than a normal one.
+                Most wearables measure your heart. NERVA Ring also reads your nervous system, 
+                pairing heart rate and blood oxygen with continuous electrodermal sensing. 
+                Designed for everyone, not just athletes, NERVA Ring tracks stress short- and long-term, helping you actually manage it.
               </p>
 
               <div className="finish">
@@ -493,7 +491,7 @@ function App() {
               </div>
 
               <dl className="hero__meta">
-                <div><dt>Signals</dt><dd>HR · SpO₂ · EDA</dd></div>
+                <div><dt>Signals</dt><dd>HR · SpO₂ · EDA · HRV</dd></div>
                 <div><dt>Standby target</dt><dd>~1 month</dd></div>
                 <div><dt>Stage</dt><dd>Prototype</dd></div>
               </dl>
@@ -517,7 +515,7 @@ function App() {
         <section className="section" id="signals">
           <div className="wrap">
             <Reveal className="lead">
-              <h2 className="display">Your pulse leaves out the stress.</h2>
+              <h2 className="display">Your electrodermal activity is a hidden window into your nervous system.</h2>
             </Reveal>
 
             <Reveal>
