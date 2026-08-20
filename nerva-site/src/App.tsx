@@ -59,23 +59,92 @@ function EdaWave() {
   )
 }
 
-/* ---------- dual-signal instrument readout ---------- */
-function ppgPath() {
-  let d = 'M0 40'
-  for (let x = 0; x < 1000; x += 125) {
+/* ---------- chart-recorder strip ----------
+   Both traces are generated rather than drawn by hand, because the thing
+   that makes a real recording look real is that it never repeats. A tiled
+   waveform is the giveaway. Seeded so every render is the same sheet. */
+const SPAN = 1000        // svg user units across the strip
+const WINDOW_S = 14      // seconds of record the strip holds
+
+function rng(seed: number) {
+  let s = seed >>> 0
+  return () => {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0
+    return s / 4294967296
+  }
+}
+
+/* PPG pulse. The beat-to-beat interval moves a few percent either way,
+   which is not decoration: that variation IS the HRV the ring reports. */
+function pulsePath(mid = 60) {
+  const r = rng(7)
+  const beat = (SPAN / WINDOW_S) * (60 / 72)   // 72 bpm at this paper speed
+  let d = `M0 ${mid}`
+  let x = 0
+  while (x < SPAN) {
+    const rr = beat * (0.88 + r() * 0.24)
+    const a = 0.86 + r() * 0.28                // and no two beats are the same height
+    const foot = x + rr * 0.24
+    const peak = x + rr * 0.36
+    const dip = x + rr * 0.53
+    const notch = x + rr * 0.69
+    const end = x + rr
+    const yUp = mid - 40 * a
+    const yDip = mid + 13 * a
+    const yNotch = mid - 11 * a
+    const f = (n: number) => n.toFixed(1)
     d +=
-      ` L${x + 34} 40` +
-      ` C${x + 42} 40 ${x + 46} 9 ${x + 54} 10` +   // systolic upstroke
-      ` C${x + 62} 11 ${x + 66} 52 ${x + 74} 50` +  // dip below baseline
-      ` C${x + 82} 49 ${x + 88} 33 ${x + 96} 35` +  // dicrotic bump
-      ` C${x + 104} 37 ${x + 110} 40 ${x + 125} 40` // back to baseline
+      ` L${f(foot)} ${mid}` +
+      ` C${f(foot + rr * 0.04)} ${mid} ${f(peak - rr * 0.04)} ${f(yUp)} ${f(peak)} ${f(yUp)}` +
+      ` C${f(peak + rr * 0.05)} ${f(yUp)} ${f(dip - rr * 0.05)} ${f(yDip)} ${f(dip)} ${f(yDip)}` +
+      ` C${f(dip + rr * 0.05)} ${f(yDip)} ${f(notch - rr * 0.05)} ${f(yNotch)} ${f(notch)} ${f(yNotch)}` +
+      ` C${f(notch + rr * 0.06)} ${f(yNotch)} ${f(end - rr * 0.1)} ${mid} ${f(end)} ${mid}`
+    x = end
   }
   return d
 }
-const HR_D = ppgPath()
-const EDA_D =
-  'M0 42 L140 42 C210 42 232 23 300 23 C360 23 382 42 460 42 ' +
-  'L560 42 C620 42 642 15 710 15 C762 15 784 42 862 42 L1000 40'
+
+/* Skin conductance: a slow tonic climb with phasic responses on top. Each
+   response rises fast and decays slowly, which is the asymmetry that makes
+   an EDA trace look like EDA and not like a sine wave. */
+function edaTrace(rest = 110) {
+  const r = rng(23)
+  const bursts: { at: number; amp: number }[] = []
+  let x = 70
+  /* stop early enough that the last response still has room to peak and
+     start decaying before the paper is cut */
+  while (x < SPAN - 130) {
+    bursts.push({ at: x, amp: 22 + r() * 42 })
+    x += 115 + r() * 175
+  }
+  const pts: string[] = []
+  for (let px = 0; px <= SPAN; px += 4) {
+    let y = rest - 5 * Math.sin(px / 240) - px * 0.013   // tonic drift
+    for (const b of bursts) {
+      const t = px - b.at
+      if (t < 0) continue
+      y -= b.amp * (1 - Math.exp(-t / 13)) * Math.exp(-t / 72) * 1.72
+    }
+    pts.push(`${px} ${Math.max(16, y).toFixed(1)}`)
+  }
+  const biggest = bursts.reduce((m, b) => (b.amp > m.amp ? b : m), bursts[0])
+  return {
+    d: 'M' + pts.join(' L'),
+    /* the note hangs over the peak of the largest response, which lands a
+       little after its onset, so its position comes out of the data */
+    markPct: ((biggest.at + 26) / SPAN) * 100,
+  }
+}
+
+const PULSE_D = pulsePath()
+const EDA = edaTrace()
+
+/* a tick per second, labelled every fifth */
+const TICKS = Array.from({ length: WINDOW_S + 1 }, (_, s) => ({
+  s,
+  pct: (s / WINDOW_S) * 100,
+  major: s % 5 === 0,
+}))
 
 function HeartIcon() {
   return (
@@ -92,33 +161,70 @@ function NerveIcon() {
   )
 }
 
-function Trace({ d, kind }: { d: string; kind: 'hr' | 'eda' }) {
-  return (
-    <svg className="inst__trace" viewBox="0 0 1000 64" preserveAspectRatio="none" aria-hidden="true">
-      <path className="trace-base" d={d} />
-      <path className={`trace-live trace-live--${kind}`} d={d} />
-    </svg>
-  )
-}
-
 function SignalInstrument() {
   return (
-    <div className="instrument" role="img" aria-label="A live-style readout showing a fast pulsatile heart-rate trace above a slow-drifting skin-conductance trace.">
-      <div className="inst__head">
-        <span className="inst__live">Dual-signal readout</span>
+    <figure
+      className="strip-chart"
+      role="img"
+      aria-label="A paper chart recording of two channels. The upper channel is a pulse trace at about 72 beats per minute, with the interval between beats varying slightly. The lower channel is skin conductance around 4.6 microsiemens, drifting slowly upward with several sharp rises that decay away, the largest of them marked as a spontaneous skin-conductance response."
+    >
+      <div className="strip-chart__sheet">
+        <div className="strip-chart__margin" aria-hidden="true" />
+
+        <div className="strip-chart__body">
+          <div className="strip-chart__head">
+            <span>Continuous strip · pulse + skin conductance</span>
+            <span className="strip-chart__speed">25 mm/s</span>
+          </div>
+
+          <div className="lane lane--pulse">
+            <div className="lane__key">
+              <span className="lane__name">Pulse</span>
+              <span className="lane__meta">PPG · 530 + 660 nm</span>
+              <div className="lane__val">72<small>bpm</small></div>
+            </div>
+            <div className="lane__field">
+              <svg className="lane__trace" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">
+                <path className="chart-rest" d="M0 60 L1000 60" />
+                <path className="chart-ink chart-ink--pulse" pathLength={1} d={PULSE_D} />
+              </svg>
+            </div>
+          </div>
+
+          <div className="lane lane--eda">
+            <div className="lane__key">
+              <span className="lane__name">Electrodermal activity</span>
+              <span className="lane__meta">GSR · 2 gold electrodes</span>
+              <div className="lane__val">4.6<small>µS</small></div>
+            </div>
+            <div className="lane__field">
+              <span className="lane__mark" style={{ left: `${EDA.markPct}%` }}>
+                spontaneous SCR
+              </span>
+              <svg className="lane__trace" viewBox="0 0 1000 130" preserveAspectRatio="none" aria-hidden="true">
+                <path className="chart-rest" d="M0 110 L1000 110" />
+                <path className="chart-ink chart-ink--eda" pathLength={1} d={EDA.d} />
+              </svg>
+            </div>
+          </div>
+
+          <div className="strip-chart__foot" aria-hidden="true">
+            <div />
+            <div className="strip-chart__time">
+              {TICKS.map((t) => (
+                <span
+                  key={t.s}
+                  className={`tick ${t.major ? 'tick--major' : ''}`}
+                  style={{ left: `${t.pct}%` }}
+                >
+                  {t.major && <i>{t.s}s</i>}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="inst__row">
-        <div className="inst__name">Heart rate<span className="inst__sub"></span></div>
-        <Trace d={HR_D} kind="hr" />
-        <div className="inst__val">72<small>bpm</small></div>
-      </div>
-      <div className="inst__div" />
-      <div className="inst__row">
-        <div className="inst__name">Electrodermal Activity<span className="inst__sub"></span></div>
-        <Trace d={EDA_D} kind="eda" />
-        <div className="inst__val">4.6<small>µS</small></div>
-      </div>
-    </div>
+    </figure>
   )
 }
 
@@ -398,7 +504,7 @@ function App() {
     <>
       {/* ---------------- STATUS STRIP ---------------- */}
       <div className="strip">
-        Functional prototype · built solo · not for sale yet
+        <b>Functional prototype</b> · built solo · not for sale yet
       </div>
 
       {/* ---------------- NAV ---------------- */}
@@ -491,7 +597,10 @@ function App() {
               </div>
 
               <dl className="hero__meta">
-                <div><dt>Signals</dt><dd>HR · SpO₂ · EDA · HRV</dd></div>
+                <div>
+                  <dt>Signals</dt>
+                  <dd><span className="sig-hr">HR</span> · SpO₂ · <span className="sig-eda">EDA</span> · HRV</dd>
+                </div>
                 <div><dt>Standby target</dt><dd>~1 month</dd></div>
                 <div><dt>Stage</dt><dd>Prototype</dd></div>
               </dl>

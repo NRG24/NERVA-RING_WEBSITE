@@ -1,29 +1,47 @@
 /* ============================================================
    NERVA Ring · Ultrahuman-inspired product page
-   Palette: white paper, near-black ink, studio-gray product tiles,
-   true-black feature sections, one disciplined signal-blue accent.
+
+   Color comes from the hardware, not from a mood board. The ring
+   emits 530 nm green and 660 nm red through the band and reads skin
+   through gold-plated electrodes, so green / red / gold are the only
+   three chromatic families on the page, and each one always means the
+   same thing: green = the ring and its sensing, red = the pulse
+   channel, gold = the electrode channel. Neutrals are warmed off the
+   usual cool grays so the paper has a temperature under them.
+
    Type: Hanken Grotesk (display + body) + IBM Plex Mono (data labels)
    ============================================================ */
 
 :root {
   --paper:      #ffffff;
-  --paper-2:    #f5f5f7;   /* Apple cool gray section */
-  --paper-3:    #fbfbfd;   /* barely-there tint */
+  --paper-2:    #f2efe8;   /* warm bone section tint */
+  --paper-3:    #faf7f1;   /* barely-there tint */
   --ink:        #0a0a0c;   /* near-black text */
   --ink-2:      #55565b;   /* secondary text */
   --ink-3:      #86868b;   /* muted / captions */
   --void:       #050506;   /* true-black sections */
   --void-2:     #101013;
+  --forest:     #06251a;   /* deep green-black, the CTA ground */
   --studio:     #7f8387;   /* product tile bg (matches renders) */
   --line:       rgba(11, 11, 13, 0.08);
   --line-2:     rgba(11, 11, 13, 0.14);
   --line-dk:    rgba(255, 255, 255, 0.11);
 
-  --accent:     #0071e3;   /* Apple blue, CTAs only */
-  --accent-ink: #ffffff;
-  --accent-dk:  #0077ed;
+  /* ---- the three signal families ---- */
+  --sensor:     #30d158;   /* the green LED itself, live indicators only */
+  --green-ink:  #1a7a42;   /* same hue, dark enough to set type in */
+  --pulse:      #ff5c57;   /* the red LED, on dark grounds only */
+  --pulse-ink:  #c0322b;   /* same hue for ink on paper */
+  --gold:       #d9a021;   /* the gold-plated GSR electrodes */
+  --gold-ink:   #8a5f12;   /* dark enough to set type in */
 
-  --sensor:     #30d158;   /* the green sensor LED, live accent only */
+  --accent:     #10743c;   /* deep signal green, CTAs */
+  --accent-ink: #ffffff;
+  --accent-dk:  #0c6033;
+
+  /* ---- chart-recorder sheet ---- */
+  --chart-paper: #f7f0e3;
+  --chart-edge:  #e8dcc6;
 
   --shadow-sm:  0 1px 2px rgba(10,10,12,0.05), 0 6px 16px rgba(10,10,12,0.05);
   --shadow-md:  0 2px 6px rgba(10,10,12,0.05), 0 18px 48px rgba(10,10,12,0.09);
@@ -159,7 +177,7 @@ a { color: inherit; text-decoration: none; }
 /* the lift belongs to a pointer. On a touchscreen there is nothing to un-hover,
    so a tapped button would keep the raised state until you tapped elsewhere. */
 @media (hover: hover) {
-  .btn--accent:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(0,113,227,0.32); }
+  .btn--accent:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(16,116,60,0.34); }
   .btn--accent:active { transform: translateY(0); }
   .btn--dark:hover { background: #26262b; transform: translateY(-1px); }
   .btn--ghost:hover { border-color: var(--ink); background: rgba(11,11,13,0.03); }
@@ -169,10 +187,10 @@ a { color: inherit; text-decoration: none; }
 /* round targets keep a round focus ring */
 .swatch:focus-visible, .brand__mark:focus-visible { border-radius: 50%; outline-offset: 4px; }
 .btn:focus-visible { border-radius: 999px; }
-/* dark sections: the blue ring loses contrast on black, so lift it off a white halo */
+/* dark sections: the deep green ring loses contrast on black, so lift it off a white halo */
 .inside :focus-visible, .cta :focus-visible, .film :focus-visible {
   outline-color: var(--paper);
-  box-shadow: 0 0 0 5px rgba(0, 113, 227, 0.55);
+  box-shadow: 0 0 0 5px rgba(48, 209, 88, 0.6);
 }
 
 /* the sticky nav must not sit on top of whatever you jumped to */
@@ -182,8 +200,8 @@ a { color: inherit; text-decoration: none; }
    STATUS STRIP + NAV
    ============================================================ */
 .strip {
-  background: var(--void);
-  color: rgba(255, 255, 255, 0.72);
+  background: var(--forest);
+  color: rgba(214, 245, 226, 0.82);
   font-family: var(--font-mono);
   font-size: 11.5px;
   letter-spacing: 0.06em;
@@ -191,6 +209,8 @@ a { color: inherit; text-decoration: none; }
   padding: 8px 16px;
   text-transform: uppercase;
 }
+/* the one word in the strip that is a live claim gets the LED green */
+.strip b { color: var(--sensor); font-weight: 500; }
 
 .nav {
   position: sticky; top: 0; z-index: 60;
@@ -248,7 +268,12 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
    HERO
    ============================================================ */
-.hero { padding: clamp(36px, 4vw, 76px) 0 clamp(52px, 6vw, 96px); }
+/* the first screen opens on warm stock rather than white, so the page has a
+   temperature before you reach any of the accents */
+.hero {
+  background: var(--paper-2);
+  padding: clamp(36px, 4vw, 76px) 0 clamp(52px, 6vw, 96px);
+}
 .hero__grid {
   max-width: var(--wrap); margin: 0 auto; padding: 0 28px;
   display: grid; grid-template-columns: 1.02fr 0.98fr; gap: clamp(28px, 4vw, 68px);
@@ -325,11 +350,15 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase; color: var(--ink-3);
 }
 .hero__meta dd { margin: 6px 0 0; font-weight: 700; font-size: 17px; letter-spacing: -0.02em; }
+/* the two signals that get their own channel further down are named in that
+   channel's ink here, so the color means the same thing on both screens */
+.sig-hr { color: var(--pulse-ink); }
+.sig-eda { color: var(--green-ink); }
 
 /* ============================================================
    EDA WAVE STRIP
    ============================================================ */
-.wavebar { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper-2); }
+.wavebar { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper); }
 .wavebar__inner {
   max-width: var(--wrap); margin: 0 auto; padding: 0 28px;
   height: 74px; display: flex; align-items: center; gap: 22px;
@@ -350,7 +379,7 @@ a { color: inherit; text-decoration: none; }
   100% { box-shadow: 0 0 0 0 rgba(53, 217, 74, 0); }
 }
 .wavebar__svg { flex: 1; height: 46px; min-width: 0; }
-.wave-path { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.6; }
+.wave-path { fill: none; stroke: var(--green-ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.5; }
 .wave-dash {
   stroke: var(--sensor); stroke-width: 1.8;
   stroke-dasharray: 90 1000; stroke-dashoffset: 1090;
@@ -425,66 +454,143 @@ a { color: inherit; text-decoration: none; }
 .br-lg { display: none; }
 @media (min-width: 720px) { .br-lg { display: inline; } }
 
-/* dual-signal instrument readout */
-.instrument {
-  position: relative; overflow: hidden;
-  background: radial-gradient(140% 120% at 20% 0%, #191a1f 0%, #0a0b0d 55%, #050506 100%);
-  border-radius: var(--radius-lg);
-  padding: clamp(22px, 2.6vw, 40px) clamp(22px, 2.8vw, 44px);
-  box-shadow: var(--shadow-lg);
+/* ------------------------------------------------------------
+   CHART-RECORDER STRIP
+   Pulse and skin conductance are the two channels a polygraph
+   writes, which is what this ring is, so the readout is drawn the
+   way a polygraph draws it: ink on a warm paper strip torn off a
+   roll. No dark panel, no oscilloscope grid, no neon. Nothing here
+   claims to be live, so nothing loops; the pen lays each trace down
+   once, when you reach it, and then it is a record.
+   ------------------------------------------------------------ */
+.strip-chart {
+  margin: 0;
+  /* a sheet someone set down on the page, not a UI panel snapped to it */
+  transform: rotate(-0.35deg);
+  filter:
+    drop-shadow(0 2px 3px rgba(10, 10, 12, 0.10))
+    drop-shadow(0 24px 42px rgba(10, 10, 12, 0.14));
 }
-/* faint oscilloscope grid, faded at the edges */
-.instrument::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.6;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
-  background-size: 44px 44px;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-}
-.inst__head {
-  position: relative; z-index: 1;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  margin-bottom: 6px;
-}
-.inst__live {
-  display: inline-flex; align-items: center; gap: 9px;
-  font-weight: 600; font-size: 13.5px; color: rgba(255,255,255,0.82); letter-spacing: -0.01em;
-}
-.inst__row {
-  position: relative; z-index: 1;
-  display: grid; grid-template-columns: 168px 1fr 92px; align-items: center; gap: 22px;
-  padding: 20px 0;
-}
-.inst__name { color: #fff; font-weight: 700; font-size: 1.06rem; letter-spacing: -0.02em; }
-.inst__sub {
-  display: block; margin-top: 4px;
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em;
-  text-transform: uppercase; color: rgba(255,255,255,0.42);
-}
-.inst__trace { width: 100%; height: 64px; display: block; }
-.inst__val {
-  text-align: right; color: #fff; font-weight: 700; font-size: 1.7rem;
-  letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1;
-}
-.inst__val small {
-  display: block; margin-top: 4px; font-size: 11px; font-weight: 500;
-  letter-spacing: 0.04em; color: rgba(255,255,255,0.5);
-}
-.inst__div { height: 1px; background: var(--line-dk); position: relative; z-index: 1; }
 
-.trace-base { fill: none; stroke: rgba(255,255,255,0.16); stroke-width: 1.4; }
-.trace-live {
-  fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round;
-  filter: drop-shadow(0 0 5px currentColor);
-  stroke-dasharray: 150 2000; stroke-dashoffset: 2150;
+.strip-chart__sheet {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  /* paper corners are cut, not rounded to 32px like a dashboard card */
+  border-radius: 2px;
+  background-color: var(--chart-paper);
+  /* uneven stock, lit from the top left. Deliberately not a grid. */
+  background-image:
+    radial-gradient(120% 84% at 10% -10%, rgba(255, 255, 255, 0.75), transparent 62%),
+    radial-gradient(94% 70% at 92% 108%, rgba(178, 138, 78, 0.13), transparent 66%);
 }
-.trace-live--hr  { stroke: #ff5c57; color: #ff5c57; animation: sweep 3s linear infinite; }
-.trace-live--eda { stroke: var(--sensor); color: var(--sensor); animation: sweep 5.4s linear infinite; }
-@keyframes sweep { to { stroke-dashoffset: 0; } }
+
+/* the tear-off strip down the left edge of continuous chart paper */
+.strip-chart__margin {
+  position: relative;
+  border-right: 1px dashed rgba(122, 94, 52, 0.34);
+}
+.strip-chart__margin::before {
+  content: '';
+  position: absolute; left: 50%; top: 22px; bottom: 22px;
+  width: 8px; transform: translateX(-50%);
+  background-image: radial-gradient(circle at 50% 4px, rgba(120, 95, 55, 0.34) 0 3.2px, transparent 3.6px);
+  background-size: 8px 27px;
+  background-repeat: repeat-y;
+}
+
+.strip-chart__body {
+  min-width: 0;
+  padding: 18px clamp(18px, 2.4vw, 32px) 16px clamp(15px, 1.8vw, 24px);
+}
+
+.strip-chart__head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid rgba(122, 94, 52, 0.2);
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.13em;
+  text-transform: uppercase; color: rgba(74, 58, 34, 0.62);
+}
+.strip-chart__speed { flex: none; }
+
+/* Lanes and the time axis share one key column so every tick lines up with
+   the ink above it. The two channels are still not the same shape: a pulse
+   channel is short and dense, an EDA channel is tall and slow. */
+.lane, .strip-chart__foot {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: clamp(12px, 1.8vw, 22px);
+}
+.lane { position: relative; align-items: center; padding: 15px 0; }
+.lane__field { position: relative; min-width: 0; }
+
+/* a rule that stops short of the right edge, the way a ruled sheet does */
+.lane + .lane::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 21%; height: 1px;
+  background: rgba(122, 94, 52, 0.22);
+}
+
+.lane__key { min-width: 0; }
+.lane__name { display: block; font-weight: 700; font-size: 1.02rem; letter-spacing: -0.02em; color: #241a0d; }
+.lane__meta {
+  display: block; margin-top: 3px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.075em;
+  text-transform: uppercase; color: rgba(74, 58, 34, 0.58);
+}
+.lane__val {
+  margin-top: 10px; font-weight: 800; font-size: 1.46rem;
+  letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums;
+}
+.lane__val small { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; margin-left: 4px; }
+.lane--pulse .lane__val { color: var(--pulse-ink); }
+.lane--eda   .lane__val { color: var(--green-ink); }
+
+.lane__trace { width: 100%; display: block; }
+.lane--pulse .lane__trace { height: 76px; }
+.lane--eda   .lane__trace { height: 104px; }
+
+/* where the pen rests when the channel is flat */
+.chart-rest { fill: none; stroke: rgba(122, 94, 52, 0.3); stroke-width: 1; stroke-dasharray: 2 6; }
+.chart-ink { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.chart-ink--pulse { stroke: var(--pulse-ink); stroke-width: 1.9; }
+.chart-ink--eda   { stroke: var(--green-ink); stroke-width: 2.2; }
+
+/* one-shot pen stroke, keyed off the section reveal. pathLength="1" on the
+   path normalizes the dash math so it works whatever the geometry is. */
+.chart-ink { stroke-dasharray: 1; stroke-dashoffset: 1; }
+/* linear, not eased: the paper leaves the recorder at a constant speed, which
+   is the whole meaning of the 25 mm/s in the header */
+.reveal.in .chart-ink { animation: penDraw 1.9s linear forwards; }
+.reveal.in .chart-ink--eda { animation-duration: 2.2s; animation-delay: 0.12s; }
+@keyframes penDraw { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  .trace-live { animation: none !important; stroke-dasharray: none; stroke-dashoffset: 0; }
+  .chart-ink { stroke-dasharray: none; stroke-dashoffset: 0; }
+  .reveal.in .chart-ink { animation: none; }
+}
+
+/* a technician's note against the biggest rise, placed from the data */
+.lane__mark {
+  position: absolute; top: 4px; z-index: 2;
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.07em;
+  text-transform: uppercase; color: var(--green-ink); white-space: nowrap;
+  transform: rotate(-1.1deg); transform-origin: left center;
+}
+.lane__mark::after {
+  content: ''; position: absolute; left: 5px; top: 100%;
+  width: 1px; height: 15px; background: currentColor; opacity: 0.45;
+}
+
+/* time axis: a tick per second, labelled every fifth. The strip ends mid
+   interval because it was cut off a longer roll. */
+.strip-chart__time {
+  position: relative; height: 25px; margin-top: 2px;
+  border-top: 1px solid rgba(122, 94, 52, 0.22);
+}
+.tick { position: absolute; top: 0; width: 1px; height: 4px; background: rgba(122, 94, 52, 0.42); }
+.tick--major { height: 8px; background: rgba(122, 94, 52, 0.62); }
+.tick i {
+  position: absolute; left: 0; top: 11px; transform: translateX(-50%);
+  font-family: var(--font-mono); font-style: normal; font-size: 9.5px;
+  letter-spacing: 0.07em; color: rgba(74, 58, 34, 0.58);
 }
 
 /* editorial signal notes (no cards, no chips) */
@@ -497,7 +603,11 @@ a { color: inherit; text-decoration: none; }
   margin: 0; font-weight: 700; font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
   letter-spacing: -0.02em; display: flex; align-items: center; gap: 11px;
 }
-.sig-note__icon { width: 20px; height: 20px; flex: none; color: var(--ink); }
+/* each note is marked in its own channel's ink, the same two colors the
+   strip above writes in, so the pairing reads without a legend */
+.sig-note__icon { width: 20px; height: 20px; flex: none; }
+.sig-note--hr  .sig-note__icon { color: var(--pulse-ink); }
+.sig-note--eda .sig-note__icon { color: var(--green-ink); }
 .sig-note p { margin: 14px 0 0; color: var(--ink-2); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; }
 .sig-note b { color: var(--ink); font-weight: 700; }
 
@@ -535,16 +645,19 @@ a { color: inherit; text-decoration: none; }
    BLUEPRINT / ENGINEERING DRAWING
    ============================================================ */
 .bp__frame {
-  background: #fff;
+  background: #f6f2e7;   /* vellum, not printer white */
   border: 1px solid var(--line);
   border-radius: 14px;
   box-shadow: var(--shadow-md);
   padding: clamp(10px, 1.6vw, 24px);
   overflow: hidden;
 }
+/* the sheet is black line art on a white field, so multiplying it drops the
+   white out and prints the linework straight onto the vellum above */
 .bp__frame img {
   width: 100%; height: auto; display: block;
   border-radius: 4px;
+  mix-blend-mode: multiply;
 }
 .bp__meta {
   display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
@@ -563,7 +676,7 @@ a { color: inherit; text-decoration: none; }
 .tally__bar { display: flex; gap: 4px; }
 .tally__seg { height: 5px; flex: 1; border-radius: 2px; background: var(--line-2); }
 .tally__seg--done { background: var(--sensor); }
-.tally__seg--wip { background: #ffb020; }
+.tally__seg--wip { background: var(--gold); }
 .tally__read {
   margin: 12px 0 0;
   font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.07em;
@@ -585,7 +698,7 @@ a { color: inherit; text-decoration: none; }
   width: 15px; height: 15px; border-radius: 50%; justify-self: center;
 }
 .lrow--done .lrow__mark { background: var(--sensor); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
-.lrow--wip .lrow__mark { background: #ffb020; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
+.lrow--wip .lrow__mark { background: var(--gold); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
 .lrow--todo .lrow__mark { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line-2); }
 .lrow__label { font-weight: 500; letter-spacing: -0.01em; }
 .lrow--todo .lrow__label { color: var(--ink-2); }
@@ -595,13 +708,21 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase; color: var(--ink-3);
   white-space: nowrap;
 }
-.lrow--done .lrow__tag { color: #1a7a2e; }
-.lrow--wip .lrow__tag { color: #9a6300; }
+.lrow--done .lrow__tag { color: var(--green-ink); }
+.lrow--wip .lrow__tag { color: var(--gold-ink); }
 
 /* ============================================================
    CTA
    ============================================================ */
-.cta { background: var(--void); color: var(--paper); padding: clamp(72px, 9vw, 130px) 0; }
+/* the one section that asks for something gets its own ground: a deep
+   green-black, so it is not a third identical black band */
+.cta { background: var(--forest); color: var(--paper); padding: clamp(72px, 9vw, 130px) 0; }
+/* the deep-green button vanishes into the deep-green ground, so on this
+   one section the CTA switches to the LED green with dark type on it */
+.cta .btn--accent { background: var(--sensor); color: #04231a; }
+@media (hover: hover) {
+  .cta .btn--accent:hover { background: #4ade74; box-shadow: 0 8px 22px rgba(48, 209, 88, 0.28); }
+}
 .cta__inner { max-width: 720px; }
 .cta__lede { margin: 22px 0 0; color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 52ch; }
 
@@ -617,11 +738,12 @@ a { color: inherit; text-decoration: none; }
 .signup input {
   flex: 1; min-width: 0;
   padding: 15px 18px; border-radius: 999px;
-  border: 1px solid var(--line-dk); background: var(--void-2); color: var(--paper);
+  /* a well sunk into the green ground, not a black hole cut out of it */
+  border: 1px solid rgba(160, 220, 185, 0.22); background: rgba(0, 0, 0, 0.24); color: var(--paper);
   font-family: var(--font-sans); font-size: 16px;
 }
-.signup input::placeholder { color: rgba(255,255,255,0.4); }
-.signup input:focus { outline: none; border-color: var(--accent); }
+.signup input::placeholder { color: rgba(214, 245, 226, 0.45); }
+.signup input:focus { outline: none; border-color: var(--sensor); }
 .cta__fine {
   margin: 18px 0 0; font-family: var(--font-mono); font-size: 11.5px;
   letter-spacing: 0.06em; color: rgba(255,255,255,0.4); text-transform: uppercase;
@@ -631,7 +753,9 @@ a { color: inherit; text-decoration: none; }
    FOOTER — read as the title block of an engineering drawing,
    the same convention the blueprint sheet above already uses.
    ============================================================ */
-.colophon { background: var(--paper); padding: clamp(52px, 6vw, 84px) 0 44px; }
+/* warm stock again, so the white cells of the title block read as a drawing
+   sheet set down on a desk rather than as a table drawn on the page */
+.colophon { background: var(--paper-2); padding: clamp(52px, 6vw, 84px) 0 44px; }
 .colophon__head {
   display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
   padding-bottom: 22px;
@@ -757,13 +881,24 @@ a { color: inherit; text-decoration: none; }
   .dockbar__desc { display: none; }
   .dockbar__inner .btn { flex: none; }
   .hero__meta { grid-template-columns: 1fr 1fr; gap: 20px 24px; }
-  .inst__row {
-    grid-template-columns: 1fr auto; gap: 6px 16px;
-    grid-template-areas: 'name val' 'trace trace';
+  /* the strip keeps its lanes, but the key sits above the trace instead
+     of beside it, and the reading moves up next to the channel name */
+  .lane, .strip-chart__foot { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .strip-chart__foot > :first-child { display: none; }
+  /* channel name over its units, with the reading held to the right of both */
+  .lane__key {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline; column-gap: 14px;
   }
-  .inst__name { grid-area: name; }
-  .inst__val { grid-area: val; }
-  .inst__trace { grid-area: trace; height: 54px; margin-top: 6px; }
+  .lane__name, .lane__meta { grid-column: 1; }
+  .lane__val { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin-top: 0; font-size: 1.3rem; }
+  /* the lanes below name both channels, so the head does not need to */
+  .strip-chart__head span:first-child { font-size: 0; letter-spacing: 0; }
+  .strip-chart__head span:first-child::before { content: 'Continuous strip'; font-size: 9.5px; letter-spacing: 0.1em; }
+  .lane--pulse .lane__trace { height: 62px; }
+  .lane--eda .lane__trace { height: 82px; }
+  .strip-chart__sheet { grid-template-columns: 30px minmax(0, 1fr); }
+  .strip-chart__head { font-size: 9.5px; letter-spacing: 0.1em; }
   .wavebar__inner { gap: 14px; }
   .wavebar__label { display: none; }
   .titleblock { grid-template-columns: 1fr; }
