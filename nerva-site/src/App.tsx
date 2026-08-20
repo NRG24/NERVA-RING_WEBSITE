@@ -475,7 +475,7 @@ function App() {
               <p className="hero__lede">
                 Most wearables measure your heart. NERVA Ring also reads your nervous system, 
                 pairing heart rate and blood oxygen with continuous electrodermal sensing. 
-                Designed for everyone—not just athletes, NERVA Ring tracks stress short- and long-term, helping you actually manage it.
+                Designed for everyone, not just athletes, NERVA Ring tracks stress short- and long-term, helping you actually manage it.
               </p>
 
               <div className="finish">
