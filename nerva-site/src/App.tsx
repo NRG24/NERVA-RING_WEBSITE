@@ -123,6 +123,8 @@ function SignalInstrument() {
 }
 
 /* ---------- scroll-scrubbed cinematic sensor film ---------- */
+const FILM_SRC = '/nerva-sensors.mp4'
+
 function FilmScroll() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -140,29 +142,13 @@ function FilmScroll() {
     setScrub(canScrub)
     video.muted = true
 
-    /* --- Reduced motion: poster only. Never download the film. --- */
-    if (reduce) {
-      video.preload = 'none'
-      return
-    }
+    /* --- Reduced motion: poster only. Never fetch the film. --- */
+    if (reduce) return
 
-    /* Hold back the ~13MB download until (a) the page has finished loading, so it
-       never competes with the hero images, and (b) the film is near the viewport. */
-    const warm = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (!e.isIntersecting) return
-        video.preload = 'auto'
-        if (video.readyState < 2) video.load()
-        warm.disconnect()
-      }),
-      { rootMargin: '120% 0px' },
-    )
-    const startWarm = () => warm.observe(section)
-    if (document.readyState === 'complete') startWarm()
-    else window.addEventListener('load', startWarm, { once: true })
-
-    /* --- Touch fallback: autoplay loop while in view --- */
+    /* --- Touch: plain streaming playback. Sequential play needs no seeking,
+           so it works off the network URL and never pulls the whole file. --- */
     if (!canScrub) {
+      video.src = FILM_SRC
       video.loop = true
       const io = new IntersectionObserver(
         (entries) => entries.forEach((e) => {
@@ -172,12 +158,13 @@ function FilmScroll() {
         { threshold: 0.25 },
       )
       io.observe(video)
-      return () => { io.disconnect(); warm.disconnect() }
+      return () => io.disconnect()
     }
 
-    /* --- Desktop: scrub video currentTime directly to scroll position --- */
+    /* --- Desktop: scrub currentTime to scroll position --- */
     video.loop = false
     let lastP = -1
+    let objectUrl = ''
 
     const update = () => {
       const rect = section.getBoundingClientRect()
@@ -190,29 +177,64 @@ function FilmScroll() {
       if (dur && video.readyState >= 1) video.currentTime = p * (dur - 0.05)
     }
 
-    if (video.readyState >= 1) update()
-    else video.addEventListener('loadedmetadata', update, { once: true })
+    /* Scrubbing means seeking, and seeking needs the server to answer byte-range
+       requests. Cloudflare Pages serves this file with a flat 200 and the whole
+       body no matter what Range we ask for, so the browser reports seekable = 0
+       and currentTime silently refuses to move. Pulling the file down once and
+       handing the element a local blob: URL sidesteps the server entirely, since
+       seeking an in-memory copy needs no ranges. Vite's dev server does answer
+       206, which is why this only ever broke in production.
+
+       Held until the page has loaded and the film is near the viewport, so the
+       fetch never competes with the hero. */
+    const warm = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (!e.isIntersecting) return
+        warm.disconnect()
+        fetch(FILM_SRC)
+          .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+          .then((blob) => {
+            objectUrl = URL.createObjectURL(blob)
+            video.src = objectUrl
+            video.addEventListener('loadedmetadata', update, { once: true })
+          })
+          .catch(() => {
+            /* Network fetch failed. Stream it instead: the scrub will not track,
+               but the film still plays rather than sitting on the poster. */
+            video.src = FILM_SRC
+            video.loop = true
+            video.play().catch(() => {})
+          })
+      }),
+      { rootMargin: '120% 0px' },
+    )
+    const startWarm = () => warm.observe(section)
+    if (document.readyState === 'complete') startWarm()
+    else window.addEventListener('load', startWarm, { once: true })
 
     window.addEventListener('scroll', update, { passive: true })
     window.addEventListener('resize', update)
     return () => {
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
+      window.removeEventListener('load', startWarm)
       warm.disconnect()
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
   }, [])
 
   return (
     <section ref={sectionRef as any} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="NERVA Ring sensor architecture film">
       <div className="film__sticky">
+        {/* src is set from the effect, not here: the desktop path swaps in a
+            blob: URL and the poster carries the section until it arrives. */}
         <video
           ref={videoRef}
           className="film__video"
-          src="/nerva-sensors.mp4"
           poster="/nerva-sensors-poster.jpg"
           muted
           playsInline
-          preload="metadata"
+          preload="none"
         />
         <div className="film__grade" aria-hidden="true" />
         <div className="film__ui">
@@ -506,10 +528,7 @@ function App() {
         <section className="section" id="signals">
           <div className="wrap">
             <Reveal className="lead">
-              <h2 className="display">
-                Your heart tells half the story.
-                <br className="br-lg" /> Your skin tells the rest.
-              </h2>
+              <h2 className="display">Your pulse leaves out the stress.</h2>
             </Reveal>
 
             <Reveal>
