@@ -105,11 +105,22 @@ Product facts live in `nerva-ring-overview.md`. Design law lives in
 - **Commerce:** no Shopify / no custom payment backend now. Email list only; pre-order
   money should route through crowdfunding (Kickstarter/Indiegogo). Never hand-roll cards.
 
-## Email signup (needs Ryan's action)
-Form POSTs `{email}` to `VITE_SIGNUP_ENDPOINT` (see `.env.example`). With no endpoint
-set it shows an honest "signup isn't connected yet, email hello@nervaring.com" error
-rather than faking success. **Ryan still needs to pick a provider (Buttondown/
-ConvertKit/Formspree) and set that env var** — until then no addresses are captured.
+## Email signup (Buttondown; needs one env var)
+Wired to **Buttondown**. Set `VITE_BUTTONDOWN_USERNAME` to the account name only
+(no URL, no path); the form builds
+`https://buttondown.com/api/emails/embed-subscribe/<username>` itself. See
+`.env.example`. Unset, the form refuses to submit and says signup isn't connected
+rather than posting into the void.
+
+**This is a native form POST on purpose. Do not "fix" it into a fetch().**
+Buttondown's docs are explicit: a subscriber sometimes has to follow the response
+to clear a CAPTCHA or a validation error. An XHR swallows that response, so those
+people look subscribed in our UI and never land on the list. The cost of doing it
+right is that a successful signup ends on Buttondown's confirmation page; point
+that back at nervaring.com from Buttondown's own settings once there's a
+thank-you page. There is no success state in our UI anymore for the same reason
+(`.signup__ok` was deleted), only client-side validation, a honeypot, and the
+not-configured error.
 
 ## Assets & tooling gotchas
 - `src/assets/`: `ring-graphite.jpg`, `ring-gold2.jpg` (studio-gray bg → light tiles),
