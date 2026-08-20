@@ -14,7 +14,7 @@
   padding: 9px 16px;
 }
 .shopbar__dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #ffb020; flex: none;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex: none;
 }
 
 .shop { padding-bottom: clamp(40px, 6vw, 72px); }
