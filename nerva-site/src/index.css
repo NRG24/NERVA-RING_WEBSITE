@@ -1,5 +1,5 @@
 /* ============================================================
-   NERVA · Ultrahuman-inspired product page
+   NERVA Ring · Ultrahuman-inspired product page
    Palette: white paper, near-black ink, studio-gray product tiles,
    true-black feature sections, one disciplined signal-blue accent.
    Type: Hanken Grotesk (display + body) + IBM Plex Mono (data labels)
@@ -170,7 +170,7 @@ a { color: inherit; text-decoration: none; }
 .swatch:focus-visible, .brand__mark:focus-visible { border-radius: 50%; outline-offset: 4px; }
 .btn:focus-visible { border-radius: 999px; }
 /* dark sections: the blue ring loses contrast on black, so lift it off a white halo */
-.inside :focus-visible, .pillars :focus-visible, .cta :focus-visible, .film :focus-visible {
+.inside :focus-visible, .cta :focus-visible, .film :focus-visible {
   outline-color: var(--paper);
   box-shadow: 0 0 0 5px rgba(0, 113, 227, 0.55);
 }
@@ -207,11 +207,7 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex; align-items: center; gap: 9px;
   font-weight: 800; font-size: 20px; letter-spacing: 0.02em;
 }
-.brand__mark {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--ink);
-  box-shadow: inset 0 0 0 4px var(--paper), 0 0 0 1.5px var(--ink);
-}
+.brand__mark { width: 24px; height: 24px; display: block; flex: none; }
 .nav__links { display: flex; gap: 30px; }
 .nav__links a {
   position: relative;
@@ -456,15 +452,6 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex; align-items: center; gap: 9px;
   font-weight: 600; font-size: 13.5px; color: rgba(255,255,255,0.82); letter-spacing: -0.01em;
 }
-.inst__live::before {
-  content: ''; width: 8px; height: 8px; border-radius: 50%;
-  background: var(--sensor); box-shadow: 0 0 0 0 rgba(48,209,88,0.5);
-  animation: livepulse 2.2s var(--ease) infinite;
-}
-.inst__cap {
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em;
-  text-transform: uppercase; color: rgba(255,255,255,0.4);
-}
 .inst__row {
   position: relative; z-index: 1;
   display: grid; grid-template-columns: 168px 1fr 92px; align-items: center; gap: 22px;
@@ -498,7 +485,6 @@ a { color: inherit; text-decoration: none; }
 @keyframes sweep { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) {
   .trace-live { animation: none !important; stroke-dasharray: none; stroke-dashoffset: 0; }
-  .inst__live::before { animation: none; }
 }
 
 /* editorial signal notes (no cards, no chips) */
@@ -511,9 +497,7 @@ a { color: inherit; text-decoration: none; }
   margin: 0; font-weight: 700; font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
   letter-spacing: -0.02em; display: flex; align-items: center; gap: 11px;
 }
-.sig-note h3::before { content: ''; width: 10px; height: 10px; border-radius: 50%; flex: none; }
-.sig-note--hr h3::before { background: #ff5c57; }
-.sig-note--eda h3::before { background: var(--sensor); }
+.sig-note__icon { width: 20px; height: 20px; flex: none; color: var(--ink); }
 .sig-note p { margin: 14px 0 0; color: var(--ink-2); font-size: 1.02rem; line-height: 1.6; max-width: 46ch; }
 .sig-note b { color: var(--ink); font-weight: 700; }
 
@@ -541,40 +525,11 @@ a { color: inherit; text-decoration: none; }
 .feat { padding: 24px 0; border-top: 1px solid var(--line-dk); }
 .feat:first-child { border-top: 0; padding-top: 0; }
 .feat:last-child { padding-bottom: 0; }
-.feat__k {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: rgba(255,255,255,0.5);
-}
 .feat h3 {
-  margin: 10px 0 0; font-weight: 700; font-size: clamp(1.2rem, 1rem + 0.7vw, 1.5rem);
+  margin: 0; font-weight: 700; font-size: clamp(1.2rem, 1rem + 0.7vw, 1.5rem);
   letter-spacing: -0.02em;
 }
 .feat p { margin: 8px 0 0; color: rgba(255,255,255,0.66); max-width: 46ch; font-size: 16px; line-height: 1.62; }
-
-/* constraints (continues dark) — a standfirst against run-in notes, not three
-   equal boxes. The rules echo the feature list above so the dark band reads
-   as one spread rather than two unrelated layouts. */
-.pillars { background: var(--void); color: var(--paper); padding: 0 0 clamp(72px, 9vw, 130px); }
-.pillars__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(26px, 5vw, 78px);
-  align-items: start;
-  padding-top: clamp(30px, 4vw, 54px);
-  border-top: 1px solid var(--line-dk);
-}
-.pillars__lead p {
-  margin: 0; max-width: 21ch;
-  font-weight: 700;
-  font-size: clamp(1.16rem, 1rem + 0.8vw, 1.55rem);
-  line-height: 1.28; letter-spacing: -0.028em;
-}
-.pillars__list { display: flex; flex-direction: column; }
-.pillar { padding: 22px 0; border-top: 1px solid var(--line-dk); }
-.pillar:first-child { border-top: 0; padding-top: 0; }
-.pillar:last-child { padding-bottom: 0; }
-.pillar p { margin: 0; max-width: 56ch; color: rgba(255,255,255,0.66); font-size: 16px; line-height: 1.62; }
-.pillar b { color: var(--paper); font-weight: 700; letter-spacing: -0.015em; }
 
 /* ============================================================
    BLUEPRINT / ENGINEERING DRAWING
@@ -806,7 +761,6 @@ a { color: inherit; text-decoration: none; }
 .dockbar__meta { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--ink-2); min-width: 0; }
 .dockbar__meta b { color: var(--ink); font-weight: 800; letter-spacing: 0.02em; }
 .dockbar__desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dockbar__mark { width: 12px; height: 12px; border-radius: 50%; background: var(--sensor); flex: none; }
 .dockbar__stage {
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--ink-3); flex: none;
@@ -829,9 +783,6 @@ a { color: inherit; text-decoration: none; }
   .sig-note + .sig-note { padding-left: 0; padding-top: 28px; border-left: 0; border-top: 1px solid var(--line); }
   .inside__grid { grid-template-columns: 1fr; gap: 32px; }
   .inside__stage { max-width: 460px; }
-  .pillars__grid { grid-template-columns: 1fr; }
-  /* the standfirst measure is set for a narrow column; stacked it can breathe */
-  .pillars__lead p { max-width: 34ch; }
   .drow { grid-template-columns: 1fr; gap: 8px; }
   .drow__k { flex-direction: row; align-items: baseline; gap: 10px; }
 

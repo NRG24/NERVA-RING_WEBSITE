@@ -158,7 +158,7 @@ export async function startCheckout(merchandiseId: string, quantity = 1): Promis
 /* The two finishes that exist as renders. */
 export const FINISHES = ['Graphite', 'Champagne Gold'] as const
 
-/* PLACEHOLDER. NERVA has no finalized sizing, so this is a conventional ring
+/* PLACEHOLDER. NERVA Ring has no finalized sizing, so this is a conventional ring
    range standing in for the real one, and the page labels it as such. Replace it
    with the sizes you actually cut, or let Shopify's variants supply them. */
 export const PLACEHOLDER_SIZES = ['7', '8', '9', '10', '11', '12'] as const
