@@ -112,7 +112,7 @@ export default function Buy() {
       <header className="nav">
         <div className="nav__inner">
           <a className="brand" href="/" aria-label="NERVA Ring home">
-            <span className="brand__mark" aria-hidden="true" />
+            <img className="brand__mark" src="/favicon.png" alt="" width={24} height={24} />
             NERVA Ring
           </a>
           <a className="btn btn--ghost" href="/">Back to the build</a>
@@ -301,7 +301,7 @@ export default function Buy() {
       <footer className="shopfoot">
         <div className="wrap shopfoot__inner">
           <a className="brand" href="/">
-            <span className="brand__mark" aria-hidden="true" />
+            <img className="brand__mark" src="/favicon.png" alt="" width={24} height={24} />
             NERVA Ring
           </a>
           <p>© 2026 NERVA Ring. Store layout preview, not a live shop.</p>
