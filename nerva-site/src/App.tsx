@@ -606,7 +606,7 @@ function App() {
         <section className="section" id="spec">
           <div className="wrap">
             <Reveal className="lead lead--tight">
-              <h2 className="display">A ring-sized system, spec by spec.</h2>
+              <h2 className="display">Every part, and why it is there.</h2>
             </Reveal>
 
             <Reveal>
@@ -637,10 +637,10 @@ function App() {
         <section className="section section--tint" id="status">
           <div className="wrap">
             <Reveal className="lead">
-              <h2 className="display">An honest build log, not a launch page.</h2>
+              <h2 className="display">Where the build stands today.</h2>
               <p className="lead__sub">
                 NERVA Ring is an early-stage, solo-built hardware project in functional prototyping.
-                Here is exactly what is done and what isn’t.
+                Every line below is either finished, on the bench, or still ahead of me.
               </p>
               <div className="tally">
                 <div className="tally__bar" aria-hidden="true">
@@ -676,11 +676,12 @@ function App() {
                 Follow it from schematic to first working prototype.
               </h2>
               <p className="cta__lede">
-                No countdown, no pre-order. Just an occasional note when a milestone lands:
+                No countdown and no pre-order. I send a note when a milestone lands:
                 first firmware, first clean EDA trace, first hand-assembled batch.
+                If a board comes back dead, that goes in the note too.
               </p>
               <Signup />
-              <p className="cta__fine">One builder · occasional updates · no spam, ever.</p>
+              <p className="cta__fine">Written by the person building it · no spam</p>
             </Reveal>
           </div>
         </section>
@@ -727,12 +728,16 @@ function App() {
                 <a href="#follow">Updates</a>
               </nav>
             </div>
+            <div className="tb tb--w6">
+              <span className="tb__k">Notes</span>
+              <p className="tb__note">
+                Renders and drawings on this page come from the working Fusion model. Nothing
+                here is for sale, and the specs move as the design does.
+              </p>
+            </div>
           </div>
 
-          <p className="colophon__fine">
-            Renders and drawings on this page come from the working Fusion model. Nothing here is
-            for sale, and the specs move as the design does. © 2026 NERVA Ring.
-          </p>
+          <p className="colophon__fine">© 2026 NERVA Ring · sheet 1 of 1</p>
         </div>
       </footer>
 
