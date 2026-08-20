@@ -232,63 +232,58 @@ function FilmScroll() {
 }
 
 /* ---------- email capture ----------
-   Point VITE_SIGNUP_ENDPOINT at whatever list you use (Buttondown, ConvertKit,
-   Formspree, a Cloudflare Worker, etc.). It just POSTs { email } as JSON.
-   With no endpoint set the form fails honestly instead of faking success. */
-const SIGNUP_ENDPOINT = import.meta.env.VITE_SIGNUP_ENDPOINT as string | undefined
+   Set VITE_BUTTONDOWN_USERNAME to the Buttondown account name (see .env.example).
+
+   This posts as a NATIVE form, deliberately, not with fetch(). Buttondown's docs
+   are explicit about it: a subscriber sometimes has to follow the response to
+   clear a CAPTCHA or fix a validation error. An XHR swallows that response, so
+   those people would look subscribed here and never land on the list. Letting
+   the browser navigate hands them the page they need.
+
+   The tradeoff is that a successful signup ends on Buttondown's confirmation
+   page rather than this one. Buttondown settings can point that back at
+   nervaring.com once there is a thank-you page to send them to.
+
+   With no username set the form refuses to submit and says so, rather than
+   posting into the void. */
+const BUTTONDOWN_USER = import.meta.env.VITE_BUTTONDOWN_USERNAME as string | undefined
+const SIGNUP_ACTION = BUTTONDOWN_USER
+  ? `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USER}`
+  : undefined
 const CONTACT_EMAIL = 'hello@nervaring.com'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 function Signup() {
   const [email, setEmail] = useState('')
-  const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
-  const [msg, setMsg] = useState('')
+  const [err, setErr] = useState('')
   const trapRef = useRef<HTMLInputElement>(null)
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (state === 'sending') return
+  /* Runs before the browser submits. Anything that returns early with
+     preventDefault keeps us on the page; otherwise the POST goes through. */
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    if (trapRef.current?.value) { e.preventDefault(); return } // bot fell in the honeypot
 
-    if (trapRef.current?.value) { setState('done'); return } // bot fell in the honeypot
-
-    const value = email.trim()
-    if (!EMAIL_RE.test(value)) {
-      setState('error')
-      setMsg('That email address doesn’t look right.')
+    if (!EMAIL_RE.test(email.trim())) {
+      e.preventDefault()
+      setErr('That email address doesn’t look right.')
       return
     }
 
-    if (!SIGNUP_ENDPOINT) {
-      setState('error')
-      setMsg(`Signup isn’t connected yet. Email ${CONTACT_EMAIL} and I’ll add you by hand.`)
+    if (!SIGNUP_ACTION) {
+      e.preventDefault()
+      setErr(`Signup isn’t connected yet. Email ${CONTACT_EMAIL} and I’ll add you by hand.`)
       return
     }
-
-    setState('sending')
-    try {
-      const res = await fetch(SIGNUP_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ email: value }),
-      })
-      if (!res.ok) throw new Error(String(res.status))
-      setState('done')
-    } catch {
-      setState('error')
-      setMsg(`Something went wrong on our end. Try again, or email ${CONTACT_EMAIL}.`)
-    }
-  }
-
-  if (state === 'done') {
-    return (
-      <p className="signup__ok" role="status">
-        You’re on the list. Talk soon.
-      </p>
-    )
   }
 
   return (
-    <form className="signup-wrap" onSubmit={onSubmit} noValidate>
+    <form
+      className="signup-wrap"
+      action={SIGNUP_ACTION}
+      method="post"
+      onSubmit={onSubmit}
+      noValidate
+    >
       <div className="signup">
         <label htmlFor="email" className="sr-only">Email address</label>
         <input
@@ -298,8 +293,8 @@ function Signup() {
           autoComplete="email"
           placeholder="you@domain.com"
           value={email}
-          aria-invalid={state === 'error'}
-          onChange={(e) => { setEmail(e.target.value); if (state === 'error') setState('idle') }}
+          aria-invalid={err ? true : undefined}
+          onChange={(e) => { setEmail(e.target.value); if (err) setErr('') }}
         />
         {/* honeypot: hidden from people, catnip for bots */}
         <input
@@ -311,11 +306,10 @@ function Signup() {
           aria-hidden="true"
           className="signup__trap"
         />
-        <button className="btn btn--accent btn--lg" type="submit" disabled={state === 'sending'}>
-          {state === 'sending' ? 'Sending…' : 'Notify me'}
-        </button>
+        <input type="hidden" name="tag" value="nervaring.com" />
+        <button className="btn btn--accent btn--lg" type="submit">Notify me</button>
       </div>
-      {state === 'error' && <p className="signup__err" role="alert">{msg}</p>}
+      {err && <p className="signup__err" role="alert">{err}</p>}
     </form>
   )
 }

@@ -658,13 +658,6 @@ a { color: inherit; text-decoration: none; }
 }
 .signup input::placeholder { color: rgba(255,255,255,0.4); }
 .signup input:focus { outline: none; border-color: var(--accent); }
-.signup__ok {
-  margin: 30px 0 0; font-weight: 600; font-size: 1.1rem;
-  display: inline-flex; align-items: center; gap: 10px;
-}
-.signup__ok::before {
-  content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--sensor);
-}
 .cta__fine {
   margin: 18px 0 0; font-family: var(--font-mono); font-size: 11.5px;
   letter-spacing: 0.06em; color: rgba(255,255,255,0.4); text-transform: uppercase;
