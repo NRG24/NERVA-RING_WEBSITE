@@ -514,7 +514,7 @@ function App() {
         <div className="wavebar" aria-hidden="true">
           <div className="wavebar__inner">
             <span className="wavebar__label">EDA · skin conductance</span>
-
+            <EdaWave />
             <span className="wavebar__val">live µS</span>
           </div>
         </div>
@@ -526,7 +526,7 @@ function App() {
         <section className="section" id="signals">
           <div className="wrap">
             <Reveal className="lead">
-              <h2 className="display">Your electrodermal activity provides one of the closest signal pathways to the nervous system.</h2>
+              <h2 className="display">Your electrodermal activity is a hidden direct window into your nervous system.</h2>
             </Reveal>
 
             <Reveal>
