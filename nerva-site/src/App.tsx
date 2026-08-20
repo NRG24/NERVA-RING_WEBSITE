@@ -353,7 +353,7 @@ const FINISHES = [
 const INSIDE = [
   {
     title: 'Heart rate & SpO₂',
-    body: 'A MAX30102-class PPG sensor reads pulse and blood oxygen straight from the finger, one of the most vascularized, signal-rich sites on the body.',
+    body: 'A MAXM86161-class PPG sensor reads pulse and blood oxygen straight from the finger, one of the most vascularized, signal-rich sites on the body.',
   },
   {
     title: 'Continuous stress (GSR)',
@@ -528,7 +528,7 @@ function App() {
         <section className="section" id="signals">
           <div className="wrap">
             <Reveal className="lead">
-              <h2 className="display">Your pulse leaves out the stress.</h2>
+              <h2 className="display">Your electrodermal activity provides one of the closest signal pathways to the nervous system.</h2>
             </Reveal>
 
             <Reveal>
