@@ -1,68 +1,62 @@
-import { useEffect, useRef, useState, type FormEvent, type JSX, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import ringGraphite from './assets/ring-graphite.jpg'
 import ringGold from './assets/ring-gold2.jpg'
 import ringChrome from './assets/ring-chrome.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
-function Reveal({ children, as: Tag = 'div', className = '', delay = 0 }: {
+function Reveal({ children, className = '', delay = 0 }: {
   children: ReactNode
-  as?: keyof JSX.IntrinsicElements
   className?: string
   delay?: number
 }) {
-  const ref = useRef<HTMLElement | null>(null)
+  const ref = useRef<HTMLDivElement | null>(null)
   const [shown, setShown] = useState(false)
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) { setShown(true); return }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setShown(true); return }
     const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) { setShown(true); io.disconnect() }
-        })
-      },
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect() } }),
       { threshold: 0.14, rootMargin: '0px 0px -6% 0px' },
     )
     io.observe(el)
     return () => io.disconnect()
   }, [])
-  const Comp = Tag as any
   return (
-    <Comp
-      ref={ref as any}
+    <div
+      ref={ref}
       className={`reveal ${shown ? 'in' : ''} ${className}`}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
-    </Comp>
+    </div>
   )
 }
 
-/* ---------- EDA / skin-conductance waveform ---------- */
+/* ---------- EDA / skin-conductance waveform (hero bezel) ---------- */
+const WAVE_D =
+  'M0 30 L60 30 L90 29 L120 31 ' +
+  'C150 31 160 12 185 12 C210 12 214 30 245 30 ' +
+  'L320 30 L360 28 ' +
+  'C395 28 402 18 425 18 C450 18 452 30 490 30 ' +
+  'L560 30 L600 31 ' +
+  'C640 31 648 8 675 8 C702 8 706 30 745 30 ' +
+  'L820 30 L870 29 L920 30 L1000 30'
+
 function EdaWave() {
-  const d =
-    'M0 30 L60 30 L90 29 L120 31 ' +
-    'C150 31 160 12 185 12 C210 12 214 30 245 30 ' +
-    'L320 30 L360 28 ' +
-    'C395 28 402 18 425 18 C450 18 452 30 490 30 ' +
-    'L560 30 L600 31 ' +
-    'C640 31 648 8 675 8 C702 8 706 30 745 30 ' +
-    'L820 30 L870 29 L920 30 L1000 30'
   return (
-    <svg className="wavebar__svg" viewBox="0 0 1000 46" preserveAspectRatio="none" aria-hidden="true">
-      <path className="wave-path" d={d} />
-      <path className="wave-path wave-dash" d={d} opacity="0.5" />
+    <svg className="hero__wave" viewBox="0 0 1000 46" preserveAspectRatio="none" aria-hidden="true">
+      <path className="wave-path" d={WAVE_D} />
+      <path className="wave-path wave-dash" d={WAVE_D} />
     </svg>
   )
 }
 
 /* ---------- chart-recorder strip ----------
    Both traces are generated rather than drawn by hand, because the thing
-   that makes a real recording look real is that it never repeats. A tiled
-   waveform is the giveaway. Seeded so every render is the same sheet. */
+   that makes a real recording look real is that it never repeats. Seeded,
+   so every render is the same sheet. */
 const SPAN = 1000        // svg user units across the strip
 const WINDOW_S = 14      // seconds of record the strip holds
 
@@ -111,8 +105,6 @@ function edaTrace(rest = 110) {
   const r = rng(23)
   const bursts: { at: number; amp: number }[] = []
   let x = 70
-  /* stop early enough that the last response still has room to peak and
-     start decaying before the paper is cut */
   while (x < SPAN - 130) {
     bursts.push({ at: x, amp: 22 + r() * 42 })
     x += 115 + r() * 175
@@ -130,8 +122,6 @@ function edaTrace(rest = 110) {
   const biggest = bursts.reduce((m, b) => (b.amp > m.amp ? b : m), bursts[0])
   return {
     d: 'M' + pts.join(' L'),
-    /* the note hangs over the peak of the largest response, which lands a
-       little after its onset, so its position comes out of the data */
     markPct: ((biggest.at + 26) / SPAN) * 100,
   }
 }
@@ -228,6 +218,79 @@ function SignalInstrument() {
   )
 }
 
+/* ---------- HERO ----------
+   The film plays once, fades to black, holds, then fades up into the
+   black-glass still. No loop: the reveal happens once and then the page
+   settles onto a product shot. Video and still share identical framing
+   (object-fit + object-position + scale) so the cross-fade does not jump. */
+const HERO_FILM = '/ring_void_0001-0400.mp4'
+const HERO_STILL = '/ring_03_black_glass_web.png'
+const BLACK_HOLD_MS = 1700
+
+function Hero() {
+  const [faded, setFaded] = useState(false)
+  const [stillShown, setStillShown] = useState(false)
+
+  useEffect(() => {
+    if (!faded) return
+    const t = window.setTimeout(() => setStillShown(true), BLACK_HOLD_MS)
+    return () => window.clearTimeout(t)
+  }, [faded])
+
+  return (
+    <section className="hero">
+      <video
+        className="hero__film"
+        src={HERO_FILM}
+        onEnded={() => setFaded(true)}
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+      />
+      <img
+        className="hero__still"
+        src={HERO_STILL}
+        alt="The NERVA Ring in black glass finish, showing the internal flex PCB and its green and red optical sensor LEDs."
+        style={{ opacity: stillShown ? 1 : 0 }}
+      />
+      <div
+        className="hero__blackout"
+        aria-hidden="true"
+        style={{ opacity: faded && !stillShown ? 1 : 0 }}
+      />
+      <div className="hero__grade" aria-hidden="true" />
+
+      <div className="hero__labels">
+        <span className="mono-label">NERVA RING · REV 5</span>
+        <span className="mono-label mono-label--live">EDA LIVE</span>
+      </div>
+
+      <div className="hero__copy">
+        <h1 className="hero__title">The ring that reads your nervous system.</h1>
+        <p className="hero__lede">
+          Heart rate and blood oxygen, paired with continuous electrodermal
+          sensing, give a live read on stress, recovery, and arousal from a single ring.
+        </p>
+        <div className="hero__cta">
+          <a className="btn btn--led btn--lg" href="#follow">Get launch updates</a>
+          <a className="btn btn--onfilm btn--lg" href="#inside">See what’s inside</a>
+        </div>
+      </div>
+
+      <div className="hero__bezel">
+        <EdaWave />
+        <div className="hero__specs">
+          <div><span className="hero__specK">Signals</span><span className="hero__specV">HR · SpO₂ · EDA · HRV</span></div>
+          <div><span className="hero__specK">Standby target</span><span className="hero__specV">~1 month</span></div>
+          <div><span className="hero__specK">Cell</span><span className="hero__specV">22 mAh</span></div>
+          <div><span className="hero__specK">Radio</span><span className="hero__specV">BLE 5 · ANNA-B402</span></div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 /* ---------- scroll-scrubbed cinematic sensor film ---------- */
 const FILM_SRC = '/nerva-sensors.mp4'
 
@@ -287,9 +350,7 @@ function FilmScroll() {
        requests. Cloudflare Pages serves this file with a flat 200 and the whole
        body no matter what Range we ask for, so the browser reports seekable = 0
        and currentTime silently refuses to move. Pulling the file down once and
-       handing the element a local blob: URL sidesteps the server entirely, since
-       seeking an in-memory copy needs no ranges. Vite's dev server does answer
-       206, which is why this only ever broke in production.
+       handing the element a local blob: URL sidesteps the server entirely.
 
        Held until the page has loaded and the film is near the viewport, so the
        fetch never competes with the hero. */
@@ -305,8 +366,6 @@ function FilmScroll() {
             video.addEventListener('loadedmetadata', update, { once: true })
           })
           .catch(() => {
-            /* Network fetch failed. Stream it instead: the scrub will not track,
-               but the film still plays rather than sitting on the poster. */
             video.src = FILM_SRC
             video.loop = true
             video.play().catch(() => {})
@@ -330,10 +389,8 @@ function FilmScroll() {
   }, [])
 
   return (
-    <section ref={sectionRef as any} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="NERVA Ring sensor architecture film">
+    <section ref={sectionRef as never} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="NERVA Ring sensor architecture film">
       <div className="film__sticky">
-        {/* src is set from the effect, not here: the desktop path swaps in a
-            blob: URL and the poster carries the section until it arrives. */}
         <video
           ref={videoRef}
           className="film__video"
@@ -344,7 +401,7 @@ function FilmScroll() {
         />
         <div className="film__grade" aria-hidden="true" />
         <div className="film__ui">
-          <span className="film__tag">Sensor architecture · rendered from the working model</span>
+          <span className="mono-label mono-label--film">SENSOR ARCHITECTURE · RENDERED FROM THE WORKING MODEL</span>
           <span className="film__hint" style={scrub ? { opacity: Math.max(0, 1 - progress * 4) } : undefined}>
             {scrub ? 'Scroll to explore' : 'Every reading begins inside the band'}
           </span>
@@ -360,20 +417,12 @@ function FilmScroll() {
 }
 
 /* ---------- email capture ----------
-   Set VITE_BUTTONDOWN_USERNAME to the Buttondown account name (see .env.example).
+   Set VITE_BUTTONDOWN_USERNAME to the Buttondown account name.
 
-   This posts as a NATIVE form, deliberately, not with fetch(). Buttondown's docs
-   are explicit about it: a subscriber sometimes has to follow the response to
-   clear a CAPTCHA or fix a validation error. An XHR swallows that response, so
-   those people would look subscribed here and never land on the list. Letting
-   the browser navigate hands them the page they need.
-
-   The tradeoff is that a successful signup ends on Buttondown's confirmation
-   page rather than this one. Buttondown settings can point that back at
-   nervaring.com once there is a thank-you page to send them to.
-
-   With no username set the form refuses to submit and says so, rather than
-   posting into the void. */
+   This posts as a NATIVE form, deliberately, not with fetch(). A subscriber
+   sometimes has to follow the response to clear a CAPTCHA or fix a validation
+   error; an XHR swallows that response, so those people would look subscribed
+   here and never land on the list. */
 const BUTTONDOWN_USER = import.meta.env.VITE_BUTTONDOWN_USERNAME as string | undefined
 const SIGNUP_ACTION = BUTTONDOWN_USER
   ? `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USER}`
@@ -386,8 +435,6 @@ function Signup() {
   const [err, setErr] = useState('')
   const trapRef = useRef<HTMLInputElement>(null)
 
-  /* Runs before the browser submits. Anything that returns early with
-     preventDefault keeps us on the page; otherwise the POST goes through. */
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     if (trapRef.current?.value) { e.preventDefault(); return } // bot fell in the honeypot
 
@@ -405,13 +452,7 @@ function Signup() {
   }
 
   return (
-    <form
-      className="signup-wrap"
-      action={SIGNUP_ACTION}
-      method="post"
-      onSubmit={onSubmit}
-      noValidate
-    >
+    <form className="signup-wrap" action={SIGNUP_ACTION} method="post" onSubmit={onSubmit} noValidate>
       <div className="signup">
         <label htmlFor="email" className="sr-only">Email address</label>
         <input
@@ -435,7 +476,7 @@ function Signup() {
           className="signup__trap"
         />
         <input type="hidden" name="tag" value="nervaring.com" />
-        <button className="btn btn--accent btn--lg" type="submit">Notify me</button>
+        <button className="btn btn--led btn--lg" type="submit">Notify me</button>
       </div>
       {err && <p className="signup__err" role="alert">{err}</p>}
     </form>
@@ -443,53 +484,71 @@ function Signup() {
 }
 
 const NAV = [
-  { href: '#different', label: 'What’s different' },
-  { href: '#signals', label: 'Sensing' },
-  { href: '#inside', label: 'Inside the ring' },
-  { href: '#design', label: 'Design' },
-  { href: '#status', label: 'Build status' },
+  { href: '#stress', label: 'Stress' },
+  { href: '#signals', label: 'Signals' },
+  { href: '#inside', label: 'Inside' },
+  { href: '#finish', label: 'Finishes' },
 ]
 
 const FINISHES = [
-  { id: 'graphite', label: 'Graphite', sub: 'Polished PVD-style', img: ringGraphite, swatch: 'linear-gradient(140deg,#3a3d42,#0d0e10 70%)' },
-  { id: 'gold', label: 'Champagne Gold', sub: 'Warm brushed finish', img: ringGold, swatch: 'linear-gradient(140deg,#e6cf9b,#8f7636 72%)' },
+  { id: 'graphite', label: 'Graphite', sub: 'POLISHED PVD', img: ringGraphite, swatch: 'linear-gradient(140deg,#3a3d42,#0d0e10 70%)' },
+  { id: 'gold', label: 'Champagne Gold', sub: 'WARM BRUSHED', img: ringGold, swatch: 'linear-gradient(140deg,#e6cf9b,#8f7636 72%)' },
 ] as const
 
-/* the ring, read inside-out */
-const INSIDE = [
+/* the sensing stack, read as a numbered index rather than a feature grid */
+const SPECS = [
   {
-    title: 'Heart rate & SpO₂',
-    body: 'A MAXM86161-class PPG sensor reads pulse and blood oxygen straight from the finger, one of the most vascularized, signal-rich sites on the body.',
+    n: '01',
+    title: 'Optical sensing',
+    part: 'MAXM86161',
+    channel: 'pulse',
+    body: 'Pulse and SpO₂ read straight from the finger, run in a custom low-power polling mode rather than stock continuous mode to stretch the battery dramatically further.',
   },
   {
-    title: 'Continuous stress (GSR)',
-    body: 'Two dry gold-plated electrodes built into the flex PCB read galvanic skin response continuously. It is the same signal used in clinical stress research.',
+    n: '02',
+    title: 'Electrodermal front end',
+    part: '2× Au ELECTRODES',
+    channel: 'gold',
+    body: 'A custom transimpedance-amplifier circuit tuned for the low-current, low-noise range of skin conductance, read through two dry gold-plated electrodes built into the flex PCB.',
   },
   {
-    title: 'Bluetooth LE 5',
-    body: 'A u-blox ANNA-B402 module with an antenna tuned to the ring’s form factor keeps the companion app in sync without draining the cell.',
+    n: '03',
+    title: 'Radio',
+    part: 'ANNA-B402 · BLE 5',
+    channel: 'sensor',
+    body: 'A u-blox module with an antenna layout tuned to the ring’s compact form factor keeps the companion app in sync without draining the cell.',
   },
   {
-    title: '2-pin pogo dock',
-    body: 'Charges on a standard 2-pin dock, with circuit protection against sweat bridging the contacts. It is the approach used across the smart-ring industry.',
+    n: '04',
+    title: 'Power',
+    part: 'BQ25120A · 22 mAh',
+    channel: 'sensor',
+    body: 'One PMIC handles charging, monitoring, and both voltage rails. A wake-on-finger architecture sleeps between readings, targeting roughly a month of standby.',
   },
-]
+  {
+    n: '05',
+    title: 'Sealed build',
+    part: 'RESIN-POTTED',
+    channel: 'neutral',
+    body: 'The flex PCB wraps the inner circumference and is fully potted in clear resin. No seams, no gaps, so it stays safe for hand-washing and showering. Charges on a 2-pin pogo dock.',
+  },
+] as const
 
 const LEDGER = [
-  { s: 'done', label: 'Power architecture finalized (BQ25120A-based)', tag: 'Done' },
-  { s: 'done', label: 'GSR analog front end designed and tuned', tag: 'Done' },
-  { s: 'done', label: 'BLE module and antenna layout complete', tag: 'Done' },
-  { s: 'done', label: 'Housing & flex-PCB wrap modeled in Fusion 360', tag: 'Done' },
-  { s: 'done', label: 'Resin-potting and waterproofing process defined', tag: 'Done' },
-  { s: 'wip', label: 'Boost converter for LED drive', tag: 'In progress' },
-  { s: 'wip', label: 'Final PCB layout & prototype assembly', tag: 'In progress' },
-  { s: 'todo', label: 'Firmware implementation of full sensing pipeline', tag: 'Planned' },
-  { s: 'todo', label: 'Functional prototype testing', tag: 'Planned' },
-  { s: 'todo', label: 'Small-batch hand-assembled production run', tag: 'Planned' },
-  { s: 'todo', label: 'Beta testing / crowdfunding phase', tag: 'Planned' },
+  { s: 'done', label: 'Power architecture finalized (BQ25120A-based)' },
+  { s: 'done', label: 'GSR analog front end designed and tuned' },
+  { s: 'done', label: 'BLE module and antenna layout complete' },
+  { s: 'done', label: 'Housing & flex-PCB wrap modeled in Fusion 360' },
+  { s: 'done', label: 'Resin-potting and waterproofing process defined' },
+  { s: 'wip', label: 'Boost converter for LED drive' },
+  { s: 'wip', label: 'Final PCB layout & prototype assembly' },
+  { s: 'todo', label: 'Firmware implementation of full sensing pipeline' },
+  { s: 'todo', label: 'Functional prototype testing' },
+  { s: 'todo', label: 'Small-batch hand-assembled production run' },
+  { s: 'todo', label: 'Beta testing / crowdfunding phase' },
 ] as const
 
-/* counted off the ledger above, so the tally can never drift from the list */
+/* counted off the ledger, so the tally can never drift from the list */
 const TALLY = {
   done: LEDGER.filter((r) => r.s === 'done').length,
   wip: LEDGER.filter((r) => r.s === 'wip').length,
@@ -503,17 +562,13 @@ function App() {
 
   return (
     <>
-      {/* ---------------- STATUS STRIP ---------------- */}
-      <div className="strip">
-        <b>Functional prototype</b> · built solo · not for sale yet
-      </div>
-
       {/* ---------------- NAV ---------------- */}
       <header className="nav">
         <div className="nav__inner">
           <a className="brand" href="#top" aria-label="NERVA Ring home">
-            <img className="brand__mark" src="/favicon.png" alt="" width={24} height={24} />
-            NERVA Ring
+            <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
+            NERVA
+            <span className="brand__tag">PROTO</span>
           </a>
           <nav className="nav__links" aria-label="Primary">
             {NAV.map((l) => (
@@ -521,7 +576,7 @@ function App() {
             ))}
           </nav>
           <div className="nav__right">
-            <a className="btn btn--dark" href="#follow">Follow the build</a>
+            <a className="btn btn--accent" href="#follow">Get updates</a>
             <button
               className="nav__toggle"
               aria-label="Menu"
@@ -542,102 +597,33 @@ function App() {
           {NAV.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
           ))}
-          <a className="btn btn--dark btn--block" href="#follow" onClick={() => setMenuOpen(false)}>
-            Follow the build
+          <a className="btn btn--accent btn--block" href="#follow" onClick={() => setMenuOpen(false)}>
+            Get updates
           </a>
         </div>
       </header>
 
       <main id="top">
-        {/* ---------------- HERO ---------------- */}
-        <section className="hero">
-          <div className="hero__grid">
-            <div className="hero__stage">
-              <img
-                key={active.id}
-                className="hero__ring"
-                src={active.img}
-                width={1400}
-                height={1270}
-                alt={`The NERVA Ring in ${active.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs on the inner band.`}
-              />
-            </div>
+        <Hero />
 
-            <div className="hero__copy">
-              <h1 className="hero__title">
-                The ring that reads your nervous system.
-              </h1>
-              <p className="hero__lede">
-                Most wearables measure your heart. NERVA Ring also reads your nervous system, 
-                pairing heart rate and blood oxygen with continuous electrodermal sensing. 
-                Designed for everyone, not just athletes, NERVA Ring tracks stress short- and long-term, helping you actually manage it.
-              </p>
-
-              <div className="finish">
-                <div className="finish__label">
-                  Finish. <span>{active.label}</span>
-                </div>
-                <div className="finish__swatches" role="radiogroup" aria-label="Ring finish">
-                  {FINISHES.map((f) => (
-                    <button
-                      key={f.id}
-                      role="radio"
-                      aria-checked={finish === f.id}
-                      aria-label={f.label}
-                      className={`swatch ${finish === f.id ? 'is-active' : ''}`}
-                      style={{ background: f.swatch }}
-                      onClick={() => setFinish(f.id)}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="hero__cta">
-                <a className="btn btn--accent btn--lg" href="#follow">Follow the build</a>
-                <a className="btn btn--ghost btn--lg" href="#inside">See what’s inside</a>
-              </div>
-
-              <dl className="hero__meta">
-                <div>
-                  <dt>Signals</dt>
-                  <dd><span className="sig-hr">HR</span> · SpO₂ · <span className="sig-eda">EDA</span> · HRV</dd>
-                </div>
-                <div><dt>Standby target</dt><dd>~1 month</dd></div>
-                <div><dt>Stage</dt><dd>Prototype</dd></div>
-              </dl>
-            </div>
-          </div>
-        </section>
-
-        {/* ---------------- EDA STRIP ---------------- */}
-        <div className="wavebar" aria-hidden="true">
-          <div className="wavebar__inner">
-            <span className="wavebar__label">EDA · skin conductance</span>
-            <EdaWave />
-            <span className="wavebar__val">live µS</span>
-          </div>
-        </div>
-
-        {/* ---------------- CINEMATIC SENSOR FILM ---------------- */}
-        <FilmScroll />
-
-        {/* ---------------- WHAT MAKES IT DIFFERENT ----------------
-            Not a feature grid. The difference is a mechanism, so the
-            section draws the mechanism: how far each ring has to travel
-            from a nerve to the number it puts on your screen. */}
-        <section className="section section--tint" id="different">
+        {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
+            Not a feature grid. The difference is a mechanism, so the section
+            draws the mechanism: how far each ring has to travel from a nerve
+            to the number it puts on your screen. */}
+        <section className="section section--tint" id="stress">
           <div className="wrap">
             <Reveal className="lead lead--split">
               <h2 className="display">Where your stress number comes from.</h2>
               <p className="lead__sub">
                 Every ring on the market will show you a stress score. Nearly all of them
-                build it out of your pulse. NERVA Ring reads pulse too, and then it reads
-                the signal that score is standing in for.
+                build it out of your pulse. NERVA reads pulse too, and then it reads the
+                signal that score is standing in for.
               </p>
             </Reveal>
 
             <div className="paths">
               <Reveal className="path path--inferred">
+                <span className="path__idx">A</span>
                 <div>
                   <h3 className="path__h">Inferred from the heart</h3>
                   <ol className="path__steps">
@@ -649,13 +635,13 @@ function App() {
                 </div>
                 <p className="path__note">
                   Beat-to-beat variation shifts with sleep, caffeine, alcohol, a cold
-                  coming on, and how hard you trained on Tuesday. Arousal is one of many
-                  hands pushing on it, so the model has to decide for you how much of
-                  today’s change was stress.
+                  coming on, and how hard you trained on Tuesday. The model has to decide
+                  for you how much of today’s change was stress.
                 </p>
               </Reveal>
 
               <Reveal className="path path--measured" delay={90}>
+                <span className="path__idx">B</span>
                 <div>
                   <h3 className="path__h">Measured at the skin</h3>
                   <ol className="path__steps">
@@ -667,20 +653,19 @@ function App() {
                 </div>
                 <p className="path__note">
                   Your sympathetic nerves drive your sweat glands directly, and nothing
-                  else does. Arousal climbs, conductance climbs about a second behind it.
-                  Two dry gold electrodes on the inner band read that in microsiemens, the
-                  same unit a stress lab writes down.
+                  else does. Arousal climbs; conductance climbs about a second behind it.
+                  Two dry gold electrodes read it in microsiemens, the same unit a stress
+                  lab writes down.
                 </p>
               </Reveal>
             </div>
 
             <Reveal className="caveat">
               <p>
-                <b>The catch, since this is a build log.</b> Skin conductance is a harder
-                signal to hold onto than pulse. It drifts with temperature, it moves when
-                you move, and a finger is a small place to put two electrodes. That
-                difficulty is most of why the signal is missing from other rings, and most
-                of what the firmware in this one has to do.
+                <b>The hard part.</b> Skin conductance drifts with temperature, moves when
+                you move, and a finger is a small place for two electrodes. That difficulty
+                is most of why the signal is missing from other rings, and most of what
+                NERVA’s firmware is built to solve.
               </p>
             </Reveal>
           </div>
@@ -689,8 +674,10 @@ function App() {
         {/* ---------------- TWO SIGNALS ---------------- */}
         <section className="section" id="signals">
           <div className="wrap">
-            <Reveal className="lead">
-              <h2 className="display">Your electrodermal activity is a hidden window into your nervous system.</h2>
+            <Reveal className="lead lead--wide">
+              <h2 className="display">
+                Your electrodermal activity is a hidden window into your nervous system.
+              </h2>
             </Reveal>
 
             <Reveal>
@@ -701,31 +688,37 @@ function App() {
               <Reveal className="sig-note sig-note--hr">
                 <h3><HeartIcon />The heart</h3>
                 <p>
-                  Optical PPG reads pulse and blood oxygen from the finger, a dense, well-perfused
-                  site that gives clean signal. It is what most rings already measure, and
-                  NERVA Ring measures it too.
+                  Optical PPG reads pulse and blood oxygen from the finger, a dense,
+                  well-perfused site that gives clean signal. It is what most rings already
+                  measure, and NERVA measures it too.
                 </p>
               </Reveal>
               <Reveal className="sig-note sig-note--eda" delay={80}>
                 <h3><NerveIcon />The nerves</h3>
                 <p>
-                  Two dry gold electrodes read skin conductance straight off the inner band, the
-                  sympathetic arousal signal clinical stress research relies on. This is the read
-                  most rings leave on the table, and where <b>NERVA Ring</b> earns its name.
+                  Two dry gold electrodes read skin conductance straight off the inner
+                  band, the sympathetic arousal signal clinical stress research relies on.
+                  This is the read most rings leave on the table, and where <b>NERVA</b>
+                  {' '}earns its name.
                 </p>
               </Reveal>
             </div>
           </div>
         </section>
 
-        {/* ---------------- INSIDE OUT (dark) ---------------- */}
+        {/* ---------------- CINEMATIC SENSOR FILM ---------------- */}
+        <FilmScroll />
+
+        {/* ---------------- INSIDE THE BAND (dark) ---------------- */}
         <section className="inside" id="inside">
-          <div className="wrap">
-            <Reveal className="inside__head">
+          <div className="wrap inside__grid">
+            <Reveal className="inside__aside">
               <h2 className="display display--light">Inside the band</h2>
-            </Reveal>
-            <div className="inside__grid">
-              <Reveal className="inside__stage">
+              <p className="inside__lede">
+                A full sensing stack, wrapped to the inner circumference of a ring and
+                potted in clear resin. Sealed, waterproof, no seams.
+              </p>
+              <div className="inside__stage">
                 <img
                   className="inside__ring"
                   src={ringChrome}
@@ -734,98 +727,104 @@ function App() {
                   loading="lazy"
                   alt="Close view inside the NERVA Ring band, exposing the flex PCB, gold electrodes, and the green and red optical sensor LEDs."
                 />
-              </Reveal>
-              <div className="inside__list">
-                {INSIDE.map((item, i) => (
-                  <Reveal key={item.title} className="feat" delay={i * 60}>
-                    <h3>{item.title}</h3>
-                    <p>{item.body}</p>
-                  </Reveal>
-                ))}
               </div>
+            </Reveal>
+
+            <div className="inside__list">
+              {SPECS.map((s, i) => (
+                <Reveal key={s.n} className="spec" delay={i * 50}>
+                  <span className="spec__n">{s.n}</span>
+                  <div>
+                    <div className="spec__head">
+                      <h3>{s.title}</h3>
+                      <span className={`spec__part spec__part--${s.channel}`}>{s.part}</span>
+                    </div>
+                    <p>{s.body}</p>
+                  </div>
+                </Reveal>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ---------------- BLUEPRINT ---------------- */}
-        <section className="section section--tint blueprint" id="design">
+        {/* ---------------- FINISHES ---------------- */}
+        <section className="section section--tint" id="finish">
           <div className="wrap">
-            <Reveal className="lead lead--split">
-              <h2 className="display">Designed down to the last line.</h2>
-              <p className="lead__sub">
-                The housing, the flex-PCB wrap, the sensor placement: every millimeter modeled
-                from first principles in Fusion 360, down to how the flex folds around the
-                inner wall.
-              </p>
-            </Reveal>
-
-            <Reveal className="bp">
-              <div className="bp__frame">
-                <img
-                  src={blueprint}
-                  width={2600}
-                  height={1838}
-                  loading="lazy"
-                  alt="Engineering drawing of the NERVA Ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
-                />
-              </div>
-              <div className="bp__meta">
-                <span>NERVA Ring · housing + flex-PCB assembly</span>
-                <span className="bp__rev">Sketch · Rev 5 · Sheet 1/1</span>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ---------------- BUILD STATUS ---------------- */}
-        <section className="section section--tint" id="status">
-          <div className="wrap">
-            <Reveal className="lead">
-              <h2 className="display">Where the build stands today.</h2>
-              <p className="lead__sub">
-                NERVA Ring is an early-stage, solo-built hardware project in functional prototyping.
-                Every line below is either finished, on the bench, or still ahead of me.
-              </p>
-              <div className="tally">
-                <div className="tally__bar" aria-hidden="true">
-                  {LEDGER.map((row) => (
-                    <span key={row.label} className={`tally__seg tally__seg--${row.s}`} />
-                  ))}
-                </div>
-                <p className="tally__read">
-                  {TALLY.done} done · {TALLY.wip} in progress · {TALLY.todo} still ahead
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal>
-              <div className="ledger">
-                {LEDGER.map((row) => (
-                  <div className={`lrow lrow--${row.s}`} key={row.label}>
-                    <span className="lrow__mark" aria-hidden="true" />
-                    <span className="lrow__label">{row.label}</span>
-                    <span className="lrow__tag">{row.tag}</span>
-                  </div>
+            <Reveal className="finish__head">
+              <h2 className="display">Two finishes.</h2>
+              <div className="finish__pills" role="radiogroup" aria-label="Ring finish">
+                {FINISHES.map((f) => (
+                  <button
+                    key={f.id}
+                    role="radio"
+                    aria-checked={finish === f.id}
+                    className={`pill ${finish === f.id ? 'is-active' : ''}`}
+                    onClick={() => setFinish(f.id)}
+                  >
+                    <i className="pill__swatch" style={{ background: f.swatch }} />
+                    {f.label}
+                  </button>
                 ))}
               </div>
+            </Reveal>
+
+            <Reveal className="finish__stage">
+              <img
+                key={active.id}
+                className="finish__ring"
+                src={active.img}
+                width={1400}
+                height={1270}
+                alt={`The NERVA Ring in ${active.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs.`}
+              />
+              <div className="finish__caption">
+                <span className="finish__name">{active.label}</span>
+                <span className="mono-label mono-label--dark">{active.sub}</span>
+              </div>
+            </Reveal>
+
+            <Reveal className="statusline">
+              <div className="tally__bar" aria-hidden="true">
+                {LEDGER.map((row) => (
+                  <span key={row.label} className={`tally__seg tally__seg--${row.s}`} />
+                ))}
+              </div>
+              <p className="statusline__read">
+                Build status: <b className="is-done">{TALLY.done} done</b> ·{' '}
+                <b className="is-wip">{TALLY.wip} in progress</b> · {TALLY.todo} ahead.
+                Every milestone lands in the update notes.
+              </p>
             </Reveal>
           </div>
         </section>
 
         {/* ---------------- CTA ---------------- */}
         <section className="cta" id="follow">
-          <div className="wrap cta__inner">
+          <div className="wrap cta__grid">
             <Reveal>
               <h2 className="display display--light">
                 Follow it from schematic to first working prototype.
               </h2>
               <p className="cta__lede">
-                No countdown and no pre-order. I send a note when a milestone lands:
-                first firmware, first clean EDA trace, first hand-assembled batch.
-                If a board comes back dead, that goes in the note too.
+                No countdown, no pre-order. A note lands when a milestone does: first
+                firmware, first clean EDA trace, first hand-assembled batch.
               </p>
               <Signup />
               <p className="cta__fine">Written by the person building it · no spam</p>
+            </Reveal>
+
+            <Reveal className="cta__sheet" delay={90}>
+              <img
+                src={blueprint}
+                width={2600}
+                height={1838}
+                loading="lazy"
+                alt="Engineering drawing of the NERVA Ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
+              />
+              <div className="cta__sheetMeta">
+                <span>HOUSING + FLEX-PCB ASSEMBLY</span>
+                <span>REV 5 · SHEET 1/1</span>
+              </div>
             </Reveal>
           </div>
         </section>
@@ -834,34 +833,18 @@ function App() {
       {/* ---------------- FOOTER (drawing title block) ---------------- */}
       <footer className="colophon">
         <div className="wrap">
-          <div className="colophon__head">
-            <a className="brand" href="#top">
-              <img className="brand__mark" src="/favicon.png" alt="" width={24} height={24} />
-              NERVA Ring
-            </a>
-            <p className="colophon__line">
-              One person, one soldering iron, and a nervous system worth measuring.
-            </p>
-          </div>
-
           <div className="titleblock">
-            <div className="tb tb--w4">
-              <span className="tb__k">Drawing</span>
-              <b className="tb__v">NERVA Ring · housing + flex-PCB assembly</b>
+            <div className="tb tb--w3">
+              <span className="tb__k">Product</span>
+              <b className="tb__v">NERVA Ring · nervous-system sensing</b>
+            </div>
+            <div className="tb tb--w1">
+              <span className="tb__k">Stage</span>
+              <b className="tb__v">Prototype</b>
             </div>
             <div className="tb tb--w2">
-              <span className="tb__k">Stage</span>
-              <b className="tb__v">Functional prototyping</b>
-            </div>
-            <div className="tb tb--w3">
-              <span className="tb__k">Built by</span>
-              <b className="tb__v">Ryan Schreiber, solo</b>
-            </div>
-            <div className="tb tb--w3">
               <span className="tb__k">Contact</span>
-              <b className="tb__v">
-                <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-              </b>
+              <b className="tb__v"><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></b>
             </div>
             <div className="tb tb--w6">
               <span className="tb__k">On this sheet</span>
@@ -872,30 +855,10 @@ function App() {
                 <a href="#follow">Updates</a>
               </nav>
             </div>
-            <div className="tb tb--w6">
-              <span className="tb__k">Notes</span>
-              <p className="tb__note">
-                Renders and drawings on this page come from the working Fusion model. Nothing
-                here is for sale, and the specs move as the design does.
-              </p>
-            </div>
           </div>
-
-          <p className="colophon__fine">© 2026 NERVA Ring · sheet 1 of 1</p>
+          <p className="colophon__fine">© 2026 NERVA Ring · built by Ryan Schreiber · sheet 1 of 1</p>
         </div>
       </footer>
-
-      {/* ---------------- STICKY BAR ---------------- */}
-      <div className="dockbar">
-        <div className="dockbar__inner">
-          <div className="dockbar__meta">
-            <b>NERVA Ring</b>
-            <span className="dockbar__desc">nervous-system sensing</span>
-            <span className="dockbar__stage">Prototype</span>
-          </div>
-          <a className="btn btn--accent" href="#follow">Follow the build</a>
-        </div>
-      </div>
     </>
   )
 }

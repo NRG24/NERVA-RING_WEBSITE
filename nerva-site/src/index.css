@@ -1,5 +1,5 @@
 /* ============================================================
-   NERVA Ring · Ultrahuman-inspired product page
+   NERVA Ring · product page (redesign)
 
    Color comes from the hardware, not from a mood board. The ring
    emits 530 nm green and 660 nm red through the band and reads skin
@@ -9,65 +9,59 @@
    channel, gold = the electrode channel. Neutrals are warmed off the
    usual cool grays so the paper has a temperature under them.
 
-   Type: Hanken Grotesk throughout. IBM Plex Mono only for numerals that
-   carry a unit, never for word-labels.
+   Type: Hanken Grotesk throughout. IBM Plex Mono for instrument
+   labels and for numerals that carry a unit.
    ============================================================ */
 
 :root {
   --paper:      #ffffff;
   --paper-2:    #f2efe8;   /* warm bone section tint */
-  --paper-3:    #faf7f1;   /* barely-there tint */
-  --ink:        #0a0a0c;   /* near-black text */
-  --ink-2:      #55565b;   /* secondary text */
-  --ink-3:      #86868b;   /* muted / captions */
-  --void:       #050506;   /* true-black sections */
-  --void-2:     #101013;
-  --forest:     #06251a;   /* deep green-black, the CTA ground */
-  --studio:     #7f8387;   /* product tile bg (matches renders) */
-  --line:       rgba(11, 11, 13, 0.08);
-  --line-2:     rgba(11, 11, 13, 0.14);
+  --paper-3:    #faf7f1;   /* page ground */
+  --ink:        #0a0a0c;
+  --ink-2:      #55565b;
+  --ink-3:      #86868b;
+  --void:       #050506;
+  --forest:     #06251a;   /* the CTA ground */
+  --forest-2:   #0a2e20;   /* panel inside the CTA */
+  --line:       rgba(11, 11, 13, 0.1);
+  --line-2:     rgba(11, 11, 13, 0.16);
   --line-dk:    rgba(255, 255, 255, 0.11);
 
   /* ---- the three signal families ---- */
-  --sensor:     #30d158;   /* the green LED itself, live indicators only */
+  --sensor:     #30d158;   /* the green LED itself */
   --green-ink:  #1a7a42;   /* same hue, dark enough to set type in */
   --pulse:      #ff5c57;   /* the red LED, on dark grounds only */
   --pulse-ink:  #c0322b;   /* same hue for ink on paper */
   --gold:       #d9a021;   /* the gold-plated GSR electrodes */
-  --gold-ink:   #8a5f12;   /* dark enough to set type in */
+  --gold-ink:   #8a5f12;
 
-  --accent:     #10743c;   /* deep signal green, CTAs */
-  --accent-ink: #ffffff;
+  --accent:     #10743c;
   --accent-dk:  #0c6033;
 
   /* ---- chart-recorder sheet ---- */
   --chart-paper: #f7f0e3;
-  --chart-edge:  #e8dcc6;
 
-  --shadow-sm:  0 1px 2px rgba(10,10,12,0.05), 0 6px 16px rgba(10,10,12,0.05);
   --shadow-md:  0 2px 6px rgba(10,10,12,0.05), 0 18px 48px rgba(10,10,12,0.09);
-  --shadow-lg:  0 4px 12px rgba(10,10,12,0.06), 0 40px 90px rgba(10,10,12,0.14);
+  --shadow-lg:  0 4px 12px rgba(10,10,12,0.06), 0 40px 90px rgba(10,10,12,0.16);
 
   --font-sans: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --wrap: 1200px;
-  --radius: 24px;
-  --radius-lg: 32px;
-  --nav-h: 66px;
+  --wrap: 1320px;
+  --nav-h: 64px;
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-* { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--paper-3);
   color: var(--ink);
   font-family: var(--font-sans);
   font-weight: 400;
@@ -81,66 +75,76 @@ body {
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 
-::selection { background: var(--ink); color: var(--paper); }
+::selection { background: var(--forest); color: #d6f5e2; }
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 28px; }
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 32px; }
+
+/* the sticky nav must not sit on top of whatever you jumped to */
+[id] { scroll-margin-top: calc(var(--nav-h) + 20px); }
 
 /* ---------- reveal ---------- */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); will-change: opacity, transform; }
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
+/* ---------- shared instrument label ---------- */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+.mono-label--film { color: rgba(255, 255, 255, 0.66); }
+.mono-label--dark { color: rgba(255, 255, 255, 0.7); letter-spacing: 0.08em; }
+.mono-label--live { display: inline-flex; align-items: center; gap: 8px; }
+.mono-label--live::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%; flex: none;
+  background: var(--sensor);
+  animation: livepulse 2.2s var(--ease) infinite;
+}
+@keyframes livepulse {
+  0% { box-shadow: 0 0 0 0 rgba(53, 217, 74, 0.5); }
+  70% { box-shadow: 0 0 0 7px rgba(53, 217, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(53, 217, 74, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .mono-label--live::before { animation: none; } }
+
 /* ============================================================
    DISPLAY TYPE
-
-   Small labels are set in the sans face, sentence case, in ink dark enough
-   to read as type. Monospace is reserved for numerals carrying a unit (the
-   chart's time axis, the paper speed) where the figures want to line up.
-   Setting word-labels in tracked-out uppercase mono is the single most
-   over-used "technical product" tell going, so none of them do.
    ============================================================ */
-
 .display {
   font-weight: 800;
-  /* capped below the hero title so the page keeps one clear loudest voice */
-  font-size: clamp(2.05rem, 1.25rem + 3.6vw, 3.9rem);
-  line-height: 1.04;
-  letter-spacing: -0.04em;
-  margin: 20px 0 0;
+  font-size: clamp(2.2rem, 1.3rem + 3.8vw, 4.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.042em;
+  margin: 0;
   color: var(--ink);
+  text-wrap: balance;
 }
 .display--light { color: var(--paper); }
 
-.lead { max-width: 820px; margin-bottom: clamp(44px, 5.4vw, 68px); }
-.lead__sub {
-  margin: 22px 0 0;
-  font-size: clamp(1.08rem, 1rem + 0.5vw, 1.3rem);
-  line-height: 1.55;
-  color: var(--ink-2);
-  max-width: 56ch;
-}
-
-/* intro variants — the page should not open every section the same way */
-.lead--tight { margin-bottom: clamp(30px, 3.4vw, 46px); }
+.lead { margin-bottom: clamp(48px, 6vw, 84px); }
+.lead--wide { max-width: 900px; }
 .lead--split {
-  max-width: none;
   display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
-  gap: clamp(24px, 4vw, 60px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(24px, 4vw, 64px);
   align-items: end;
 }
-.lead--split .display { margin: 0; }
-.lead--split .lead__sub {
+.lead__sub {
   margin: 0;
   padding-left: clamp(22px, 2.6vw, 40px);
-  border-left: 1px solid var(--line);
+  border-left: 1px solid rgba(11, 11, 13, 0.12);
   font-size: 1.05rem;
   line-height: 1.6;
+  color: var(--ink-2);
   max-width: 42ch;
 }
 
@@ -148,7 +152,7 @@ a { color: inherit; text-decoration: none; }
    BUTTONS
    ============================================================ */
 .btn {
-  --pad-y: 11px; --pad-x: 20px;
+  --pad-y: 10px; --pad-x: 20px;
   display: inline-flex; align-items: center; justify-content: center;
   gap: 8px;
   padding: var(--pad-y) var(--pad-x);
@@ -156,78 +160,73 @@ a { color: inherit; text-decoration: none; }
   border-radius: 999px;
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14.5px;
   letter-spacing: -0.01em;
   cursor: pointer;
   white-space: nowrap;
   transition: transform 0.18s var(--ease), background 0.18s var(--ease),
-              border-color 0.18s var(--ease), color 0.18s var(--ease);
+              border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
 }
 .btn:active { transform: translateY(1px); }
-.btn--lg { --pad-y: 15px; --pad-x: 28px; font-size: 16px; }
+.btn--lg { --pad-y: 15px; --pad-x: 30px; font-size: 16px; }
 .btn--block { width: 100%; }
 
-.btn--accent { background: var(--accent); color: var(--accent-ink); }
-.btn--dark { background: var(--ink); color: var(--paper); }
-.btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
+.btn--accent { background: var(--accent); color: #fff; }
+/* the LED green, for buttons that sit on a dark or green ground */
+.btn--led { background: var(--sensor); color: #04231a; }
+.btn--onfilm { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.34); }
 
-/* the lift belongs to a pointer. On a touchscreen there is nothing to un-hover,
-   so a tapped button would keep the raised state until you tapped elsewhere. */
+/* the lift belongs to a pointer. On a touchscreen there is nothing to
+   un-hover, so a tapped button would keep the raised state. */
 @media (hover: hover) {
-  .btn--accent:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(16,116,60,0.34); }
-  .btn--accent:active { transform: translateY(0); }
-  .btn--dark:hover { background: #26262b; transform: translateY(-1px); }
-  .btn--ghost:hover { border-color: var(--ink); background: rgba(11,11,13,0.03); }
+  .btn--accent:hover { background: var(--accent-dk); }
+  .btn--led:hover { background: #4ade74; box-shadow: 0 8px 26px rgba(48, 209, 88, 0.32); }
+  .btn--onfilm:hover { border-color: #fff; background: rgba(255, 255, 255, 0.06); }
 }
 
 :focus-visible { outline: 2.5px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
-/* round targets keep a round focus ring */
-.swatch:focus-visible, .brand__mark:focus-visible { border-radius: 50%; outline-offset: 4px; }
-.btn:focus-visible { border-radius: 999px; }
-/* dark sections: the deep green ring loses contrast on black, so lift it off a white halo */
-.inside :focus-visible, .cta :focus-visible, .film :focus-visible {
+.btn:focus-visible, .pill:focus-visible { border-radius: 999px; }
+/* dark sections: the deep green ring loses contrast on black, so lift it
+   off a white halo */
+.hero :focus-visible, .inside :focus-visible, .cta :focus-visible, .film :focus-visible {
   outline-color: var(--paper);
   box-shadow: 0 0 0 5px rgba(48, 209, 88, 0.6);
 }
 
-/* the sticky nav must not sit on top of whatever you jumped to */
-[id] { scroll-margin-top: calc(var(--nav-h) + 20px); }
-
 /* ============================================================
-   STATUS STRIP + NAV
+   NAV
    ============================================================ */
-.strip {
-  background: var(--forest);
-  color: rgba(214, 245, 226, 0.82);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  text-align: center;
-  padding: 9px 16px;
-}
-/* the one word in the strip that is a live claim gets the LED green */
-.strip b { color: var(--sensor); font-weight: 600; }
-
 .nav {
   position: sticky; top: 0; z-index: 60;
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: saturate(1.4) blur(14px);
+  background: rgba(250, 247, 241, 0.88);
+  backdrop-filter: saturate(1.3) blur(16px);
   border-bottom: 1px solid var(--line);
 }
 .nav__inner {
   max-width: var(--wrap); margin: 0 auto; height: var(--nav-h);
-  padding: 0 28px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 .brand {
-  display: inline-flex; align-items: center; gap: 9px;
-  font-weight: 800; font-size: 20px; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 19px; letter-spacing: 0.02em;
 }
-.brand__mark { width: 24px; height: 24px; display: block; flex: none; }
-.nav__links { display: flex; gap: 30px; }
+.brand__mark { width: 22px; height: 22px; display: block; flex: none; }
+/* the stage is part of the wordmark: this is a prototype, and the page
+   never pretends otherwise */
+.brand__tag {
+  font-family: var(--font-mono);
+  font-weight: 500; font-size: 11px; letter-spacing: 0.08em;
+  color: var(--gold-ink);
+  border: 1px solid rgba(138, 95, 18, 0.35);
+  border-radius: 3px;
+  padding: 2px 7px;
+  margin-left: 2px;
+}
+.nav__links { display: flex; gap: 28px; }
 .nav__links a {
   position: relative;
-  font-size: 15px; font-weight: 500; color: var(--ink-2);
+  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
   transition: color 0.15s var(--ease);
 }
 .nav__links a::after {
@@ -247,12 +246,10 @@ a { color: inherit; text-decoration: none; }
 }
 
 .mobile-menu {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px 20px 20px;
+  display: none; flex-direction: column; gap: 4px;
+  padding: 8px 24px 20px;
   border-bottom: 1px solid var(--line);
-  background: var(--paper);
+  background: var(--paper-3);
 }
 .mobile-menu.open { display: flex; }
 .mobile-menu a:not(.btn) {
@@ -263,252 +260,184 @@ a { color: inherit; text-decoration: none; }
 
 /* ============================================================
    HERO
+
+   Full-bleed product film, played once. It ends, fades to black,
+   holds, then fades up into the black-glass still — so the page opens
+   on motion and settles on a product shot rather than looping forever.
+   Film and still carry IDENTICAL framing values so the cross-fade
+   cannot jump; do not change one without the other.
    ============================================================ */
-/* the first screen opens on warm stock rather than white, so the page has a
-   temperature before you reach any of the accents */
 .hero {
-  background: var(--paper-2);
-  padding: clamp(36px, 4vw, 76px) 0 clamp(52px, 6vw, 96px);
-}
-.hero__grid {
-  max-width: var(--wrap); margin: 0 auto; padding: 0 28px;
-  display: grid; grid-template-columns: 1.02fr 0.98fr; gap: clamp(28px, 4vw, 68px);
-  align-items: center;
-}
-
-.hero__stage {
   position: relative;
-  background:
-    radial-gradient(130% 110% at 50% 22%, #8f9398 0%, #7c8085 46%, #62666b 100%);
-  border-radius: var(--radius-lg);
+  background: #0b0c0e;
+  min-height: 92vh;
+  display: flex; flex-direction: column;
   overflow: hidden;
-  aspect-ratio: 1 / 0.92;
-  display: grid; place-items: center;
-  box-shadow: var(--shadow-lg);
 }
-.hero__stage::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(120% 90% at 50% 40%, transparent 44%, rgba(0,0,0,0.22) 100%);
+.hero__film, .hero__still {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  /* a hair of scale so no edge of the render shows at any aspect ratio.
+     NOTE: no scale-in animation here — an animation that ends on
+     transform:none fights this value and shows as a stutter. */
+  transform: scale(1.02);
 }
-.hero__ring {
-  width: 100%; height: 100%; object-fit: cover;
-  animation: ringIn 0.7s var(--ease);
+.hero__still {
+  opacity: 0;
+  transition: opacity 1.6s ease;
 }
-@keyframes ringIn {
-  from { opacity: 0; transform: scale(1.03); }
-  to   { opacity: 1; transform: none; }
+.hero__blackout {
+  position: absolute; inset: 0; pointer-events: none;
+  background: #000;
+  opacity: 0;
+  transition: opacity 1.4s ease;
 }
-@media (prefers-reduced-motion: reduce) { .hero__ring { animation: none; } }
+.hero__grade {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgba(5, 5, 6, 0.42) 0%, transparent 30% 52%, rgba(5, 5, 6, 0.78) 88%);
+}
 
-.hero__copy { padding: 6px 0; }
+.hero__labels {
+  position: relative;
+  max-width: var(--wrap); width: 100%; margin: 0 auto;
+  padding: 28px 32px 0;
+  display: flex; justify-content: space-between; gap: 24px;
+}
+
+.hero__copy {
+  position: relative;
+  max-width: var(--wrap); width: 100%;
+  margin: auto auto 0;
+  padding: 56px 32px 0;
+}
 .hero__title {
+  margin: 0; max-width: 13ch;
   font-weight: 800;
-  font-size: clamp(2.6rem, 1.5rem + 4.4vw, 4.3rem);
-  line-height: 0.98;
-  letter-spacing: -0.045em;
-  margin: 20px 0 0;
+  font-size: clamp(3rem, 1.6rem + 6vw, 6.4rem);
+  line-height: 0.94;
+  letter-spacing: -0.048em;
+  color: #fff;
+  text-wrap: balance;
 }
 .hero__lede {
-  margin: 26px 0 0; max-width: 46ch;
-  font-size: clamp(1.08rem, 1rem + 0.45vw, 1.28rem);
+  margin: 26px 0 0; max-width: 44ch;
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.25rem);
   line-height: 1.5;
-  color: var(--ink-2);
+  color: rgba(255, 255, 255, 0.78);
 }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 34px 0 0; }
 
-/* finish selector */
-.finish { margin-top: 30px; }
-.finish__label {
-  font-weight: 700; font-size: 15px; letter-spacing: -0.01em;
+/* the instrument bezel along the bottom of the film: a live EDA trace
+   running the full width, with the ring's headline figures under it */
+.hero__bezel {
+  position: relative;
+  margin-top: 52px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
-.finish__label span { color: var(--ink-3); font-weight: 500; }
-.finish__swatches { display: flex; gap: 12px; margin-top: 12px; }
-.swatch {
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 0; cursor: pointer; padding: 0;
-  box-shadow: 0 0 0 1.5px var(--line-2), inset 0 1px 2px rgba(255,255,255,0.35);
-  transition: box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
+.hero__wave {
+  position: absolute; left: 0; right: 0; top: -46px;
+  width: 100%; height: 46px; pointer-events: none;
 }
-@media (hover: hover) {
-  .swatch:hover { transform: translateY(-1px); box-shadow: 0 0 0 1.5px var(--ink-3), inset 0 1px 2px rgba(255,255,255,0.35); }
-  .swatch.is-active:hover { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); }
-}
-.swatch.is-active { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent); }
-
-.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-
-.hero__meta {
-  display: grid; grid-template-columns: repeat(3, auto);
-  gap: 0 40px; margin: 40px 0 0; padding-top: 28px;
-  border-top: 1px solid var(--line);
-}
-.hero__meta dt { font-size: 13px; font-weight: 500; color: var(--ink-2); }
-.hero__meta dd { margin: 6px 0 0; font-weight: 700; font-size: 17px; letter-spacing: -0.02em; }
-/* the two signals that get their own channel further down are named in that
-   channel's ink here, so the color means the same thing on both screens */
-.sig-hr { color: var(--pulse-ink); }
-.sig-eda { color: var(--green-ink); }
-
-/* ============================================================
-   EDA WAVE STRIP
-   ============================================================ */
-.wavebar { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper); }
-.wavebar__inner {
-  max-width: var(--wrap); margin: 0 auto; padding: 0 28px;
-  height: 74px; display: flex; align-items: center; gap: 22px;
-}
-.wavebar__label, .wavebar__val {
-  font-size: 13px; font-weight: 500; color: var(--ink-2); white-space: nowrap;
-}
-.wavebar__val { display: inline-flex; align-items: center; gap: 8px; }
-.wavebar__val::before {
-  content: ''; width: 8px; height: 8px; border-radius: 50%;
-  background: var(--sensor); box-shadow: 0 0 0 0 rgba(53, 217, 74, 0.5);
-  animation: livepulse 2.2s var(--ease) infinite;
-}
-@keyframes livepulse {
-  0% { box-shadow: 0 0 0 0 rgba(53, 217, 74, 0.5); }
-  70% { box-shadow: 0 0 0 7px rgba(53, 217, 74, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(53, 217, 74, 0); }
-}
-.wavebar__svg { flex: 1; height: 46px; min-width: 0; }
-.wave-path { fill: none; stroke: var(--green-ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.5; }
+.wave-path { fill: none; stroke: rgba(48, 209, 88, 0.35); stroke-width: 1.4; }
 .wave-dash {
-  stroke: var(--sensor); stroke-width: 1.8;
+  stroke: var(--sensor); stroke-width: 1.7; stroke-linecap: round;
   stroke-dasharray: 90 1000; stroke-dashoffset: 1090;
   animation: trace 4.5s linear infinite;
 }
 @keyframes trace { to { stroke-dashoffset: 0; } }
-@media (prefers-reduced-motion: reduce) {
-  .wave-dash { animation: none; opacity: 0; }
-  .wavebar__val::before { animation: none; }
-}
+@media (prefers-reduced-motion: reduce) { .wave-dash { animation: none; opacity: 0; } }
 
-/* ============================================================
-   CINEMATIC SENSOR FILM (scroll-scrubbed)
-   ============================================================ */
-.film { position: relative; background: #000; }
-/* mobile / reduced-motion: normal autoplay panel */
-.film__sticky {
-  position: relative; height: 74vh; min-height: 420px;
-  overflow: hidden; background: #000;
+.hero__specs {
+  max-width: var(--wrap); margin: 0 auto;
+  padding: 18px 32px 22px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
 }
-/* desktop scrub: tall scroll track + pinned viewport */
-.film--scrub { height: 340vh; }
-.film--scrub .film__sticky { position: sticky; top: 0; height: 100vh; }
-
-.film__video {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; background: #000;
+.hero__specK { display: block; font-size: 12px; font-weight: 500; color: rgba(255, 255, 255, 0.52); }
+.hero__specV {
+  display: block; margin-top: 5px;
+  font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: #fff;
 }
-.film__grade {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    linear-gradient(to bottom, #000 0%, transparent 16% 84%, #000 100%),
-    radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(0,0,0,0.4) 100%);
-}
-.film__ui {
-  position: absolute; inset: 0; pointer-events: none;
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: clamp(20px, 4vw, 44px);
-}
-.film__tag { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); }
-.film__hint {
-  align-self: center; margin-top: auto;
-  font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.88);
-  display: inline-flex; align-items: center; gap: 10px;
-  transition: opacity 0.2s var(--ease);
-}
-.film__hint::after {
-  content: ''; width: 7px; height: 7px; border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor; transform: rotate(45deg);
-  animation: bob 1.8s var(--ease) infinite;
-}
-@keyframes bob { 0%,100% { transform: rotate(45deg) translate(0,0); } 50% { transform: rotate(45deg) translate(2px,2px); } }
-.film__progress {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
-  background: rgba(255,255,255,0.14);
-}
-.film__progress span {
-  display: block; height: 100%; width: 100%;
-  background: var(--sensor); transform-origin: left center;
-}
-@media (prefers-reduced-motion: reduce) { .film__hint::after { animation: none; } }
 
 /* ============================================================
    SECTIONS (light)
    ============================================================ */
-.section { padding: clamp(80px, 10vw, 160px) 0; }
+.section { padding: clamp(90px, 11vw, 170px) 0; }
 .section--tint { background: var(--paper-2); }
-.br-lg { display: none; }
-@media (min-width: 720px) { .br-lg { display: inline; } }
 
 /* ------------------------------------------------------------
    THE TWO PATHS TO A STRESS NUMBER
    Two ruled rows, not two cards: the point is a comparison of
-   distance, so each row runs the full width and the chain of steps
-   is allowed to be as long as it really is. The rule above each row
-   is in that channel's ink, and the last step of each chain carries
-   the argument typographically. One ends in an italic hedge, the
-   other in a figure with a unit on it.
+   distance, so each row runs the full width and the chain of steps is
+   allowed to be as long as it really is. The rule above each row is in
+   that channel's ink, and the last step carries the argument
+   typographically — one ends in an italic hedge, the other in a figure
+   with a unit on it.
    ------------------------------------------------------------ */
-.paths { margin-top: clamp(28px, 3.6vw, 46px); }
-
 .path {
   display: grid;
-  grid-template-columns: minmax(0, 1.24fr) minmax(0, 0.76fr);
-  gap: clamp(18px, 3vw, 46px);
-  padding: clamp(22px, 2.6vw, 30px) 0 clamp(26px, 3vw, 36px);
+  grid-template-columns: 56px minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(18px, 3vw, 48px);
+  padding: clamp(26px, 3vw, 38px) 0;
   border-top: 2px solid var(--line-2);
 }
-.path--inferred { border-top-color: rgba(192, 50, 43, 0.34); }
-.path--measured { border-top-color: rgba(26, 122, 66, 0.5); }
+.path--inferred { border-top-color: rgba(192, 50, 43, 0.4); }
+.path--measured { border-top-color: rgba(26, 122, 66, 0.55); border-bottom: 1px solid var(--line); }
+
+.path__idx { font-family: var(--font-mono); font-size: 13px; padding-top: 6px; }
+.path--inferred .path__idx { color: var(--pulse-ink); }
+.path--measured .path__idx { color: var(--green-ink); }
 
 .path__h {
-  margin: 0; font-weight: 700; letter-spacing: -0.02em;
-  font-size: clamp(1.18rem, 1.05rem + 0.45vw, 1.42rem);
+  margin: 0; font-weight: 700; letter-spacing: -0.025em;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
 }
 .path--inferred .path__h { color: var(--pulse-ink); }
 .path--measured .path__h { color: var(--green-ink); }
 
 .path__steps {
-  list-style: none; margin: 20px 0 0; padding: 0;
-  display: flex; flex-wrap: wrap; align-items: baseline;
-  font-size: clamp(1.02rem, 0.97rem + 0.22vw, 1.11rem); line-height: 1.55;
+  list-style: none; margin: 22px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px;
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+  line-height: 1.5; color: #3d3e42; font-weight: 500;
 }
-.path__steps li { color: var(--ink-2); }
-/* the arrow leads its step rather than trailing the one before it, so a chain
-   that wraps starts the next line with the link instead of orphaning it */
+/* the arrow leads its step rather than trailing the one before it, so a
+   chain that wraps starts the next line with the link */
 .path__steps li:not(:first-child)::before {
-  content: '\2192';
-  margin: 0 clamp(9px, 1vw, 14px);
-  color: var(--ink-3);
+  content: '\2192'; margin-right: 16px; color: #b3b4b8;
 }
-.path__out { font-weight: 700; }
 /* a guess, set as one */
-.path--inferred .path__out { color: var(--ink-3); font-style: italic; font-weight: 500; }
+.path--inferred .path__out { color: var(--ink-3); font-style: italic; }
 /* a reading, with the unit still attached to it */
-.path--measured .path__out { color: var(--green-ink); font-variant-numeric: tabular-nums; }
-
-.path__note { margin: 0; color: var(--ink-2); font-size: 0.98rem; line-height: 1.62; max-width: 46ch; }
+.path--measured .path__out {
+  color: var(--green-ink); font-weight: 700;
+  font-family: var(--font-mono); font-size: 0.92em;
+}
+.path__note {
+  margin: 0; align-self: center;
+  color: var(--ink-2); font-size: 0.98rem; line-height: 1.62; max-width: 44ch;
+}
 
 /* the honest footnote, marked in the electrode channel's gold */
 .caveat {
-  margin-top: clamp(30px, 4vw, 50px);
+  margin-top: clamp(28px, 3.5vw, 44px);
   padding-left: clamp(18px, 2.2vw, 28px);
   border-left: 3px solid var(--gold);
-  max-width: 76ch;
+  max-width: 72ch;
 }
-.caveat p { margin: 0; color: var(--ink-2); font-size: 1.02rem; line-height: 1.62; }
+.caveat p { margin: 0; color: var(--ink-2); font-size: 1rem; line-height: 1.62; }
 .caveat b { color: var(--ink); font-weight: 700; }
 
 /* ------------------------------------------------------------
    CHART-RECORDER STRIP
-   Pulse and skin conductance are the two channels a polygraph
-   writes, which is what this ring is, so the readout is drawn the
-   way a polygraph draws it: ink on a warm paper strip torn off a
-   roll. No dark panel, no oscilloscope grid, no neon. Nothing here
-   claims to be live, so nothing loops; the pen lays each trace down
-   once, when you reach it, and then it is a record.
+   Pulse and skin conductance are the two channels a polygraph writes,
+   which is what this ring is, so the readout is drawn the way a
+   polygraph draws it: ink on a warm paper strip torn off a roll. No
+   dark panel, no oscilloscope grid, no neon. Nothing here claims to be
+   live, so nothing loops; the pen lays each trace down once, when you
+   reach it, and then it is a record.
    ------------------------------------------------------------ */
 .strip-chart {
   margin: 0;
@@ -518,11 +447,10 @@ a { color: inherit; text-decoration: none; }
     drop-shadow(0 2px 3px rgba(10, 10, 12, 0.10))
     drop-shadow(0 24px 42px rgba(10, 10, 12, 0.14));
 }
-
 .strip-chart__sheet {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
-  /* paper corners are cut, not rounded to 32px like a dashboard card */
+  /* paper corners are cut, not rounded like a dashboard card */
   border-radius: 2px;
   background-color: var(--chart-paper);
   /* uneven stock, lit from the top left. Deliberately not a grid. */
@@ -530,12 +458,8 @@ a { color: inherit; text-decoration: none; }
     radial-gradient(120% 84% at 10% -10%, rgba(255, 255, 255, 0.75), transparent 62%),
     radial-gradient(94% 70% at 92% 108%, rgba(178, 138, 78, 0.13), transparent 66%);
 }
-
 /* the tear-off strip down the left edge of continuous chart paper */
-.strip-chart__margin {
-  position: relative;
-  border-right: 1px dashed rgba(122, 94, 52, 0.34);
-}
+.strip-chart__margin { position: relative; border-right: 1px dashed rgba(122, 94, 52, 0.34); }
 .strip-chart__margin::before {
   content: '';
   position: absolute; left: 50%; top: 22px; bottom: 22px;
@@ -544,12 +468,7 @@ a { color: inherit; text-decoration: none; }
   background-size: 8px 27px;
   background-repeat: repeat-y;
 }
-
-.strip-chart__body {
-  min-width: 0;
-  padding: 18px clamp(18px, 2.4vw, 32px) 16px clamp(15px, 1.8vw, 24px);
-}
-
+.strip-chart__body { min-width: 0; padding: 18px clamp(18px, 2.4vw, 32px) 16px clamp(15px, 1.8vw, 24px); }
 .strip-chart__head {
   display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
   padding-bottom: 11px;
@@ -559,9 +478,9 @@ a { color: inherit; text-decoration: none; }
 /* a measurement, so it keeps the monospace figures */
 .strip-chart__speed { flex: none; font-family: var(--font-mono); font-size: 11.5px; }
 
-/* Lanes and the time axis share one key column so every tick lines up with
-   the ink above it. The two channels are still not the same shape: a pulse
-   channel is short and dense, an EDA channel is tall and slow. */
+/* Lanes and the time axis share one key column so every tick lines up
+   with the ink above it. The two channels are still not the same shape:
+   a pulse channel is short and dense, an EDA channel is tall and slow. */
 .lane, .strip-chart__foot {
   display: grid;
   grid-template-columns: 170px minmax(0, 1fr);
@@ -569,19 +488,14 @@ a { color: inherit; text-decoration: none; }
 }
 .lane { position: relative; align-items: center; padding: 15px 0; }
 .lane__field { position: relative; min-width: 0; }
-
 /* a rule that stops short of the right edge, the way a ruled sheet does */
 .lane + .lane::before {
   content: ''; position: absolute; top: 0; left: 0; right: 21%; height: 1px;
   background: rgba(122, 94, 52, 0.22);
 }
-
 .lane__key { min-width: 0; }
 .lane__name { display: block; font-weight: 700; font-size: 1.02rem; letter-spacing: -0.02em; color: #241a0d; }
-.lane__meta {
-  display: block; margin-top: 3px;
-  font-size: 12.5px; color: rgba(74, 58, 34, 0.72);
-}
+.lane__meta { display: block; margin-top: 3px; font-size: 12.5px; color: rgba(74, 58, 34, 0.72); }
 .lane__val {
   margin-top: 10px; font-weight: 800; font-size: 1.46rem;
   letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums;
@@ -600,11 +514,11 @@ a { color: inherit; text-decoration: none; }
 .chart-ink--pulse { stroke: var(--pulse-ink); stroke-width: 1.9; }
 .chart-ink--eda   { stroke: var(--green-ink); stroke-width: 2.2; }
 
-/* one-shot pen stroke, keyed off the section reveal. pathLength="1" on the
-   path normalizes the dash math so it works whatever the geometry is. */
+/* one-shot pen stroke, keyed off the section reveal. pathLength="1" on
+   the path normalizes the dash math whatever the geometry is. */
 .chart-ink { stroke-dasharray: 1; stroke-dashoffset: 1; }
-/* linear, not eased: the paper leaves the recorder at a constant speed, which
-   is the whole meaning of the 25 mm/s in the header */
+/* linear, not eased: the paper leaves the recorder at a constant speed,
+   which is the whole meaning of the 25 mm/s in the header */
 .reveal.in .chart-ink { animation: penDraw 1.9s linear forwards; }
 .reveal.in .chart-ink--eda { animation-duration: 2.2s; animation-delay: 0.12s; }
 @keyframes penDraw { to { stroke-dashoffset: 0; } }
@@ -624,8 +538,8 @@ a { color: inherit; text-decoration: none; }
   width: 1px; height: 15px; background: currentColor; opacity: 0.45;
 }
 
-/* time axis: a tick per second, labelled every fifth. The strip ends mid
-   interval because it was cut off a longer roll. */
+/* time axis: a tick per second, labelled every fifth. The strip ends
+   mid-interval because it was cut off a longer roll. */
 .strip-chart__time {
   position: relative; height: 25px; margin-top: 2px;
   border-top: 1px solid rgba(122, 94, 52, 0.22);
@@ -640,10 +554,10 @@ a { color: inherit; text-decoration: none; }
 
 /* editorial signal notes (no cards, no chips) */
 .sig-notes {
-  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 68px);
-  margin-top: clamp(36px, 4.5vw, 60px);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 72px);
+  margin-top: clamp(40px, 5vw, 68px);
 }
-.sig-note + .sig-note { padding-left: clamp(28px, 4vw, 68px); border-left: 1px solid var(--line); }
+.sig-note + .sig-note { padding-left: clamp(28px, 4vw, 72px); border-left: 1px solid var(--line); }
 .sig-note h3 {
   margin: 0; font-weight: 700; font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
   letter-spacing: -0.02em; display: flex; align-items: center; gap: 11px;
@@ -657,194 +571,231 @@ a { color: inherit; text-decoration: none; }
 .sig-note b { color: var(--ink); font-weight: 700; }
 
 /* ============================================================
-   INSIDE OUT (dark)
+   CINEMATIC SENSOR FILM (scroll-scrubbed)
    ============================================================ */
-.inside {
-  background: var(--void); color: var(--paper);
-  padding: clamp(72px, 9vw, 140px) 0 clamp(48px, 6vw, 80px);
+.film { position: relative; background: #000; }
+/* mobile / reduced-motion: normal autoplay panel */
+.film__sticky { position: relative; height: 74vh; min-height: 420px; overflow: hidden; background: #000; }
+/* desktop scrub: tall scroll track + pinned viewport */
+.film--scrub { height: 340vh; }
+.film--scrub .film__sticky { position: sticky; top: 0; height: 100vh; }
+
+.film__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; }
+.film__grade {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to bottom, #000 0%, transparent 16% 84%, #000 100%),
+    radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
 }
-.inside__head { max-width: 780px; }
+.film__ui {
+  position: absolute; inset: 0; pointer-events: none;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: clamp(20px, 4vw, 44px);
+}
+.film__hint {
+  align-self: center; margin-top: auto;
+  font-size: 13.5px; font-weight: 500; color: rgba(255, 255, 255, 0.88);
+  display: inline-flex; align-items: center; gap: 10px;
+  transition: opacity 0.2s var(--ease);
+}
+.film__hint::after {
+  content: ''; width: 7px; height: 7px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  animation: bob 1.8s var(--ease) infinite;
+}
+@keyframes bob {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); }
+  50% { transform: rotate(45deg) translate(2px, 2px); }
+}
+@media (prefers-reduced-motion: reduce) { .film__hint::after { animation: none; } }
+.film__progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.14); }
+.film__progress span { display: block; height: 100%; width: 100%; background: var(--sensor); transform-origin: left center; }
+
+/* ============================================================
+   INSIDE THE BAND (dark)
+   A numbered index of the sensing stack, with the real part numbers
+   set in mono beside each heading. The image column sticks so the ring
+   stays in view while the list scrolls past it.
+   ============================================================ */
+.inside { background: var(--void); color: var(--paper); padding: clamp(90px, 11vw, 160px) 0; }
 .inside__grid {
-  margin-top: clamp(36px, 5vw, 68px);
-  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 72px);
-  align-items: center;
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 5vw, 88px); align-items: start;
+}
+.inside__aside { position: sticky; top: 96px; }
+.inside__lede {
+  margin: 20px 0 0; color: rgba(255, 255, 255, 0.62);
+  font-size: 1.05rem; line-height: 1.6; max-width: 38ch;
 }
 .inside__stage {
-  border-radius: var(--radius); overflow: hidden;
+  margin-top: 36px; border-radius: 20px; overflow: hidden;
   background: radial-gradient(120% 100% at 50% 40%, #24282d, #0a0b0d 78%);
-  aspect-ratio: 1 / 1; display: grid; place-items: center;
+  aspect-ratio: 1 / 0.9;
 }
 .inside__ring { width: 100%; height: 100%; object-fit: cover; }
 
 .inside__list { display: flex; flex-direction: column; }
-.feat { padding: 24px 0; border-top: 1px solid var(--line-dk); }
-.feat:first-child { border-top: 0; padding-top: 0; }
-.feat:last-child { padding-bottom: 0; }
-.feat h3 {
-  margin: 0; font-weight: 700; font-size: clamp(1.2rem, 1rem + 0.7vw, 1.5rem);
-  letter-spacing: -0.02em;
+.spec {
+  display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 20px;
+  padding: clamp(24px, 2.6vw, 34px) 0;
+  border-top: 1px solid var(--line-dk);
 }
-.feat p { margin: 8px 0 0; color: rgba(255,255,255,0.66); max-width: 46ch; font-size: 16px; line-height: 1.62; }
+.spec:first-child { border-top: 0; padding-top: 0; }
+.spec__n { font-family: var(--font-mono); font-size: 13px; color: rgba(255, 255, 255, 0.4); padding-top: 8px; }
+.spec__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; }
+.spec__head h3 {
+  margin: 0; font-weight: 700;
+  font-size: clamp(1.3rem, 1.1rem + 0.7vw, 1.7rem); letter-spacing: -0.022em;
+}
+/* the part number is marked in the channel that part belongs to */
+.spec__part { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.04em; }
+.spec__part--pulse   { color: var(--pulse); }
+.spec__part--gold    { color: var(--gold); }
+.spec__part--sensor  { color: var(--sensor); }
+.spec__part--neutral { color: rgba(255, 255, 255, 0.55); }
+.spec p { margin: 10px 0 0; color: rgba(255, 255, 255, 0.64); max-width: 52ch; font-size: 16px; line-height: 1.62; }
 
 /* ============================================================
-   BLUEPRINT / ENGINEERING DRAWING
+   FINISHES
    ============================================================ */
-.bp__frame {
-  background: #f6f2e7;   /* vellum, not printer white */
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: var(--shadow-md);
-  padding: clamp(10px, 1.6vw, 24px);
-  overflow: hidden;
+.finish__head {
+  display: flex; align-items: end; justify-content: space-between;
+  gap: 32px; flex-wrap: wrap;
+  margin-bottom: clamp(36px, 4.5vw, 56px);
 }
-/* the sheet is black line art on a white field, so multiplying it drops the
-   white out and prints the linework straight onto the vellum above */
-.bp__frame img {
-  width: 100%; height: auto; display: block;
-  border-radius: 4px;
-  mix-blend-mode: multiply;
+.finish__pills { display: flex; align-items: center; gap: 16px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 9px 18px 9px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-sans); font-size: 14.5px; font-weight: 600; color: var(--ink);
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
 }
-.bp__meta {
-  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-  margin-top: 18px;
-  font-size: 13px; font-weight: 500; color: var(--ink-2);
+.pill.is-active { border-color: var(--accent); background: var(--paper); }
+@media (hover: hover) { .pill:hover { border-color: var(--ink-3); } }
+.pill__swatch {
+  width: 22px; height: 22px; border-radius: 50%; flex: none;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35);
 }
-.bp__rev { color: var(--ink-3); }
 
-/* ============================================================
-   BUILD LEDGER
-   ============================================================ */
+.finish__stage {
+  position: relative; border-radius: 24px; overflow: hidden;
+  aspect-ratio: 16 / 8.4;
+  /* the studio ground the renders were shot against */
+  background: radial-gradient(130% 110% at 50% 22%, #8f9398 0%, #7c8085 46%, #62666b 100%);
+  box-shadow: var(--shadow-lg);
+}
+.finish__ring {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 40%;
+  animation: ringIn 0.7s var(--ease);
+}
+@keyframes ringIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .finish__ring { animation: none; } }
+.finish__caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding: 20px 26px;
+  background: linear-gradient(to top, rgba(5, 5, 6, 0.55), transparent);
+}
+.finish__name { font-weight: 700; font-size: 17px; color: #fff; letter-spacing: -0.01em; }
 
-/* one segment per row of the ledger below, counted from the same data */
-.tally { margin-top: 30px; max-width: 460px; }
-.tally__bar { display: flex; gap: 4px; }
-.tally__seg { height: 5px; flex: 1; border-radius: 2px; background: var(--line-2); }
+/* the build ledger, compressed to a single status line: one segment per
+   milestone, counted from the same array the copy reads */
+.statusline {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 20px; flex-wrap: wrap;
+  margin-top: clamp(40px, 5vw, 60px);
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+.tally__bar { display: flex; gap: 4px; flex: 1; min-width: 280px; max-width: 520px; }
+.tally__seg { height: 5px; flex: 1; border-radius: 2px; background: rgba(11, 11, 13, 0.14); }
 .tally__seg--done { background: var(--sensor); }
 .tally__seg--wip { background: var(--gold); }
-.tally__read {
-  margin: 12px 0 0; font-size: 13px; font-weight: 500; color: var(--ink-2);
-}
-
-.ledger {
-  border: none; border-radius: var(--radius-lg); overflow: hidden;
-  background: var(--paper); box-shadow: var(--shadow-md);
-}
-.lrow {
-  display: grid; grid-template-columns: 26px 1fr auto; align-items: center; gap: 16px;
-  padding: 20px 30px; border-top: 1px solid var(--line);
-  transition: background 0.2s var(--ease);
-}
-@media (hover: hover) { .lrow:hover { background: var(--paper-3); } }
-.lrow:first-child { border-top: 0; }
-.lrow__mark {
-  width: 15px; height: 15px; border-radius: 50%; justify-self: center;
-}
-.lrow--done .lrow__mark { background: var(--sensor); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
-.lrow--wip .lrow__mark { background: var(--gold); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.12); }
-.lrow--todo .lrow__mark { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line-2); }
-.lrow__label { font-weight: 500; letter-spacing: -0.01em; }
-.lrow--todo .lrow__label { color: var(--ink-2); }
-/* plain type, not a pill badge */
-.lrow__tag {
-  font-size: 13px; font-weight: 600; color: var(--ink-3);
-  white-space: nowrap;
-}
-.lrow--done .lrow__tag { color: var(--green-ink); }
-.lrow--wip .lrow__tag { color: var(--gold-ink); }
+.statusline__read { margin: 0; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.statusline__read .is-done { color: var(--green-ink); font-weight: 700; }
+.statusline__read .is-wip { color: var(--gold-ink); font-weight: 700; }
 
 /* ============================================================
    CTA
+   The one section that asks for something gets its own ground: a deep
+   green-black, so it is not a third identical black band. The drawing
+   sits beside it, inverted onto the green so the sheet reads as a
+   backlit plot rather than a pasted-in JPEG.
    ============================================================ */
-/* the one section that asks for something gets its own ground: a deep
-   green-black, so it is not a third identical black band */
-.cta { background: var(--forest); color: var(--paper); padding: clamp(72px, 9vw, 130px) 0; }
-/* the deep-green button vanishes into the deep-green ground, so on this
-   one section the CTA switches to the LED green with dark type on it */
-.cta .btn--accent { background: var(--sensor); color: #04231a; }
-@media (hover: hover) {
-  .cta .btn--accent:hover { background: #4ade74; box-shadow: 0 8px 22px rgba(48, 209, 88, 0.28); }
+.cta { background: var(--forest); color: var(--paper); padding: clamp(90px, 11vw, 150px) 0; }
+.cta__grid {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(32px, 5vw, 80px); align-items: center;
 }
-.cta__inner { max-width: 720px; }
-.cta__lede { margin: 22px 0 0; color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 52ch; }
+.cta__lede { margin: 22px 0 0; color: rgba(255, 255, 255, 0.7); font-size: 1.1rem; max-width: 48ch; }
 
-.signup-wrap { margin: 32px 0 0; }
-.signup { display: flex; gap: 10px; max-width: 460px; }
+.signup-wrap { margin: 34px 0 0; }
+.signup { display: flex; gap: 10px; max-width: 480px; }
 .signup__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-.signup input[aria-invalid='true'] { border-color: #ff6a5e; }
-.signup .btn[disabled] { opacity: 0.6; cursor: default; }
-.signup__err {
-  margin: 12px 0 0; max-width: 46ch;
-  font-size: 14.5px; color: #ffb3ac;
-}
 .signup input {
   flex: 1; min-width: 0;
   padding: 15px 18px; border-radius: 999px;
   /* a well sunk into the green ground, not a black hole cut out of it */
-  border: 1px solid rgba(160, 220, 185, 0.22); background: rgba(0, 0, 0, 0.24); color: var(--paper);
+  border: 1px solid rgba(160, 220, 185, 0.22);
+  background: rgba(0, 0, 0, 0.24);
+  color: var(--paper);
   font-family: var(--font-sans); font-size: 16px;
 }
 .signup input::placeholder { color: rgba(214, 245, 226, 0.45); }
 .signup input:focus { outline: none; border-color: var(--sensor); }
-.cta__fine {
-  margin: 18px 0 0; font-size: 13px; color: rgba(214, 245, 226, 0.55);
+.signup input[aria-invalid='true'] { border-color: #ff6a5e; }
+.signup__err { margin: 12px 0 0; max-width: 46ch; font-size: 14.5px; color: #ffb3ac; }
+.cta__fine { margin: 18px 0 0; font-size: 13px; color: rgba(214, 245, 226, 0.55); }
+
+.cta__sheet {
+  border-radius: 18px; overflow: hidden;
+  border: 1px solid rgba(160, 220, 185, 0.14);
+  background: var(--forest-2);
+  padding: clamp(14px, 1.6vw, 22px);
+}
+/* the sheet is black line art on white, so inverting it prints the
+   linework as light on the green instead of a white block */
+.cta__sheet img {
+  width: 100%; height: auto; border-radius: 6px;
+  mix-blend-mode: screen;
+  filter: invert(1) hue-rotate(180deg) saturate(0.4);
+  opacity: 0.85;
+}
+.cta__sheetMeta {
+  display: flex; justify-content: space-between; gap: 14px; margin-top: 14px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.07em;
+  color: rgba(214, 245, 226, 0.55);
 }
 
 /* ============================================================
-   FOOTER — read as the title block of an engineering drawing,
-   the same convention the blueprint sheet above already uses.
+   FOOTER — read as the title block of an engineering drawing, the
+   same convention the drawing sheet above already uses.
    ============================================================ */
-/* warm stock again, so the white cells of the title block read as a drawing
-   sheet set down on a desk rather than as a table drawn on the page */
-.colophon { background: var(--paper-2); padding: clamp(52px, 6vw, 84px) 0 44px; }
-.colophon__head {
-  display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
-  padding-bottom: 22px;
-}
-.colophon__line {
-  margin: 0; color: var(--ink-2); font-size: 15.5px; letter-spacing: -0.01em;
-}
+.colophon { background: var(--paper-3); padding: clamp(48px, 5.5vw, 72px) 0 40px; border-top: 1px solid rgba(11, 11, 13, 0.08); }
 
-/* hairline ruled block: 1px container background shows through the gaps */
+/* hairline ruled block: the 1px container background shows through the gaps */
 .titleblock {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  display: grid; grid-template-columns: repeat(6, 1fr);
   gap: 1px; padding: 1px;
   background: var(--line-2);
 }
-/* spans are explicit so every row tiles the full 6 columns; a gap left over
-   would show the container's hairline color as a solid block */
-.tb {
-  background: var(--paper);
-  padding: 16px 18px 18px;
-  min-width: 0;
-}
+/* spans are explicit so every row tiles the full 6 columns; a gap left
+   over would show the container's hairline color as a solid block */
+.tb { background: var(--paper); padding: 16px 18px 18px; min-width: 0; }
+.tb--w1 { grid-column: span 1; }
 .tb--w2 { grid-column: span 2; }
 .tb--w3 { grid-column: span 3; }
-.tb--w4 { grid-column: span 4; }
 .tb--w6 { grid-column: span 6; }
-.tb__k {
-  display: block; font-size: 12.5px; font-weight: 500; color: var(--ink-2);
-}
-.tb__v {
-  display: block; margin-top: 7px;
-  font-weight: 600; font-size: 15px; letter-spacing: -0.012em; color: var(--ink);
-}
+.tb__k { display: block; font-size: 12.5px; font-weight: 500; color: var(--ink-2); }
+.tb__v { display: block; margin-top: 7px; font-weight: 600; font-size: 15px; letter-spacing: -0.012em; color: var(--ink); }
 .tb__v a { border-bottom: 1px solid var(--line-2); transition: border-color 0.18s var(--ease); }
-
-/* the drawing's NOTES field: the fine print belongs inside the block, not
-   loose underneath it, so the footer reads as one artifact */
-.tb__note {
-  margin: 7px 0 0; max-width: 76ch;
-  font-size: 14px; line-height: 1.62; color: var(--ink-2);
-}
-
 .tb__index { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 8px; }
-.tb__index a {
-  position: relative;
-  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
-  padding: 3px 0;
-  transition: color 0.15s var(--ease);
-}
+.tb__index a { position: relative; font-size: 14.5px; font-weight: 500; color: var(--ink-2); padding: 3px 0; transition: color 0.15s var(--ease); }
 .tb__index a::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
   background: var(--ink); transform: scaleX(0); transform-origin: left center;
@@ -856,76 +807,57 @@ a { color: inherit; text-decoration: none; }
   .tb__index a:hover::after { transform: scaleX(1); }
 }
 @media (prefers-reduced-motion: reduce) { .tb__index a::after { transition: none; } }
-
-/* stamped like the revision line on the drawing sheet above */
-.colophon__fine {
-  margin: 20px 0 0; font-size: 12.5px; color: var(--ink-3);
-}
-
-/* ============================================================
-   STICKY DOCK BAR
-   ============================================================ */
-.dockbar {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 55;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: saturate(1.4) blur(14px);
-  border-top: 1px solid var(--line);
-}
-.dockbar__inner {
-  max-width: var(--wrap); margin: 0 auto; padding: 11px 28px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-}
-.dockbar__meta { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--ink-2); min-width: 0; }
-.dockbar__meta b { color: var(--ink); font-weight: 800; letter-spacing: 0.02em; }
-.dockbar__desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dockbar__stage {
-  font-size: 13px; font-weight: 500; color: var(--ink-2); flex: none;
-  padding-left: 11px; margin-left: 1px; border-left: 1px solid var(--line-2);
-}
+.colophon__fine { margin: 20px 0 0; font-size: 12.5px; color: var(--ink-3); }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 980px) {
+@media (max-width: 1080px) {
   .nav__links { display: none; }
-  .nav__right .btn--dark { display: none; }
   .nav__toggle { display: flex; }
 
-  .hero__grid { grid-template-columns: 1fr; gap: 28px; }
-  .hero__stage { aspect-ratio: 1 / 0.78; order: -1; }
-  .hero__title { font-size: clamp(2.1rem, 6.4vw, 3rem); }
-
-  .path { grid-template-columns: 1fr; gap: 18px; }
-  .sig-notes { grid-template-columns: 1fr; gap: 28px; }
-  .sig-note + .sig-note { padding-left: 0; padding-top: 28px; border-left: 0; border-top: 1px solid var(--line); }
-  .inside__grid { grid-template-columns: 1fr; gap: 32px; }
-  .inside__stage { max-width: 460px; }
+  .hero__specs { grid-template-columns: repeat(2, 1fr); gap: 18px 24px; }
 
   .lead--split { grid-template-columns: 1fr; gap: 22px; }
-  .lead--split .lead__sub { padding-left: 0; border-left: 0; max-width: 56ch; }
+  .lead__sub { padding-left: 0; border-left: 0; max-width: 56ch; }
+
+  .path { grid-template-columns: 40px minmax(0, 1fr); gap: 16px 18px; }
+  .path__note { grid-column: 2; }
+
+  .sig-notes { grid-template-columns: 1fr; gap: 28px; }
+  .sig-note + .sig-note { padding-left: 0; padding-top: 28px; border-left: 0; border-top: 1px solid var(--line); }
+
+  .inside__grid { grid-template-columns: 1fr; gap: 40px; }
+  .inside__aside { position: static; }
+  .inside__stage { max-width: 480px; }
+
+  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
 
   /* two-up title block: 6 columns become 2 half-width cells per row */
   .titleblock { grid-template-columns: repeat(2, 1fr); }
-  .tb--w2, .tb--w3, .tb--w4 { grid-column: span 1; }
+  .tb--w1, .tb--w2, .tb--w3 { grid-column: span 1; }
   .tb--w6 { grid-column: span 2; }
 }
 
 @media (max-width: 620px) {
   body { font-size: 16px; }
-  .wrap, .nav__inner, .hero__grid { padding-left: 20px; padding-right: 20px; }
-  .dockbar__inner { padding-left: 20px; padding-right: 20px; gap: 12px; }
-  .dockbar__desc { display: none; }
-  .dockbar__inner .btn { flex: none; }
-  .hero__meta { grid-template-columns: 1fr 1fr; gap: 20px 24px; }
+  .wrap, .nav__inner, .hero__labels, .hero__copy, .hero__specs { padding-left: 20px; padding-right: 20px; }
+
+  .hero { min-height: 88vh; }
+  .hero__title { font-size: clamp(2.4rem, 9vw, 3.2rem); }
+  .hero__specs { grid-template-columns: 1fr 1fr; }
+  .hero__cta .btn { flex: 1; }
+
+  .finish__head { gap: 20px; }
+  .finish__pills { width: 100%; }
+  .pill { flex: 1; justify-content: center; }
+  .finish__stage { aspect-ratio: 4 / 3.4; }
+
   /* the strip keeps its lanes, but the key sits above the trace instead
      of beside it, and the reading moves up next to the channel name */
   .lane, .strip-chart__foot { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .strip-chart__foot > :first-child { display: none; }
-  /* channel name over its units, with the reading held to the right of both */
-  .lane__key {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    align-items: baseline; column-gap: 14px;
-  }
+  .lane__key { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: 14px; }
   .lane__name, .lane__meta { grid-column: 1; }
   .lane__val { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin-top: 0; font-size: 1.3rem; }
   /* the lanes below name both channels, so the head does not need to */
@@ -935,16 +867,10 @@ a { color: inherit; text-decoration: none; }
   .lane--eda .lane__trace { height: 82px; }
   .strip-chart__sheet { grid-template-columns: 30px minmax(0, 1fr); }
   .strip-chart__head { font-size: 11.5px; }
-  .wavebar__inner { gap: 14px; }
-  .wavebar__label { display: none; }
+
   .titleblock { grid-template-columns: 1fr; }
-  .tb--w2, .tb--w3, .tb--w4, .tb--w6 { grid-column: span 1; }
+  .tb--w1, .tb--w2, .tb--w3, .tb--w6 { grid-column: span 1; }
+
   .signup { flex-direction: column; }
   .signup .btn { width: 100%; }
-  .lrow { grid-template-columns: 20px 1fr; gap: 12px; }
-  .lrow__tag { grid-column: 2; justify-self: start; margin-top: 2px; }
 }
-
-/* keep the end of the page clear of the fixed dock bar (it used to sit on main,
-   which left a white band under the dark CTA and still covered the footer) */
-body { padding-bottom: 64px; }
