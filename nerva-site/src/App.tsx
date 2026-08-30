@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import ringGraphite from './assets/ring-graphite.jpg'
 import ringGold from './assets/ring-gold2.jpg'
-import ringChrome from './assets/ring-chrome.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -261,11 +260,6 @@ function Hero() {
       />
       <div className="hero__grade" aria-hidden="true" />
 
-      <div className="hero__labels">
-        <span className="mono-label">NERVA RING · REV 5</span>
-        <span className="mono-label mono-label--live">EDA LIVE</span>
-      </div>
-
       <div className="hero__copy">
         <h1 className="hero__title">The ring that reads your nervous system.</h1>
         <p className="hero__lede">
@@ -280,12 +274,6 @@ function Hero() {
 
       <div className="hero__bezel">
         <EdaWave />
-        <div className="hero__specs">
-          <div><span className="hero__specK">Signals</span><span className="hero__specV">HR · SpO₂ · EDA · HRV</span></div>
-          <div><span className="hero__specK">Standby target</span><span className="hero__specV">~1 month</span></div>
-          <div><span className="hero__specK">Cell</span><span className="hero__specV">22 mAh</span></div>
-          <div><span className="hero__specK">Radio</span><span className="hero__specV">BLE 5 · ANNA-B402</span></div>
-        </div>
       </div>
     </section>
   )
@@ -567,7 +555,7 @@ function App() {
         <div className="nav__inner">
           <a className="brand" href="#top" aria-label="NERVA Ring home">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA
+            NERVA Ring
             <span className="brand__tag">PROTO</span>
           </a>
           <nav className="nav__links" aria-label="Primary">
@@ -613,7 +601,7 @@ function App() {
         <section className="section section--tint" id="stress">
           <div className="wrap">
             <Reveal className="lead lead--split">
-              <h2 className="display">Where your stress number comes from.</h2>
+              <h2 className="display">What makes NERVA Ring Different</h2>
               <p className="lead__sub">
                 Every ring on the market will show you a stress score. Nearly all of them
                 build it out of your pulse. NERVA reads pulse too, and then it reads the
@@ -721,11 +709,11 @@ function App() {
               <div className="inside__stage">
                 <img
                   className="inside__ring"
-                  src={ringChrome}
-                  width={1100}
-                  height={1100}
+                  src={blueprint}
+                  width={2600}
+                  height={1838}
                   loading="lazy"
-                  alt="Close view inside the NERVA Ring band, exposing the flex PCB, gold electrodes, and the green and red optical sensor LEDs."
+                  alt="Engineering drawing of the NERVA Ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
                 />
               </div>
             </Reveal>
