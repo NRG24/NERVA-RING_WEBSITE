@@ -611,9 +611,12 @@ function App() {
             <Reveal className="lead lead--split">
               <h2 className="display">What makes NERVA Ring Different</h2>
               <p className="lead__sub">
-                Every ring on the market will show you a stress score. Nearly all of them
-                build it out of your pulse. NERVA reads pulse too, and then it reads the
-                signal that score is standing in for.
+               Most smart rings track your heart, but NERVA Ring goes further 
+                with continuous electrodermal activity (EDA) sensing,
+                a direct window into how your nervous system responds to the world around you. 
+                By learning your unique stress patterns over time, NERVA helps you recognize stress as it happens, 
+                understand what triggers it, and take control of your response.
+
               </p>
             </Reveal>
 
