@@ -225,7 +225,7 @@ function SignalInstrument() {
    black-glass still. No loop: the reveal happens once and then the page
    settles onto a product shot. Video and still share identical framing
    (object-fit + object-position + scale) so the cross-fade does not jump. */
-const HERO_FILM = '/ring_void_0001-0400.mp4'
+const HERO_FILM = '/ring_void_16x9_0001-0400.mp4'
 const HERO_STILL = '/ring_03_black_glass_web.png'
 const BLACK_HOLD_MS = 1700
 
