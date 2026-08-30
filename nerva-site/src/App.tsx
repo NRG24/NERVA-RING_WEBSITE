@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import ringGraphite from './assets/ring-graphite.jpg'
-import ringGold from './assets/ring-gold2.jpg'
+import ringBlue from './assets/ring-blue.jpg'
+import ringCoffee from './assets/ring-coffee.jpg'
+import ringPink from './assets/ring-pink.jpg'
+import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -479,8 +481,10 @@ const NAV = [
 ]
 
 const FINISHES = [
-  { id: 'graphite', label: 'Graphite', sub: 'POLISHED PVD', img: ringGraphite, swatch: 'linear-gradient(140deg,#3a3d42,#0d0e10 70%)' },
-  { id: 'gold', label: 'Champagne Gold', sub: 'WARM BRUSHED', img: ringGold, swatch: 'linear-gradient(140deg,#e6cf9b,#8f7636 72%)' },
+  { id: 'blue', label: 'Blue', sub: 'BLUE GLASS', img: ringBlue, swatch: 'linear-gradient(140deg,#3d5f8a,#0a0e14 72%)' },
+  { id: 'coffee', label: 'Coffee', sub: 'COFFEE GLASS', img: ringCoffee, swatch: 'linear-gradient(140deg,#6b4a30,#160f0a 72%)' },
+  { id: 'pink', label: 'Pink', sub: 'PINK CERAMIC', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
+  { id: 'ceramic-black', label: 'Black Ceramic', sub: 'BLACK CERAMIC', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
 ] as const
 
 /* the sensing stack, read as a numbered index rather than a feature grid */
@@ -545,7 +549,7 @@ const TALLY = {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('graphite')
+  const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('blue')
   const active = FINISHES.find((f) => f.id === finish)!
 
   return (
@@ -739,7 +743,7 @@ function App() {
         <section className="section section--tint" id="finish">
           <div className="wrap">
             <Reveal className="finish__head">
-              <h2 className="display">Two finishes.</h2>
+              <h2 className="display">Four finishes.</h2>
               <div className="finish__pills" role="radiogroup" aria-label="Ring finish">
                 {FINISHES.map((f) => (
                   <button
