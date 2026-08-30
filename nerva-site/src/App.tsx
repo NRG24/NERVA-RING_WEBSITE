@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import ringGraphite from './assets/ring-graphite.jpg'
-import ringGold from './assets/ring-gold2.jpg'
-import ringChrome from './assets/ring-chrome.jpg'
+import ringBlue from './assets/ring-blue.jpg'
+import ringCoffee from './assets/ring-coffee.jpg'
+import ringPink from './assets/ring-pink.jpg'
+import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
+import ringMacro from './assets/ring-macro.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -261,11 +263,6 @@ function Hero() {
       />
       <div className="hero__grade" aria-hidden="true" />
 
-      <div className="hero__labels">
-        <span className="mono-label">NERVA RING · REV 5</span>
-        <span className="mono-label mono-label--live">EDA LIVE</span>
-      </div>
-
       <div className="hero__copy">
         <h1 className="hero__title">The ring that reads your nervous system.</h1>
         <p className="hero__lede">
@@ -280,12 +277,6 @@ function Hero() {
 
       <div className="hero__bezel">
         <EdaWave />
-        <div className="hero__specs">
-          <div><span className="hero__specK">Signals</span><span className="hero__specV">HR · SpO₂ · EDA · HRV</span></div>
-          <div><span className="hero__specK">Standby target</span><span className="hero__specV">~1 month</span></div>
-          <div><span className="hero__specK">Cell</span><span className="hero__specV">22 mAh</span></div>
-          <div><span className="hero__specK">Radio</span><span className="hero__specV">BLE 5 · ANNA-B402</span></div>
-        </div>
       </div>
     </section>
   )
@@ -491,8 +482,10 @@ const NAV = [
 ]
 
 const FINISHES = [
-  { id: 'graphite', label: 'Graphite', sub: 'POLISHED PVD', img: ringGraphite, swatch: 'linear-gradient(140deg,#3a3d42,#0d0e10 70%)' },
-  { id: 'gold', label: 'Champagne Gold', sub: 'WARM BRUSHED', img: ringGold, swatch: 'linear-gradient(140deg,#e6cf9b,#8f7636 72%)' },
+  { id: 'blue', label: 'Blue', sub: 'BLUE GLASS', img: ringBlue, swatch: 'linear-gradient(140deg,#3d5f8a,#0a0e14 72%)' },
+  { id: 'coffee', label: 'Coffee', sub: 'COFFEE GLASS', img: ringCoffee, swatch: 'linear-gradient(140deg,#6b4a30,#160f0a 72%)' },
+  { id: 'pink', label: 'Pink', sub: 'PINK CERAMIC', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
+  { id: 'ceramic-black', label: 'Black Ceramic', sub: 'BLACK CERAMIC', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
 ] as const
 
 /* the sensing stack, read as a numbered index rather than a feature grid */
@@ -557,7 +550,7 @@ const TALLY = {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('graphite')
+  const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('blue')
   const active = FINISHES.find((f) => f.id === finish)!
 
   return (
@@ -567,7 +560,7 @@ function App() {
         <div className="nav__inner">
           <a className="brand" href="#top" aria-label="NERVA Ring home">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA
+            NERVA Ring
             <span className="brand__tag">PROTO</span>
           </a>
           <nav className="nav__links" aria-label="Primary">
@@ -613,7 +606,7 @@ function App() {
         <section className="section section--tint" id="stress">
           <div className="wrap">
             <Reveal className="lead lead--split">
-              <h2 className="display">Where your stress number comes from.</h2>
+              <h2 className="display">What makes NERVA Ring Different</h2>
               <p className="lead__sub">
                 Every ring on the market will show you a stress score. Nearly all of them
                 build it out of your pulse. NERVA reads pulse too, and then it reads the
@@ -721,11 +714,11 @@ function App() {
               <div className="inside__stage">
                 <img
                   className="inside__ring"
-                  src={ringChrome}
-                  width={1100}
-                  height={1100}
+                  src={ringMacro}
+                  width={2000}
+                  height={2000}
                   loading="lazy"
-                  alt="Close view inside the NERVA Ring band, exposing the flex PCB, gold electrodes, and the green and red optical sensor LEDs."
+                  alt="Macro view inside the NERVA Ring band, showing the flex PCB, gold electrodes, and the green and red optical sensor LEDs."
                 />
               </div>
             </Reveal>
@@ -751,7 +744,7 @@ function App() {
         <section className="section section--tint" id="finish">
           <div className="wrap">
             <Reveal className="finish__head">
-              <h2 className="display">Two finishes.</h2>
+              <h2 className="display">Four finishes.</h2>
               <div className="finish__pills" role="radiogroup" aria-label="Ring finish">
                 {FINISHES.map((f) => (
                   <button

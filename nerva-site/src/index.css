@@ -103,18 +103,6 @@ a { color: inherit; text-decoration: none; }
 }
 .mono-label--film { color: rgba(255, 255, 255, 0.66); }
 .mono-label--dark { color: rgba(255, 255, 255, 0.7); letter-spacing: 0.08em; }
-.mono-label--live { display: inline-flex; align-items: center; gap: 8px; }
-.mono-label--live::before {
-  content: ''; width: 7px; height: 7px; border-radius: 50%; flex: none;
-  background: var(--sensor);
-  animation: livepulse 2.2s var(--ease) infinite;
-}
-@keyframes livepulse {
-  0% { box-shadow: 0 0 0 0 rgba(53, 217, 74, 0.5); }
-  70% { box-shadow: 0 0 0 7px rgba(53, 217, 74, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(53, 217, 74, 0); }
-}
-@media (prefers-reduced-motion: reduce) { .mono-label--live::before { animation: none; } }
 
 /* ============================================================
    DISPLAY TYPE
@@ -279,10 +267,10 @@ a { color: inherit; text-decoration: none; }
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: center 40%;
-  /* a hair of scale so no edge of the render shows at any aspect ratio.
+  /* pulled back from the render's default framing so more of the ring reads.
      NOTE: no scale-in animation here — an animation that ends on
      transform:none fights this value and shows as a stutter. */
-  transform: scale(1.02);
+  transform: scale(0.9);
 }
 .hero__still {
   opacity: 0;
@@ -298,13 +286,6 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(to bottom,
     rgba(5, 5, 6, 0.42) 0%, transparent 30% 52%, rgba(5, 5, 6, 0.78) 88%);
-}
-
-.hero__labels {
-  position: relative;
-  max-width: var(--wrap); width: 100%; margin: 0 auto;
-  padding: 28px 32px 0;
-  display: flex; justify-content: space-between; gap: 24px;
 }
 
 .hero__copy {
@@ -335,6 +316,7 @@ a { color: inherit; text-decoration: none; }
 .hero__bezel {
   position: relative;
   margin-top: 52px;
+  padding-bottom: 28px;
   border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 .hero__wave {
@@ -349,17 +331,6 @@ a { color: inherit; text-decoration: none; }
 }
 @keyframes trace { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) { .wave-dash { animation: none; opacity: 0; } }
-
-.hero__specs {
-  max-width: var(--wrap); margin: 0 auto;
-  padding: 18px 32px 22px;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
-}
-.hero__specK { display: block; font-size: 12px; font-weight: 500; color: rgba(255, 255, 255, 0.52); }
-.hero__specV {
-  display: block; margin-top: 5px;
-  font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: #fff;
-}
 
 /* ============================================================
    SECTIONS (light)
@@ -816,8 +787,6 @@ a { color: inherit; text-decoration: none; }
   .nav__links { display: none; }
   .nav__toggle { display: flex; }
 
-  .hero__specs { grid-template-columns: repeat(2, 1fr); gap: 18px 24px; }
-
   .lead--split { grid-template-columns: 1fr; gap: 22px; }
   .lead__sub { padding-left: 0; border-left: 0; max-width: 56ch; }
 
@@ -841,11 +810,10 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 620px) {
   body { font-size: 16px; }
-  .wrap, .nav__inner, .hero__labels, .hero__copy, .hero__specs { padding-left: 20px; padding-right: 20px; }
+  .wrap, .nav__inner, .hero__copy { padding-left: 20px; padding-right: 20px; }
 
   .hero { min-height: 88vh; }
   .hero__title { font-size: clamp(2.4rem, 9vw, 3.2rem); }
-  .hero__specs { grid-template-columns: 1fr 1fr; }
   .hero__cta .btn { flex: 1; }
 
   .finish__head { gap: 20px; }
