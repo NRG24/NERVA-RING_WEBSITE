@@ -21,6 +21,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="canonical" href="https://nervaring.com/" />
 
+    <!-- Kicks off the hero film's download before React even mounts, since it's
+         the largest above-the-fold asset and autoplays immediately. -->
+    <link rel="preload" as="video" type="video/mp4" href="/ring_void_0001-0400.mp4" fetchpriority="high" />
+
     <!-- Social sharing. NOTE: update the domain below once the real one is live.
          og:image must be an absolute URL or most scrapers will ignore it. -->
     <meta property="og:type" content="website" />

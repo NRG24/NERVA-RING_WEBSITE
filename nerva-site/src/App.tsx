@@ -244,11 +244,14 @@ function Hero() {
       <video
         className="hero__film"
         src={HERO_FILM}
+        poster={HERO_STILL}
         onEnded={() => setFaded(true)}
         autoPlay
         muted
         playsInline
         preload="auto"
+        // @ts-expect-error -- fetchPriority landed in the DOM types after this React version
+        fetchPriority="high"
       />
       <img
         className="hero__still"
@@ -482,10 +485,10 @@ const NAV = [
 ]
 
 const FINISHES = [
-  { id: 'blue', label: 'Blue', sub: 'BLUE GLASS', img: ringBlue, swatch: 'linear-gradient(140deg,#3d5f8a,#0a0e14 72%)' },
-  { id: 'coffee', label: 'Coffee', sub: 'COFFEE GLASS', img: ringCoffee, swatch: 'linear-gradient(140deg,#6b4a30,#160f0a 72%)' },
-  { id: 'pink', label: 'Pink', sub: 'PINK CERAMIC', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
-  { id: 'ceramic-black', label: 'Black Ceramic', sub: 'BLACK CERAMIC', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
+  { id: 'ceramic-black', label: 'Black Ceramic', sub: 'PREMIUM CERAMIC', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
+  { id: 'blue', label: 'Blue', sub: 'PREMIUM CERAMIC', img: ringBlue, swatch: 'linear-gradient(140deg,#3d5f8a,#0a0e14 72%)' },
+  { id: 'coffee', label: 'Coffee', sub: 'PREMIUM CERAMIC', img: ringCoffee, swatch: 'linear-gradient(140deg,#6b4a30,#160f0a 72%)' },
+  { id: 'pink', label: 'Pink', sub: 'PREMIUM CERAMIC', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
 ] as const
 
 /* the sensing stack, read as a numbered index rather than a feature grid */
@@ -550,7 +553,7 @@ const TALLY = {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('blue')
+  const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('ceramic-black')
   const active = FINISHES.find((f) => f.id === finish)!
 
   return (
@@ -744,7 +747,13 @@ function App() {
         <section className="section section--tint" id="finish">
           <div className="wrap">
             <Reveal className="finish__head">
-              <h2 className="display">Four finishes.</h2>
+              <div>
+                <h2 className="display">Four finishes.</h2>
+                <p className="finish__lede">
+                  Every color is the same premium ceramic shell, not a coating, so it
+                  stays smooth against skin and keeps its color for years, not months.
+                </p>
+              </div>
               <div className="finish__pills" role="radiogroup" aria-label="Ring finish">
                 {FINISHES.map((f) => (
                   <button
