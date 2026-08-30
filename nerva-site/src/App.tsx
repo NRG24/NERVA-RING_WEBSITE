@@ -776,6 +776,7 @@ function App() {
                 src={active.img}
                 width={1400}
                 height={1270}
+                loading="lazy"
                 alt={`The NERVA Ring in ${active.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs.`}
               />
               <div className="finish__caption">

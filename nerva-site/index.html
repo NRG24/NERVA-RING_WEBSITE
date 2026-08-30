@@ -54,6 +54,20 @@
       href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+
+    <!-- No offers/price here on purpose: nothing on this site is for sale yet
+         (see the commerce decision in project memory), so Product schema
+         would be inaccurate. WebSite is the honest description of what
+         this page actually is today. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "NERVA Ring",
+        "url": "https://nervaring.com/",
+        "description": "NERVA Ring is a smart ring that measures your nervous system: continuous heart rate, blood oxygen, and stress (GSR/EDA) from a single finger-worn device."
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
