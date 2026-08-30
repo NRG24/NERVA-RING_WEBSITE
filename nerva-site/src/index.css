@@ -266,11 +266,11 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center 40%;
+  object-position: center 55%;
   /* pulled back from the render's default framing so more of the ring reads.
      NOTE: no scale-in animation here — an animation that ends on
      transform:none fights this value and shows as a stutter. */
-  transform: scale(0.9);
+  transform: scale(0.8);
 }
 .hero__still {
   opacity: 0;
@@ -634,6 +634,10 @@ a { color: inherit; text-decoration: none; }
   display: flex; align-items: end; justify-content: space-between;
   gap: 32px; flex-wrap: wrap;
   margin-bottom: clamp(36px, 4.5vw, 56px);
+}
+.finish__lede {
+  margin: 12px 0 0; max-width: 46ch;
+  font-size: 1.05rem; line-height: 1.5; color: var(--ink-2);
 }
 .finish__pills { display: flex; align-items: center; gap: 16px; }
 .pill {
