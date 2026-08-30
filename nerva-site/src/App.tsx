@@ -3,6 +3,7 @@ import ringBlue from './assets/ring-blue.jpg'
 import ringCoffee from './assets/ring-coffee.jpg'
 import ringPink from './assets/ring-pink.jpg'
 import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
+import ringMacro from './assets/ring-macro.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -713,11 +714,11 @@ function App() {
               <div className="inside__stage">
                 <img
                   className="inside__ring"
-                  src={blueprint}
-                  width={2600}
-                  height={1838}
+                  src={ringMacro}
+                  width={2000}
+                  height={2000}
                   loading="lazy"
-                  alt="Engineering drawing of the NERVA Ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
+                  alt="Macro view inside the NERVA Ring band, showing the flex PCB, gold electrodes, and the green and red optical sensor LEDs."
                 />
               </div>
             </Reveal>
