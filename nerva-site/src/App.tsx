@@ -244,7 +244,6 @@ function Hero() {
       <video
         className="hero__film"
         src={HERO_FILM}
-        poster={HERO_STILL}
         onEnded={() => setFaded(true)}
         autoPlay
         muted
