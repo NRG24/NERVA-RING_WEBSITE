@@ -266,13 +266,20 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center 55%;
-  /* pulled back from the render's default framing so more of the ring reads.
-     NOTE: no scale-in animation here — an animation that ends on
-     transform:none fights this value and shows as a stutter. */
-  transform: scale(0.8);
+}
+.hero__film {
+  /* the film is shot 16:9, close to the hero box's own aspect at most
+     desktop sizes, so it needs little to no extra crop or scale. */
+  object-position: center 50%;
 }
 .hero__still {
+  /* the still is a square render inside a wide box, so most of the crop
+     comes off the top/bottom; framed low so the full ring clears the
+     top edge instead of only its bottom arc showing.
+     NOTE: no scale-in animation here — an animation that ends on
+     transform:none fights this value and shows as a stutter. */
+  object-position: center 10%;
+  transform: scale(0.85);
   opacity: 0;
   transition: opacity 1.6s ease;
 }
