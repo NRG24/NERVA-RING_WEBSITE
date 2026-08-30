@@ -632,7 +632,7 @@ function App() {
                   </ol>
                 </div>
                 <p className="path__note">
-                  Beat-to-beat variation shifts with sleep, caffeine, alcohol, a cold
+                  Beat-to-beat variation (HRV) shifts with sleep, caffeine, alcohol, a cold
                   coming on, and how hard you trained on Tuesday. The model has to decide
                   for you how much of today’s change was stress.
                 </p>
@@ -650,10 +650,8 @@ function App() {
                   </ol>
                 </div>
                 <p className="path__note">
-                  Your sympathetic nerves drive your sweat glands directly, and nothing
-                  else does. Arousal climbs; conductance climbs about a second behind it.
-                  Two dry gold electrodes read it in microsiemens, the same unit a stress
-                  lab writes down.
+                  Your sympathetic nerves drive your sweat glands directly. Hearing something as small as a pin drop can spike your EDA.
+                  Two dry electrodes read it in microsiemens, capturing highly detailed short-term stress data. 
                 </p>
               </Reveal>
             </div>
@@ -807,11 +805,10 @@ function App() {
           <div className="wrap cta__grid">
             <Reveal>
               <h2 className="display display--light">
-                Follow it from schematic to first working prototype.
+                See it go from a schematic to a working prototype.
               </h2>
               <p className="cta__lede">
-                No countdown, no pre-order. A note lands when a milestone does: first
-                firmware, first clean EDA trace, first hand-assembled batch.
+                We'll email you about new prototypes and project updates.
               </p>
               <Signup />
               <p className="cta__fine">Written by the person building it · no spam</p>
