@@ -269,8 +269,7 @@ function Hero() {
       <div className="hero__copy">
         <h1 className="hero__title">The ring that reads your nervous system.</h1>
         <p className="hero__lede">
-          Heart rate and blood oxygen, paired with continuous electrodermal
-          sensing, give a live read on stress, recovery, and arousal from a single ring.
+          Reads your nervous system with EDA, helping you understand and manage stress in real time.
         </p>
         <div className="hero__cta">
           <a className="btn btn--led btn--lg" href="#follow">Get launch updates</a>
@@ -611,7 +610,7 @@ function App() {
             <Reveal className="lead lead--split">
               <h2 className="display">What makes NERVA Ring Different</h2>
               <p className="lead__sub">
-               Most smart rings track your heart, but NERVA Ring goes further 
+               Most smart rings only track your heart, but NERVA Ring goes further 
                 with continuous electrodermal activity (EDA) sensing,
                 a direct window into how your nervous system responds to the world around you. 
                 By learning your unique stress patterns over time, NERVA helps you recognize stress as it happens, 
