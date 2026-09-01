@@ -832,7 +832,7 @@ function App() {
           <div className="titleblock">
             <div className="tb tb--w3">
               <span className="tb__k">Product</span>
-              <b className="tb__v">NERVA Ring · nervous-system sensing</b>
+              <b className="tb__v">NERVA Ring - Launching soon</b>
             </div>
             <div className="tb tb--w1">
               <span className="tb__k">Stage</span>
