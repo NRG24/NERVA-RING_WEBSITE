@@ -483,7 +483,7 @@ const NAV = [
 ]
 
 const FINISHES = [
-  { id: 'ceramic-black', label: 'Black Ceramic', sub: 'PREMIUM CERAMIC', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
+  { id: 'ceramic-black', label: 'Black', sub: 'PREMIUM CERAMIC', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
   { id: 'blue', label: 'Blue', sub: 'PREMIUM CERAMIC', img: ringBlue, swatch: 'linear-gradient(140deg,#3d5f8a,#0a0e14 72%)' },
   { id: 'coffee', label: 'Coffee', sub: 'PREMIUM CERAMIC', img: ringCoffee, swatch: 'linear-gradient(140deg,#6b4a30,#160f0a 72%)' },
   { id: 'pink', label: 'Pink', sub: 'PREMIUM CERAMIC', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
@@ -609,8 +609,7 @@ function App() {
             <Reveal className="lead lead--split">
               <h2 className="display">What makes NERVA Ring Different</h2>
               <p className="lead__sub">
-               Most smart rings only track your heart, but NERVA Ring goes further 
-                with continuous electrodermal activity (EDA) sensing,
+                NERVA Ring takes a step further with continuous EDA sensing,
                 a direct window into how your nervous system responds to the world around you. 
                 By learning your unique stress patterns over time, NERVA helps you recognize stress as it happens, 
                 understand what triggers it, and take control of your response.
@@ -711,7 +710,7 @@ function App() {
               <h2 className="display display--light">Inside the band</h2>
               <p className="inside__lede">
                 A full sensing stack, wrapped to the inner circumference of a ring and
-                potted in clear resin. Sealed, waterproof, no seams.
+                potted in RF-transparent resin. Sealed and waterproofed.
               </p>
               <div className="inside__stage">
                 <img
@@ -747,11 +746,7 @@ function App() {
           <div className="wrap">
             <Reveal className="finish__head">
               <div>
-                <h2 className="display">Four finishes.</h2>
-                <p className="finish__lede">
-                  Every color is the same premium ceramic shell, not a coating, so it
-                  stays smooth against skin and keeps its color for years, not months.
-                </p>
+                <h2 className="display">Ceramic in Four Finishes</h2>
               </div>
               <div className="finish__pills" role="radiogroup" aria-label="Ring finish">
                 {FINISHES.map((f) => (
