@@ -508,23 +508,23 @@ const SPECS = [
   {
     n: '03',
     title: 'Radio',
-    part: 'ANNA-B402 · BLE 5',
+    part: 'ANNA-B402 - BLE 5',
     channel: 'sensor',
-    body: 'A u-blox module with an antenna layout tuned to the ring’s compact form factor keeps the companion app in sync without draining the cell.',
+    body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity',
   },
   {
     n: '04',
     title: 'Power',
-    part: 'BQ25120A · 22 mAh',
+    part: 'BQ25120A - 23 mAh',
     channel: 'sensor',
-    body: 'One PMIC handles charging, monitoring, and both voltage rails. A wake-on-finger architecture sleeps between readings, targeting roughly a month of standby.',
+    body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rain management and low-voltage threshold allow for days of battery life.',
   },
   {
     n: '05',
     title: 'Sealed build',
     part: 'RESIN-POTTED',
     channel: 'neutral',
-    body: 'The flex PCB wraps the inner circumference and is fully potted in clear resin. No seams, no gaps, so it stays safe for hand-washing and showering. Charges on a 2-pin pogo dock.',
+    body: 'The flex PCB wraps the inner circumference and is fully potted in RF-tuned resin. Charges on the provided charging case.',
   },
 ] as const
 
