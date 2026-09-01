@@ -268,7 +268,7 @@ function Hero() {
       <div className="hero__copy">
         <h1 className="hero__title">The ring that reads your nervous system.</h1>
         <p className="hero__lede">
-          Reads your nervous system with EDA, helping you understand and manage stress in real time.
+          Helping you understand and manage stress in real time with EDA sensors.
         </p>
         <div className="hero__cta">
           <a className="btn btn--led btn--lg" href="#follow">Get launch updates</a>
