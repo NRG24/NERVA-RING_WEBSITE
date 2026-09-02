@@ -693,7 +693,7 @@ function App() {
                   Two dry gold electrodes read skin conductance straight off the inner
                   band, the sympathetic arousal signal clinical stress research relies on.
                   This is the read most rings leave on the table, and where <b>NERVA</b>
-                  {' '}earns its name.
+                  {' '}Ring earns its name.
                 </p>
               </Reveal>
             </div>
@@ -817,10 +817,7 @@ function App() {
                 loading="lazy"
                 alt="Engineering drawing of the NERVA Ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
               />
-              <div className="cta__sheetMeta">
-                <span>HOUSING + FLEX-PCB ASSEMBLY</span>
-                <span>REV 5 · SHEET 1/1</span>
-              </div>
+
             </Reveal>
           </div>
         </section>
@@ -852,7 +849,7 @@ function App() {
               </nav>
             </div>
           </div>
-          <p className="colophon__fine">© 2026 NERVA Ring · built by Ryan Schreiber · sheet 1 of 1</p>
+          <p className="colophon__fine">© 2026 NERVA Ring - built by Ryan Schreiber</p>
         </div>
       </footer>
     </>
