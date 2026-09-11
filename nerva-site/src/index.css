@@ -92,18 +92,6 @@ a { color: inherit; text-decoration: none; }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
-/* ---------- shared instrument label ---------- */
-.mono-label {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.6);
-  white-space: nowrap;
-}
-.mono-label--film { color: rgba(255, 255, 255, 0.66); }
-.mono-label--dark { color: rgba(255, 255, 255, 0.7); letter-spacing: 0.08em; }
-
 /* ============================================================
    DISPLAY TYPE
    ============================================================ */
@@ -748,12 +736,6 @@ a { color: inherit; text-decoration: none; }
   filter: invert(1) hue-rotate(180deg) saturate(0.4);
   opacity: 0.85;
 }
-.cta__sheetMeta {
-  display: flex; justify-content: space-between; gap: 14px; margin-top: 14px;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.07em;
-  color: rgba(214, 245, 226, 0.55);
-}
-
 /* ============================================================
    FOOTER — read as the title block of an engineering drawing, the
    same convention the drawing sheet above already uses.

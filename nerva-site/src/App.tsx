@@ -393,7 +393,6 @@ function FilmScroll() {
         />
         <div className="film__grade" aria-hidden="true" />
         <div className="film__ui">
-          <span className="mono-label mono-label--film">SENSOR ARCHITECTURE · RENDERED FROM THE WORKING MODEL</span>
           <span className="film__hint" style={scrub ? { opacity: Math.max(0, 1 - progress * 4) } : undefined}>
             {scrub ? 'Scroll to explore' : 'Every reading begins inside the band'}
           </span>
@@ -483,10 +482,10 @@ const NAV = [
 ]
 
 const FINISHES = [
-  { id: 'ceramic-black', label: 'Black', sub: 'PREMIUM CERAMIC', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
-  { id: 'blue', label: 'Blue', sub: 'PREMIUM CERAMIC', img: ringBlue, swatch: 'linear-gradient(140deg,#3d5f8a,#0a0e14 72%)' },
-  { id: 'coffee', label: 'Coffee', sub: 'PREMIUM CERAMIC', img: ringCoffee, swatch: 'linear-gradient(140deg,#6b4a30,#160f0a 72%)' },
-  { id: 'pink', label: 'Pink', sub: 'PREMIUM CERAMIC', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
+  { id: 'ceramic-black', label: 'Black', img: ringCeramicBlack, swatch: 'linear-gradient(140deg,#3a3a3c,#050506 72%)' },
+  { id: 'blue', label: 'Blue', img: ringBlue, swatch: 'linear-gradient(140deg,#3d5f8a,#0a0e14 72%)' },
+  { id: 'coffee', label: 'Coffee', img: ringCoffee, swatch: 'linear-gradient(140deg,#6b4a30,#160f0a 72%)' },
+  { id: 'pink', label: 'Pink', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
 ] as const
 
 /* the sensing stack, read as a numbered index rather than a feature grid */
@@ -776,7 +775,6 @@ function App() {
               />
               <div className="finish__caption">
                 <span className="finish__name">{active.label}</span>
-                <span className="mono-label mono-label--dark">{active.sub}</span>
               </div>
             </Reveal>
 
@@ -817,7 +815,6 @@ function App() {
                 loading="lazy"
                 alt="Engineering drawing of the NERVA Ring housing and internal flex PCB, shown from three isometric views plus a face-on section, with title block."
               />
-
             </Reveal>
           </div>
         </section>
