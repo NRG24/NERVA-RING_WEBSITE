@@ -304,7 +304,10 @@ export default function Buy() {
             <img className="brand__mark" src="/favicon.png" alt="" width={24} height={24} />
             NERVA Ring
           </a>
-          <p>© 2026 NERVA Ring. Store layout preview, not a live shop.</p>
+          <p>
+            © 2026 NERVA Ring. Store layout preview, not a live shop.{' '}
+            <a className="shopfoot__link" href="/privacy.html">Privacy and disclaimers</a>
+          </p>
         </div>
       </footer>
     </>

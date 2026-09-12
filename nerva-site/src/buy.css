@@ -150,18 +150,6 @@
 .row p { margin: 7px 0 0; color: var(--ink-2); font-size: 15.5px; line-height: 1.55; max-width: 60ch; }
 
 /* ============================================================
-   FOOTER
-   ============================================================ */
-.shopfoot { border-top: 1px solid var(--line); padding: 32px 0 40px; }
-.shopfoot__inner {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap;
-}
-.shopfoot__inner p {
-  margin: 0; font-size: 12.5px; color: var(--ink-3);
-}
-
-/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 980px) {
@@ -173,5 +161,4 @@
 @media (max-width: 620px) {
   .buy__strip { gap: 10px; }
   .opt--qty { align-items: flex-start; flex-direction: column; gap: 12px; }
-  .shopfoot__inner { flex-direction: column; align-items: flex-start; gap: 12px; }
 }

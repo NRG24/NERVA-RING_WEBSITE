@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
-Disallow: /buy.html
+
+# a preview of a shop that does not exist yet has no business in search
+# results. The page also carries <meta name="robots" content="noindex">;
+# it is crawlable on purpose, because a Disallow would stop crawlers ever
+# reading that tag.
+Allow: /buy.html
 
 Sitemap: https://nervaring.com/sitemap.xml

@@ -819,7 +819,11 @@ function App() {
                 We’ll email you about new prototypes and project updates.
               </p>
               <Signup />
-              <p className="cta__fine">Written by the person building it · no spam</p>
+              <p className="cta__fine">
+                Written by the person building it, no spam. Your address goes to
+                Buttondown and nowhere else.{' '}
+                <a href="/privacy.html">What this site collects</a>.
+              </p>
             </Reveal>
 
             <Reveal className="cta__sheet" delay={90}>
@@ -858,7 +862,20 @@ function App() {
                   <a key={l.href} href={l.href}>{l.label}</a>
                 ))}
                 <a href="#follow">Updates</a>
+                <a href="/privacy.html">Privacy</a>
               </nav>
+            </div>
+            {/* the cell spans are load-bearing: every row of the 6-column
+                grid has to tile exactly or the leftover gap prints as a
+                solid hairline block */}
+            <div className="tb tb--w6">
+              <span className="tb__k">Notes</span>
+              <p className="tb__note">
+                NERVA Ring is a wellness product, not a medical device. It is not
+                intended to diagnose, treat, cure, or prevent any disease, and nothing
+                on this site is for sale. Every ring image is a render of the CAD
+                model. <a href="/privacy.html">Privacy and disclaimers</a>.
+              </p>
             </div>
           </div>
           <p className="colophon__fine">© 2026 NERVA Ring - built by Ryan Schreiber</p>
