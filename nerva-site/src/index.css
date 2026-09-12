@@ -350,6 +350,23 @@ a { color: inherit; text-decoration: none; }
    index the sensing stack uses in the dark band. No borders, no
    panels: the hairline between rows is the only furniture.
    ------------------------------------------------------------ */
+.does__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  gap: clamp(30px, 4.5vw, 72px);
+  align-items: center;
+}
+.does__stage {
+  margin: 0;
+  border-radius: var(--radius-lg); overflow: hidden;
+  aspect-ratio: 1 / 1;
+  /* sampled off the render: a black ceiling falling to a lit grey floor, so
+     the box matches while the lazy image is still on its way */
+  background: linear-gradient(to bottom, #050505 0%, #8f8c8e 52%, #cdcacb 100%);
+  box-shadow: var(--shadow-lg);
+}
+.does__stage img { width: 100%; height: 100%; object-fit: cover; }
+
 .doing {
   display: grid;
   grid-template-columns: 32px minmax(0, 1fr);
@@ -372,7 +389,7 @@ a { color: inherit; text-decoration: none; }
 }
 .doing p {
   margin: 9px 0 0; color: var(--ink-2);
-  font-size: 1.02rem; line-height: 1.6; max-width: 56ch;
+  font-size: 1.02rem; line-height: 1.6;
 }
 /* the two abbreviations are the only data labels in this section, so they
    take the mono the rest of the page reserves for readings */
@@ -427,30 +444,6 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--font-mono); font-size: 0.88em;
 }
 
-/* the chrome shot and the honest footnote, set as one object: the note is
-   the caption on the thing it is about */
-.stress__shot {
-  margin-top: clamp(44px, 5.5vw, 80px);
-  display: grid;
-  /* the render carries the section, so it takes the larger share and the
-     note sits tight against it rather than drifting off to the right */
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
-  gap: clamp(26px, 3.5vw, 52px);
-  align-items: center;
-}
-.stress__stage {
-  margin: 0;
-  border-radius: var(--radius-lg); overflow: hidden;
-  aspect-ratio: 1 / 0.82;
-  /* sampled off the render itself, so the box reads as the same studio
-     sweep while the image is still loading: dark taupe overhead falling
-     to a cream floor */
-  background: linear-gradient(to bottom, #4a413a 0%, #9d9588 44%, #f3f1ec 100%);
-  box-shadow: var(--shadow-lg);
-}
-/* framed a little high: the render leaves a lot of empty floor under the ring */
-.stress__stage img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
-
 /* the honest footnote, marked in the electrode channel's gold */
 .caveat {
   margin-top: clamp(28px, 3.5vw, 44px);
@@ -458,7 +451,7 @@ a { color: inherit; text-decoration: none; }
   border-left: 3px solid var(--gold);
   max-width: 72ch;
 }
-.stress__shot .caveat { margin-top: 0; max-width: 38ch; }
+
 .caveat p { margin: 0; color: var(--ink-2); font-size: 1rem; line-height: 1.62; }
 .caveat b { color: var(--ink); font-weight: 700; }
 
@@ -876,7 +869,8 @@ a { color: inherit; text-decoration: none; }
   .lead--split { grid-template-columns: 1fr; gap: 22px; }
   .lead__sub { padding-left: 0; border-left: 0; max-width: 56ch; }
 
-  .stress__shot { grid-template-columns: 1fr; gap: 28px; }
+  .does__grid { grid-template-columns: 1fr; gap: 34px; }
+  .does__stage { max-width: 520px; }
 
   .sig-notes { grid-template-columns: 1fr; gap: 28px; }
   .sig-note + .sig-note { padding-left: 0; padding-top: 28px; border-left: 0; border-top: 1px solid var(--line); }

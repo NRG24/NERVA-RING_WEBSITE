@@ -4,7 +4,7 @@ import ringCoffee from './assets/ring-coffee.jpg'
 import ringPink from './assets/ring-pink.jpg'
 import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
 import ringMacro from './assets/ring-macro.jpg'
-import ringStoneBlack from './assets/ring-stone-black.jpg'
+import ringSilver from './assets/ring-silver.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -581,8 +581,8 @@ const DOES = [
 ] as const
 
 const NAV = [
-  { href: '#signals', label: 'Signals' },
   { href: '#does', label: 'What it does' },
+  { href: '#signals', label: 'Signals' },
   { href: '#stress', label: 'Stress' },
   { href: '#inside', label: 'Inside' },
   { href: '#finish', label: 'Finishes' },
@@ -706,6 +706,50 @@ function App() {
       <main id="top">
         <Hero />
 
+        {/* ---------------- WHAT IT DOES ----------------
+            Three ruled rows with the icon out in the margin, the same index
+            shape the sensing stack uses, rather than three cards. The rows are
+            short, so the render takes the column beside them: on its own the
+            list left the right half and the foot of the section empty. */}
+        <section className="section section--tint" id="does">
+          <div className="wrap">
+            <Reveal className="lead lead--split">
+              <h2 className="display">What it does</h2>
+              <p className="lead__sub">
+                NERVA Ring is continuously monitoring your nervous system. Unlike
+                other wearables that are mainly beneficial to athletes, NERVA Ring
+                is tuned specifically for you.
+              </p>
+            </Reveal>
+
+            <div className="does__grid">
+              <div className="does">
+                {DOES.map((d, i) => (
+                  <Reveal key={d.k} className={`doing doing--${d.channel}`} delay={i * 70}>
+                    <d.Icon />
+                    <div>
+                      <h3>{d.k}</h3>
+                      <p>{d.body}</p>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
+
+              <Reveal className="does__shot" delay={120}>
+                <figure className="does__stage">
+                  <img
+                    src={ringSilver}
+                    width={1500}
+                    height={1500}
+                    loading="lazy"
+                    alt="The NERVA Ring in polished silver, its clear inner band showing the flex PCB, the gold traces and the optical sensor."
+                  />
+                </figure>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
         {/* ---------------- TWO SIGNALS ---------------- */}
         <section className="section" id="signals">
           <div className="wrap">
@@ -740,36 +784,6 @@ function App() {
           </div>
         </section>
 
-        {/* ---------------- WHAT IT DOES ----------------
-            Three ruled rows with the icon out in the margin, the same index
-            shape the sensing stack uses, rather than three cards. The two
-            sections around this one are a drawn instrument and a drawn
-            comparison, so this one stays quiet and just lists. */}
-        <section className="section section--tint" id="does">
-          <div className="wrap">
-            <Reveal className="lead lead--split">
-              <h2 className="display">What it does</h2>
-              <p className="lead__sub">
-                NERVA Ring is continuously monitoring your nervous system. Unlike
-                other wearables that are mainly beneficial to athletes, NERVA Ring
-                is tuned specifically for you.
-              </p>
-            </Reveal>
-
-            <div className="does">
-              {DOES.map((d, i) => (
-                <Reveal key={d.k} className={`doing doing--${d.channel}`} delay={i * 70}>
-                  <d.Icon />
-                  <div>
-                    <h3>{d.k}</h3>
-                    <p>{d.body}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
             The argument is about distance, so the section draws the distance
             instead of explaining it. Both chains start on the same nerve and
@@ -777,7 +791,7 @@ function App() {
             argument typographically, a reading with a unit against a phrase
             in quotation marks. That is the whole section, so there is no
             paragraph under it telling you what you just looked at. */}
-        <section className="section" id="stress">
+        <section className="section section--tint" id="stress">
           <div className="wrap">
             <Reveal className="lead lead--wide">
               <h2 className="display">Two ways to read your nervous system.</h2>
@@ -806,24 +820,14 @@ function App() {
               </Reveal>
             </div>
 
-            <Reveal className="stress__shot">
-              <figure className="stress__stage">
-                <img
-                  src={ringStoneBlack}
-                  width={1600}
-                  height={1600}
-                  loading="lazy"
-                  alt="The NERVA Ring in black ceramic, its clear resin window showing the flex PCB, the gold electrode traces, and the green and red optical sensor inside the band."
-                />
-              </figure>
-              <div className="caveat">
-                <p>
-                  <b>The hard part.</b> Skin conductance drifts with temperature, moves
-                  when you move, and a finger is a small place for two electrodes. That
-                  difficulty is why most rings skip it.
-                </p>
-              </div>
+            <Reveal className="caveat">
+              <p>
+                <b>The hard part.</b> Skin conductance drifts with temperature, moves
+                when you move, and a finger is a small place for two electrodes. That
+                difficulty is why most rings skip it.
+              </p>
             </Reveal>
+
           </div>
         </section>
 
