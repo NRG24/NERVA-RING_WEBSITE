@@ -570,7 +570,7 @@ const DOES = [
     k: 'In-app breathing exercises',
     channel: 'sensor',
     Icon: BreathIcon,
-    body: <>Measures how effectively you can down-regulate your nervous system so you can track your stress-prevention progress.</>,
+    body: <>Exercises to train your nervous system and manage stress. Measures your ability to downregulate your nervous system so you can track progress.</>,
   },
   {
     k: 'Steps, calories burned, heart rate',
