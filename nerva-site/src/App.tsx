@@ -154,6 +154,31 @@ function NerveIcon() {
   )
 }
 
+/* ---------- what-it-does icons ---------- */
+function PedalIcon() {
+  return (
+    <svg className="doing__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7.5 20V5" /><path d="M4 8.5 7.5 5 11 8.5" />
+      <path d="M16.5 4v15" /><path d="M13 15.5 16.5 19 20 15.5" />
+    </svg>
+  )
+}
+function BreathIcon() {
+  return (
+    <svg className="doing__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.1" /><circle cx="12" cy="12" r="8.4" />
+    </svg>
+  )
+}
+function RingMetricsIcon() {
+  return (
+    <svg className="doing__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 20.5v-4.5" /><path d="M12 20.5V6" /><path d="M19 20.5v-8.5" />
+    </svg>
+  )
+}
+
+
 function SignalInstrument() {
   return (
     <figure
@@ -528,8 +553,37 @@ function Signup() {
   )
 }
 
+/* Ryan's copy, cut down and reordered, never rewritten: each label and body
+   below is a literal run from the brief. The channel colors keep the meanings
+   set at the top of index.css: gold is the electrode channel that times the
+   two branches, green is the ring's own sensing, red is the pulse channel. */
+const DOES = [
+  {
+    k: 'Gas pedal and brake',
+    channel: 'gold',
+    Icon: PedalIcon,
+    body: (
+      <>How long your <b className="abbr">SNS</b> is active and how long your{' '}
+      <b className="abbr">PNS</b> is engaged.</>
+    ),
+  },
+  {
+    k: 'In-app breathing exercises',
+    channel: 'sensor',
+    Icon: BreathIcon,
+    body: <>How effectively you can down-regulate your nervous system compared to your baseline.</>,
+  },
+  {
+    k: 'Steps, calories burned, heart rate',
+    channel: 'pulse',
+    Icon: RingMetricsIcon,
+    body: <>All of the things you would expect in a premium wearable.</>,
+  },
+] as const
+
 const NAV = [
   { href: '#signals', label: 'Signals' },
+  { href: '#does', label: 'What it does' },
   { href: '#stress', label: 'Stress' },
   { href: '#inside', label: 'Inside' },
   { href: '#finish', label: 'Finishes' },
@@ -687,6 +741,36 @@ function App() {
           </div>
         </section>
 
+        {/* ---------------- WHAT IT DOES ----------------
+            Three ruled rows with the icon out in the margin, the same index
+            shape the sensing stack uses, rather than three cards. The two
+            sections around this one are a drawn instrument and a drawn
+            comparison, so this one stays quiet and just lists. */}
+        <section className="section section--tint" id="does">
+          <div className="wrap">
+            <Reveal className="lead lead--split">
+              <h2 className="display">What it does</h2>
+              <p className="lead__sub">
+                NERVA Ring is continuously monitoring your nervous system. Unlike
+                other wearables that are mainly beneficial to athletes, NERVA Ring
+                is tuned specifically for you.
+              </p>
+            </Reveal>
+
+            <div className="does">
+              {DOES.map((d, i) => (
+                <Reveal key={d.k} className={`doing doing--${d.channel}`} delay={i * 70}>
+                  <d.Icon />
+                  <div>
+                    <h3>{d.k}</h3>
+                    <p>{d.body}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
             The argument is about distance, so the section draws the distance
             instead of explaining it. Both chains start on the same nerve and
@@ -694,7 +778,7 @@ function App() {
             argument typographically, a reading with a unit against a phrase
             in quotation marks. That is the whole section, so there is no
             paragraph under it telling you what you just looked at. */}
-        <section className="section section--tint" id="stress">
+        <section className="section" id="stress">
           <div className="wrap">
             <Reveal className="lead lead--wide">
               <h2 className="display">Two ways to read your nervous system.</h2>
