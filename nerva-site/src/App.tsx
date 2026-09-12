@@ -362,30 +362,56 @@ function FilmScroll() {
       if (dur && video.readyState >= 1) video.currentTime = p * (dur - 0.05)
     }
 
-    /* Scrubbing means seeking, and seeking needs the server to answer byte-range
-       requests. Cloudflare Pages serves this file with a flat 200 and the whole
-       body no matter what Range we ask for, so the browser reports seekable = 0
-       and currentTime silently refuses to move. Pulling the file down once and
-       handing the element a local blob: URL sidesteps the server entirely.
+    /* Scrubbing means seeking, and seeking needs the server to answer byte
+       range requests. This used to assume no server would, and pulled the
+       whole film down as a blob before the first frame could move, which
+       cost every desktop visitor the entire file.
 
-       Held until the page has loaded and the film is near the viewport, so the
-       fetch never competes with the hero. */
+       So ask instead. One request for one byte settles it: a 206 means the
+       host serves ranges and the element can scrub straight off the network,
+       fetching only the parts a seek actually lands on. The blob path is kept
+       for a host that answers a Range with a flat 200, where the browser
+       reports seekable = 0 and currentTime silently refuses to move.
+
+       Held until the page has loaded and the film is near the viewport, so
+       none of this competes with the hero. */
+    const scrubOverNetwork = () => {
+      video.preload = 'auto'
+      video.src = FILM_SRC
+      video.addEventListener('loadedmetadata', update, { once: true })
+    }
+
+    const scrubFromBlob = () => {
+      fetch(FILM_SRC)
+        .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+        .then((blob) => {
+          objectUrl = URL.createObjectURL(blob)
+          video.src = objectUrl
+          video.addEventListener('loadedmetadata', update, { once: true })
+        })
+        .catch(() => {
+          /* last resort: no scrub, just let it play */
+          video.src = FILM_SRC
+          video.loop = true
+          video.play().catch(() => {})
+        })
+    }
+
     const warm = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
         if (!e.isIntersecting) return
         warm.disconnect()
-        fetch(FILM_SRC)
-          .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
-          .then((blob) => {
-            objectUrl = URL.createObjectURL(blob)
-            video.src = objectUrl
-            video.addEventListener('loadedmetadata', update, { once: true })
+        fetch(FILM_SRC, { headers: { Range: 'bytes=0-1' } })
+          .then((r) => {
+            const servesRanges = r.status === 206
+            /* only the status line was needed. Drop the body without reading
+               it, so a server that answers a Range by streaming the whole
+               file does not cost us the whole file just to be asked. */
+            r.body?.cancel().catch(() => {})
+            if (servesRanges) scrubOverNetwork()
+            else scrubFromBlob()
           })
-          .catch(() => {
-            video.src = FILM_SRC
-            video.loop = true
-            video.play().catch(() => {})
-          })
+          .catch(scrubFromBlob)
       }),
       { rootMargin: '120% 0px' },
     )
@@ -442,7 +468,7 @@ const BUTTONDOWN_USER = import.meta.env.VITE_BUTTONDOWN_USERNAME as string | und
 const SIGNUP_ACTION = BUTTONDOWN_USER
   ? `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USER}`
   : undefined
-const CONTACT_EMAIL = 'hello@nervaring.com'
+const CONTACT_EMAIL = 'nervaring@gmail.com'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 function Signup() {

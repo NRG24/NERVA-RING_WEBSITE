@@ -12,7 +12,7 @@
 
 import type { ReactNode } from 'react'
 
-const CONTACT_EMAIL = 'hello@nervaring.com'
+const CONTACT_EMAIL = 'nervaring@gmail.com'
 const UPDATED = '12 September 2026'
 
 /* one hanging label, one block of document */
