@@ -4,7 +4,7 @@ import ringCoffee from './assets/ring-coffee.jpg'
 import ringPink from './assets/ring-pink.jpg'
 import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
 import ringMacro from './assets/ring-macro.jpg'
-import ringChrome from './assets/ring-chrome.jpg'
+import ringStoneBlack from './assets/ring-stone-black.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -726,11 +726,11 @@ function App() {
             <Reveal className="stress__shot">
               <figure className="stress__stage">
                 <img
-                  src={ringChrome}
-                  width={2200}
-                  height={2200}
+                  src={ringStoneBlack}
+                  width={1600}
+                  height={1600}
                   loading="lazy"
-                  alt="The inside of the NERVA Ring band, with the flex PCB and its green and red optical sensor visible through the polished housing."
+                  alt="The NERVA Ring in black ceramic, its clear resin window showing the flex PCB, the gold electrode traces, and the green and red optical sensor inside the band."
                 />
               </figure>
               <div className="caveat">

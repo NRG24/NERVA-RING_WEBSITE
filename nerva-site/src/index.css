@@ -404,13 +404,15 @@ a { color: inherit; text-decoration: none; }
 .stress__stage {
   margin: 0;
   border-radius: var(--radius-lg); overflow: hidden;
-  /* the render is square and the ring nearly fills it, so the box stays
-     close to square: crop harder than this and the top arc goes */
-  aspect-ratio: 1 / 0.88;
-  background: radial-gradient(120% 100% at 50% 45%, #24282d, #0a0b0d 78%);
+  aspect-ratio: 1 / 0.82;
+  /* sampled off the render itself, so the box reads as the same studio
+     sweep while the image is still loading: dark taupe overhead falling
+     to a cream floor */
+  background: linear-gradient(to bottom, #4a413a 0%, #9d9588 44%, #f3f1ec 100%);
   box-shadow: var(--shadow-lg);
 }
-.stress__stage img { width: 100%; height: 100%; object-fit: cover; object-position: center 48%; }
+/* framed a little high: the render leaves a lot of empty floor under the ring */
+.stress__stage img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
 
 /* the honest footnote, marked in the electrode channel's gold */
 .caveat {
