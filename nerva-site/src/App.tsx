@@ -563,14 +563,14 @@ const DOES = [
     channel: 'gold',
     Icon: PedalIcon,
     body: (
-      <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and don't get burnout.</>
+      <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and avoid burnout.</>
     ),
   },
   {
     k: 'In-app breathing exercises',
     channel: 'sensor',
     Icon: BreathIcon,
-    body: <>How effectively you can down-regulate your nervous system compared to your baseline.</>,
+    body: <>Measures how effectively you can down-regulate your nervous system so you can track your stress-prevention progress.</>,
   },
   {
     k: 'Steps, calories burned, heart rate',
