@@ -563,8 +563,7 @@ const DOES = [
     channel: 'gold',
     Icon: PedalIcon,
     body: (
-      <>How long your <b className="abbr">SNS</b> is active and how long your{' '}
-      <b className="abbr">PNS</b> is engaged.</>
+      <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and don't get burnout.</>
     ),
   },
   {
