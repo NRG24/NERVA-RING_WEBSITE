@@ -307,8 +307,12 @@ function Hero() {
   )
 }
 
-/* ---------- scroll-scrubbed cinematic sensor film ---------- */
-const FILM_SRC = '/nerva-sensors.mp4'
+/* ---------- scroll-scrubbed exploded view ----------
+   Scrolling drives the ring apart: housing, flex PCB, outer shell. The
+   poster is frame 0, the assembled ring, because scroll progress 0 maps to
+   time 0, so the still the browser paints before the file lands is the same
+   frame the scrub starts on and nothing jumps when it loads. */
+const FILM_SRC = '/nerva-exploded.mp4'
 
 function FilmScroll() {
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -431,12 +435,12 @@ function FilmScroll() {
   }, [])
 
   return (
-    <section ref={sectionRef as never} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="NERVA Ring sensor architecture film">
+    <section ref={sectionRef as never} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="An exploded view of the NERVA Ring, separating into the outer housing, the flex PCB carrying the sensors, and the inner shell.">
       <div className="film__sticky">
         <video
           ref={videoRef}
           className="film__video"
-          poster="/nerva-sensors-poster.jpg"
+          poster="/nerva-exploded-poster.jpg"
           muted
           playsInline
           preload="none"
@@ -444,7 +448,7 @@ function FilmScroll() {
         <div className="film__grade" aria-hidden="true" />
         <div className="film__ui">
           <span className="film__hint" style={scrub ? { opacity: Math.max(0, 1 - progress * 4) } : undefined}>
-            {scrub ? 'Scroll to explore' : 'Every reading begins inside the band'}
+            {scrub ? 'Scroll to take it apart' : 'Every reading begins inside the band'}
           </span>
         </div>
         {scrub && (
