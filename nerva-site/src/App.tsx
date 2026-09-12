@@ -525,8 +525,8 @@ function Signup() {
 }
 
 const NAV = [
-  { href: '#stress', label: 'Stress' },
   { href: '#signals', label: 'Signals' },
+  { href: '#stress', label: 'Stress' },
   { href: '#inside', label: 'Inside' },
   { href: '#finish', label: 'Finishes' },
 ]
@@ -649,6 +649,40 @@ function App() {
       <main id="top">
         <Hero />
 
+        {/* ---------------- TWO SIGNALS ---------------- */}
+        <section className="section" id="signals">
+          <div className="wrap">
+            <Reveal className="lead lead--wide">
+              <h2 className="display">
+                Your electrodermal activity is a hidden window into your nervous system.
+              </h2>
+            </Reveal>
+
+            <Reveal>
+              <SignalInstrument />
+            </Reveal>
+
+            <div className="sig-notes">
+              <Reveal className="sig-note sig-note--hr">
+                <h3><HeartIcon />The heart</h3>
+                <p>
+                  Optical PPG reads pulse and blood oxygen off the finger, a dense,
+                  well-perfused site that gives clean signal. Most rings already measure
+                  it. So does NERVA.
+                </p>
+              </Reveal>
+              <Reveal className="sig-note sig-note--eda" delay={80}>
+                <h3><NerveIcon />The nerves</h3>
+                <p>
+                  Two dry gold electrodes read skin conductance straight off the inner
+                  band, the sympathetic arousal signal clinical stress research relies on.
+                  This is the read most rings leave on the table.
+                </p>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
         {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
             The argument is about distance, so the section draws the distance
             instead of explaining it. Both chains start on the same nerve and
@@ -703,40 +737,6 @@ function App() {
                 </p>
               </div>
             </Reveal>
-          </div>
-        </section>
-
-        {/* ---------------- TWO SIGNALS ---------------- */}
-        <section className="section" id="signals">
-          <div className="wrap">
-            <Reveal className="lead lead--wide">
-              <h2 className="display">
-                Your electrodermal activity is a hidden window into your nervous system.
-              </h2>
-            </Reveal>
-
-            <Reveal>
-              <SignalInstrument />
-            </Reveal>
-
-            <div className="sig-notes">
-              <Reveal className="sig-note sig-note--hr">
-                <h3><HeartIcon />The heart</h3>
-                <p>
-                  Optical PPG reads pulse and blood oxygen off the finger, a dense,
-                  well-perfused site that gives clean signal. Most rings already measure
-                  it. So does NERVA.
-                </p>
-              </Reveal>
-              <Reveal className="sig-note sig-note--eda" delay={80}>
-                <h3><NerveIcon />The nerves</h3>
-                <p>
-                  Two dry gold electrodes read skin conductance straight off the inner
-                  band, the sympathetic arousal signal clinical stress research relies on.
-                  This is the read most rings leave on the table.
-                </p>
-              </Reveal>
-            </div>
           </div>
         </section>
 
