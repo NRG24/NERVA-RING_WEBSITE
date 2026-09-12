@@ -1,0 +1,84 @@
+/* ============================================================
+   LEGAL SHEET
+   Set as a document, not as a landing page: one measure of text,
+   hanging labels in the margin, hairline rules between clauses. The
+   same title block the build site's footer uses sits at the top, so
+   this reads as another drawing off the same set.
+   ============================================================ */
+
+.sheet { padding: clamp(40px, 5vw, 72px) 0 clamp(56px, 7vw, 96px); }
+.sheet .wrap { max-width: 1040px; }
+
+.sheet__title {
+  margin: 0 0 clamp(24px, 3vw, 36px);
+  font-weight: 800; letter-spacing: -0.038em; line-height: 1.04;
+  font-size: clamp(2.1rem, 1.5rem + 2.2vw, 3.1rem);
+  text-wrap: balance;
+}
+
+/* three cells across a 6-column block: 2 + 2 + 2 tiles the row exactly,
+   which the hairline grid requires or the gap prints as a solid bar */
+.sheet__block { margin-bottom: clamp(30px, 4vw, 48px); }
+
+.sheet__lede {
+  margin: 0 0 clamp(12px, 2vw, 20px);
+  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.32rem);
+  line-height: 1.5; letter-spacing: -0.018em;
+  color: var(--ink); max-width: 60ch;
+}
+
+/* ---------- clauses ---------- */
+.clause {
+  display: grid;
+  grid-template-columns: minmax(0, 0.32fr) minmax(0, 0.68fr);
+  gap: clamp(18px, 3vw, 48px);
+  padding: clamp(26px, 3vw, 38px) 0;
+  border-top: 1px solid var(--line);
+}
+.clause:first-of-type { margin-top: clamp(18px, 2.4vw, 30px); }
+
+.clause__label {
+  margin: 0; align-self: start;
+  font-weight: 700; font-size: 1.02rem; letter-spacing: -0.018em;
+  color: var(--ink);
+  /* the label is a margin note, so it stays put while the body scrolls by */
+  position: sticky; top: calc(var(--nav-h) + 20px);
+}
+@media (max-width: 900px) { .clause__label { position: static; } }
+
+.clause__body { max-width: 62ch; }
+.clause__body p { margin: 0 0 14px; color: var(--ink-2); font-size: 1rem; line-height: 1.62; }
+.clause__body p:last-child { margin-bottom: 0; }
+.clause__body b { color: var(--ink); font-weight: 700; }
+.clause__body a {
+  color: var(--ink); font-weight: 500;
+  border-bottom: 1px solid var(--line-2);
+  transition: border-color 0.18s var(--ease);
+}
+@media (hover: hover) { .clause__body a:hover { border-color: var(--ink); } }
+
+/* the one sentence on this page that has to land before anything else */
+.clause__loud {
+  font-weight: 700; font-size: 1.12rem; line-height: 1.4;
+  letter-spacing: -0.022em;
+  color: var(--ink) !important;
+  padding-left: clamp(16px, 2vw, 22px);
+  border-left: 3px solid var(--gold);
+}
+
+/* ---------- third parties ---------- */
+.party { margin: 0; }
+.party dt {
+  font-weight: 700; font-size: 1rem; letter-spacing: -0.015em; color: var(--ink);
+}
+.party dd {
+  margin: 6px 0 0; padding: 0 0 18px;
+  color: var(--ink-2); font-size: 1rem; line-height: 1.62;
+  border-bottom: 1px solid var(--line);
+}
+.party dd:last-child { padding-bottom: 0; border-bottom: 0; }
+.party dt + dd + dt { margin-top: 18px; display: block; }
+
+@media (max-width: 900px) {
+  .clause { grid-template-columns: 1fr; gap: 14px; }
+}

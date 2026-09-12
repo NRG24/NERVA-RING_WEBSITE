@@ -7,7 +7,8 @@
       name="description"
       content="NERVA Ring is a smart ring that measures your nervous system. Continuous heart rate, blood oxygen, and stress (GSR/EDA) from a single finger-worn device."
     />
-    <meta name="theme-color" content="#ffffff" />
+    <!-- matches --paper-3, the actual page ground -->
+    <meta name="theme-color" content="#faf7f1" />
     <title>NERVA Ring: the ring that reads your nervous system</title>
 
     <!-- favicon.ico first and unsized: browsers request /favicon.ico on their own,
@@ -20,10 +21,6 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="canonical" href="https://nervaring.com/" />
-
-    <!-- Kicks off the hero film's download before React even mounts, since it's
-         the largest above-the-fold asset and autoplays immediately. -->
-    <link rel="preload" as="video" type="video/mp4" href="/ring_void_16x9_0001-0400.mp4" fetchpriority="high" />
 
     <!-- Social sharing. NOTE: update the domain below once the real one is live.
          og:image must be an absolute URL or most scrapers will ignore it. -->

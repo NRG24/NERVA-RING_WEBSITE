@@ -4,6 +4,7 @@ import ringCoffee from './assets/ring-coffee.jpg'
 import ringPink from './assets/ring-pink.jpg'
 import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
 import ringMacro from './assets/ring-macro.jpg'
+import ringStoneBlack from './assets/ring-stone-black.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -225,33 +226,56 @@ function SignalInstrument() {
    black-glass still. No loop: the reveal happens once and then the page
    settles onto a product shot. Video and still share identical framing
    (object-fit + object-position + scale) so the cross-fade does not jump. */
+/* Spread rather than written as a prop: React forwards the lowercase DOM
+   attribute as-is, so this does not break the build the day @types/react
+   adds its own camelCase declaration for it. */
+const HIGH_PRIORITY: Record<string, string> = { fetchpriority: 'high' }
+
 const HERO_FILM = '/ring_void_16x9_0001-0400.mp4'
 const HERO_STILL = '/ring_03_black_glass_web.png'
 const BLACK_HOLD_MS = 1700
 
 function Hero() {
-  const [faded, setFaded] = useState(false)
-  const [stillShown, setStillShown] = useState(false)
+  /* Reduced motion skips the film outright: it autoplays for ~16s with no
+     controls, which is exactly the thing that setting asks us not to do.
+     Decided before first paint so the still never fades in after the fact,
+     and the 2.4MB download never starts. */
+  const [playFilm] = useState(
+    () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  )
+  const [faded, setFaded] = useState(!playFilm)
+  const [stillShown, setStillShown] = useState(!playFilm)
+  const filmRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
-    if (!faded) return
+    if (!faded || stillShown) return
     const t = window.setTimeout(() => setStillShown(true), BLACK_HOLD_MS)
     return () => window.clearTimeout(t)
-  }, [faded])
+  }, [faded, stillShown])
+
+  /* A browser that refuses the autoplay (iOS Low Power Mode is the usual
+     one) rejects this promise and never fires onEnded, so without a cut the
+     hero would hold a stalled first frame for the life of the page. */
+  const cutToStill = () => { setFaded(true); setStillShown(true) }
+  useEffect(() => { filmRef.current?.play().catch(cutToStill) }, [])
 
   return (
     <section className="hero">
-      <video
-        className="hero__film"
-        src={HERO_FILM}
-        onEnded={() => setFaded(true)}
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        // @ts-expect-error -- fetchPriority landed in the DOM types after this React version
-        fetchPriority="high"
-      />
+      {playFilm && (
+        <video
+          ref={filmRef}
+          className="hero__film"
+          src={HERO_FILM}
+          onEnded={() => setFaded(true)}
+          onError={cutToStill}
+          onStalled={cutToStill}
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          {...HIGH_PRIORITY}
+        />
+      )}
       <img
         className="hero__still"
         src={HERO_STILL}
@@ -283,8 +307,12 @@ function Hero() {
   )
 }
 
-/* ---------- scroll-scrubbed cinematic sensor film ---------- */
-const FILM_SRC = '/nerva-sensors.mp4'
+/* ---------- scroll-scrubbed exploded view ----------
+   Scrolling drives the ring apart: housing, flex PCB, outer shell. The
+   poster is frame 0, the assembled ring, because scroll progress 0 maps to
+   time 0, so the still the browser paints before the file lands is the same
+   frame the scrub starts on and nothing jumps when it loads. */
+const FILM_SRC = '/nerva-exploded.mp4'
 
 function FilmScroll() {
   const sectionRef = useRef<HTMLElement | null>(null)
@@ -338,30 +366,56 @@ function FilmScroll() {
       if (dur && video.readyState >= 1) video.currentTime = p * (dur - 0.05)
     }
 
-    /* Scrubbing means seeking, and seeking needs the server to answer byte-range
-       requests. Cloudflare Pages serves this file with a flat 200 and the whole
-       body no matter what Range we ask for, so the browser reports seekable = 0
-       and currentTime silently refuses to move. Pulling the file down once and
-       handing the element a local blob: URL sidesteps the server entirely.
+    /* Scrubbing means seeking, and seeking needs the server to answer byte
+       range requests. This used to assume no server would, and pulled the
+       whole film down as a blob before the first frame could move, which
+       cost every desktop visitor the entire file.
 
-       Held until the page has loaded and the film is near the viewport, so the
-       fetch never competes with the hero. */
+       So ask instead. One request for one byte settles it: a 206 means the
+       host serves ranges and the element can scrub straight off the network,
+       fetching only the parts a seek actually lands on. The blob path is kept
+       for a host that answers a Range with a flat 200, where the browser
+       reports seekable = 0 and currentTime silently refuses to move.
+
+       Held until the page has loaded and the film is near the viewport, so
+       none of this competes with the hero. */
+    const scrubOverNetwork = () => {
+      video.preload = 'auto'
+      video.src = FILM_SRC
+      video.addEventListener('loadedmetadata', update, { once: true })
+    }
+
+    const scrubFromBlob = () => {
+      fetch(FILM_SRC)
+        .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+        .then((blob) => {
+          objectUrl = URL.createObjectURL(blob)
+          video.src = objectUrl
+          video.addEventListener('loadedmetadata', update, { once: true })
+        })
+        .catch(() => {
+          /* last resort: no scrub, just let it play */
+          video.src = FILM_SRC
+          video.loop = true
+          video.play().catch(() => {})
+        })
+    }
+
     const warm = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
         if (!e.isIntersecting) return
         warm.disconnect()
-        fetch(FILM_SRC)
-          .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
-          .then((blob) => {
-            objectUrl = URL.createObjectURL(blob)
-            video.src = objectUrl
-            video.addEventListener('loadedmetadata', update, { once: true })
+        fetch(FILM_SRC, { headers: { Range: 'bytes=0-1' } })
+          .then((r) => {
+            const servesRanges = r.status === 206
+            /* only the status line was needed. Drop the body without reading
+               it, so a server that answers a Range by streaming the whole
+               file does not cost us the whole file just to be asked. */
+            r.body?.cancel().catch(() => {})
+            if (servesRanges) scrubOverNetwork()
+            else scrubFromBlob()
           })
-          .catch(() => {
-            video.src = FILM_SRC
-            video.loop = true
-            video.play().catch(() => {})
-          })
+          .catch(scrubFromBlob)
       }),
       { rootMargin: '120% 0px' },
     )
@@ -381,12 +435,12 @@ function FilmScroll() {
   }, [])
 
   return (
-    <section ref={sectionRef as never} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="NERVA Ring sensor architecture film">
+    <section ref={sectionRef as never} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="An exploded view of the NERVA Ring, separating into the outer housing, the flex PCB carrying the sensors, and the inner shell.">
       <div className="film__sticky">
         <video
           ref={videoRef}
           className="film__video"
-          poster="/nerva-sensors-poster.jpg"
+          poster="/nerva-exploded-poster.jpg"
           muted
           playsInline
           preload="none"
@@ -394,7 +448,7 @@ function FilmScroll() {
         <div className="film__grade" aria-hidden="true" />
         <div className="film__ui">
           <span className="film__hint" style={scrub ? { opacity: Math.max(0, 1 - progress * 4) } : undefined}>
-            {scrub ? 'Scroll to explore' : 'Every reading begins inside the band'}
+            {scrub ? 'Scroll to take it apart' : 'Every reading begins inside the band'}
           </span>
         </div>
         {scrub && (
@@ -418,7 +472,7 @@ const BUTTONDOWN_USER = import.meta.env.VITE_BUTTONDOWN_USERNAME as string | und
 const SIGNUP_ACTION = BUTTONDOWN_USER
   ? `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USER}`
   : undefined
-const CONTACT_EMAIL = 'hello@nervaring.com'
+const CONTACT_EMAIL = 'nervaring@gmail.com'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 function Signup() {
@@ -475,8 +529,8 @@ function Signup() {
 }
 
 const NAV = [
-  { href: '#stress', label: 'Stress' },
   { href: '#signals', label: 'Signals' },
+  { href: '#stress', label: 'Stress' },
   { href: '#inside', label: 'Inside' },
   { href: '#finish', label: 'Finishes' },
 ]
@@ -509,14 +563,14 @@ const SPECS = [
     title: 'Radio',
     part: 'ANNA-B402 - BLE 5',
     channel: 'sensor',
-    body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity',
+    body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity.',
   },
   {
     n: '04',
     title: 'Power',
-    part: 'BQ25120A - 23 mAh',
+    part: 'BQ25120A - 22 mAh',
     channel: 'sensor',
-    body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rain management and low-voltage threshold allow for days of battery life.',
+    body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rail management and a low-voltage threshold target about a month of standby on a 22 mAh cell.',
   },
   {
     n: '05',
@@ -599,71 +653,6 @@ function App() {
       <main id="top">
         <Hero />
 
-        {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
-            Not a feature grid. The difference is a mechanism, so the section
-            draws the mechanism: how far each ring has to travel from a nerve
-            to the number it puts on your screen. */}
-        <section className="section section--tint" id="stress">
-          <div className="wrap">
-            <Reveal className="lead lead--split">
-              <h2 className="display">What makes NERVA Ring Different</h2>
-              <p className="lead__sub">
-                NERVA Ring takes a step further with continuous EDA sensing,
-                a direct window into how your nervous system responds to the world around you. 
-                By learning your unique stress patterns over time, NERVA helps you recognize stress as it happens, 
-                understand what triggers it, and take control of your response.
-
-              </p>
-            </Reveal>
-
-            <div className="paths">
-              <Reveal className="path path--inferred">
-                <span className="path__idx">A</span>
-                <div>
-                  <h3 className="path__h">Inferred from the heart</h3>
-                  <ol className="path__steps">
-                    <li>Heart rate</li>
-                    <li>Beat-to-beat variation</li>
-                    <li>A model</li>
-                    <li className="path__out">a stress score</li>
-                  </ol>
-                </div>
-                <p className="path__note">
-                  Beat-to-beat variation (HRV) shifts with sleep, caffeine, alcohol, a cold
-                  coming on, and how hard you trained on Tuesday. The model has to decide
-                  for you how much of today’s change was stress.
-                </p>
-              </Reveal>
-
-              <Reveal className="path path--measured" delay={90}>
-                <span className="path__idx">B</span>
-                <div>
-                  <h3 className="path__h">Measured at the skin</h3>
-                  <ol className="path__steps">
-                    <li>Sympathetic nerve</li>
-                    <li>Sweat glands</li>
-                    <li>Skin conductance</li>
-                    <li className="path__out">4.6 µS</li>
-                  </ol>
-                </div>
-                <p className="path__note">
-                  Your sympathetic nerves drive your sweat glands directly. Hearing something as small as a pin drop can spike your EDA.
-                  Two dry electrodes read it in microsiemens, capturing highly detailed short-term stress data. 
-                </p>
-              </Reveal>
-            </div>
-
-            <Reveal className="caveat">
-              <p>
-                <b>The hard part.</b> Skin conductance drifts with temperature, moves when
-                you move, and a finger is a small place for two electrodes. That difficulty
-                is most of why the signal is missing from other rings, and most of what
-                NERVA’s firmware is built to solve.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
         {/* ---------------- TWO SIGNALS ---------------- */}
         <section className="section" id="signals">
           <div className="wrap">
@@ -681,9 +670,9 @@ function App() {
               <Reveal className="sig-note sig-note--hr">
                 <h3><HeartIcon />The heart</h3>
                 <p>
-                  Optical PPG reads pulse and blood oxygen from the finger, a dense,
-                  well-perfused site that gives clean signal. It is what most rings already
-                  measure, and NERVA measures it too.
+                  Optical PPG reads pulse and blood oxygen off the finger, a dense,
+                  well-perfused site that gives clean signal. Most rings already measure
+                  it. So does NERVA.
                 </p>
               </Reveal>
               <Reveal className="sig-note sig-note--eda" delay={80}>
@@ -691,11 +680,67 @@ function App() {
                 <p>
                   Two dry gold electrodes read skin conductance straight off the inner
                   band, the sympathetic arousal signal clinical stress research relies on.
-                  This is the read most rings leave on the table, and where <b>NERVA</b>
-                  {' '}Ring earns its name.
+                  This is the read most rings leave on the table.
                 </p>
               </Reveal>
             </div>
+          </div>
+        </section>
+
+        {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
+            The argument is about distance, so the section draws the distance
+            instead of explaining it. Both chains start on the same nerve and
+            one of them is visibly half as long; the endpoints finish the
+            argument typographically, a reading with a unit against a phrase
+            in quotation marks. That is the whole section, so there is no
+            paragraph under it telling you what you just looked at. */}
+        <section className="section section--tint" id="stress">
+          <div className="wrap">
+            <Reveal className="lead lead--wide">
+              <h2 className="display">One nerve signal. Two ways to read it.</h2>
+            </Reveal>
+
+            <div className="paths">
+              <Reveal className="path path--measured">
+                <h3 className="path__h">NERVA measures it</h3>
+                <ol className="path__steps">
+                  <li>Sympathetic nerve</li>
+                  <li>Sweat glands</li>
+                  <li>Skin conductance</li>
+                  <li className="path__out">4.6 µS</li>
+                </ol>
+              </Reveal>
+
+              <Reveal className="path path--inferred" delay={90}>
+                <h3 className="path__h">Most rings infer it</h3>
+                <ol className="path__steps">
+                  <li>Sympathetic nerve</li>
+                  <li>Heart rate</li>
+                  <li>Beat-to-beat variation</li>
+                  <li>A model</li>
+                  <li className="path__out">“a stress score”</li>
+                </ol>
+              </Reveal>
+            </div>
+
+            <Reveal className="stress__shot">
+              <figure className="stress__stage">
+                <img
+                  src={ringStoneBlack}
+                  width={1600}
+                  height={1600}
+                  loading="lazy"
+                  alt="The NERVA Ring in black ceramic, its clear resin window showing the flex PCB, the gold electrode traces, and the green and red optical sensor inside the band."
+                />
+              </figure>
+              <div className="caveat">
+                <p>
+                  <b>The hard part.</b> Skin conductance drifts with temperature, moves
+                  when you move, and a finger is a small place for two electrodes. That
+                  difficulty is why most rings skip it.
+                </p>
+              </div>
+            </Reveal>
           </div>
         </section>
 
@@ -801,10 +846,14 @@ function App() {
                 See it go from a schematic to a working prototype.
               </h2>
               <p className="cta__lede">
-                We'll email you about new prototypes and project updates.
+                We’ll email you about new prototypes and project updates.
               </p>
               <Signup />
-              <p className="cta__fine">Written by the person building it · no spam</p>
+              <p className="cta__fine">
+                Written by the person building it, no spam. Your address goes to
+                Buttondown and nowhere else.{' '}
+                <a href="/privacy.html">What this site collects</a>.
+              </p>
             </Reveal>
 
             <Reveal className="cta__sheet" delay={90}>
@@ -843,7 +892,20 @@ function App() {
                   <a key={l.href} href={l.href}>{l.label}</a>
                 ))}
                 <a href="#follow">Updates</a>
+                <a href="/privacy.html">Privacy</a>
               </nav>
+            </div>
+            {/* the cell spans are load-bearing: every row of the 6-column
+                grid has to tile exactly or the leftover gap prints as a
+                solid hairline block */}
+            <div className="tb tb--w6">
+              <span className="tb__k">Notes</span>
+              <p className="tb__note">
+                NERVA Ring is a wellness product, not a medical device. It is not
+                intended to diagnose, treat, cure, or prevent any disease, and nothing
+                on this site is for sale. Every ring image is a render of the CAD
+                model. <a href="/privacy.html">Privacy and disclaimers</a>.
+              </p>
             </div>
           </div>
           <p className="colophon__fine">© 2026 NERVA Ring - built by Ryan Schreiber</p>

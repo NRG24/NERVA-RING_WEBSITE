@@ -1,159 +1,152 @@
-# NERVA Website — Session Handoff
+# NERVA Website: Session Handoff
 
-_Last updated: 2026-08-18. Read this first, then `memory/nerva-site-design.md`._
-
-## 2026-08-18 polish pass (branch `claude/festive-fermi-8r6xs4`)
-**Pillars are gone.** The dark band's three-up bordered grid was the last
-card-shaped thing on the page, complete with a mono kicker on each cell. It is
-now `.pillars__grid`: a bold standfirst naming the two constraints that drive
-the design (22 mAh cell, seamless housing) against three run-in notes on
-hairline rules, reusing the rule language of the `.feat` list directly above so
-the whole dark band reads as one spread. `PILLARS` lost its `k` field.
-
-**Footer** absorbed the loose fine print as a `Notes` cell (`.tb__note`), so the
-title block is one closed artifact instead of a block plus a trailing
-paragraph. Row spans still tile 6 columns per row: 4+2, 3+3, 6, 6. The
-copyright line is now a mono sheet stamp (`© 2026 NERVA · sheet 1 of 1`).
-
-**Copy:** "An honest build log, not a launch page" was an X-not-Y construction,
-now "Where the build stands today." Datasheet headline is "Every part, and why
-it is there." The CTA moved to first person to match the signup error copy.
-
-**Hover states** are behind `(hover: hover)` everywhere now (nav links, footer
-index, datasheet and ledger rows), matching what the buttons already did, so
-tapped rows on touch do not keep a stuck highlight.
-
-## 2026-08-16 polish pass (branch `claude/polish-2026-08-16`, PR #1)
-Two passes landed on this branch, the second building on the first.
-
-**Footer** is now a **drawing title block** (`.colophon` / `.titleblock`),
-echoing the Fusion sheet in the Design section: hairline-ruled cells for
-drawing, stage, builder, and contact, with the section index as one
-horizontal row. The first pass's brand-row + dark "spec plate" footer was
-replaced by this. Cell spans (`.tb--w2/w3/w4/w6`) must tile each row of the
-6-column grid exactly, or the leftover gap renders as a solid hairline block.
-
-**Section rhythm** no longer repeats headline+sub everywhere: Design uses a
-split lead (`.lead--split`), Hardware opens headline-only with its caveat as
-a footnote under the table, Build status gained a segment meter counted off
-the `LEDGER` array (`TALLY`), so the tally cannot drift from the list. The
-first pass's side-by-side blueprint intro was dropped: it shrank the 2600px
-CAD sheet to ~740px and the title-block text stopped being legible.
-
-**Dock-bar clearance** is now `body { padding-bottom: 64px }`. It used to sit
-on `main`, which left a white band under the dark CTA while still covering
-the footer. Anything appended after the footer inherits the clearance now.
-
-Also: `[id] { scroll-margin-top }` so anchor jumps clear the sticky nav;
-`.display` capped below the hero title; mono pill badges dropped from the
-ledger tags and dock-bar stage label; focus rings made round on round
-targets and white-on-dark inside the black sections.
+_Last updated: 2026-09-12. Read this, then `CLAUDEwebdesign copy.md` (design law)
+and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
-Marketing / "follow the build" site for the **NERVA smart ring** — a solo-built
-smart ring that pairs heart rate + SpO₂ with **continuous GSR/EDA (skin-conductance)
-sensing**. Early-stage prototype, not for sale. Ryan Schreiber is the sole builder.
-Product facts live in `nerva-ring-overview.md`. Design law lives in
-`CLAUDEwebdesign copy.md` (anti-AI-slop rules — obey it).
+Marketing / "follow the build" site for the **NERVA smart ring**, a solo-built
+smart ring pairing heart rate and SpO₂ with **continuous GSR/EDA
+(skin-conductance) sensing**. Early prototype, not for sale. Ryan Schreiber is
+the sole builder. Contact is **nervaring@gmail.com**.
 
 ## Stack & how to run
-- App is in **`nerva-site/`** — React 19 + Vite + TypeScript. Single page:
-  everything is `src/App.tsx` + `src/index.css`. No routing, no backend.
-- Dev server: `.claude/launch.json` runs on **port 5190** (5188 was taken by a
-  parallel session earlier). Use `preview_start` name `nerva-dev`; never Bash.
-- Typecheck: `npx tsc -b --pretty false` (must pass — React 19 removed the global
-  `JSX` namespace, so `App.tsx` imports `type JSX` explicitly).
-- Prod build: `npm run build` (tsc + vite). Currently clean.
+- App lives in **`nerva-site/`**. React 19 + Vite + TypeScript. No router, no
+  backend. Three HTML entry points, all listed in `vite.config.ts`:
+  - `index.html` → `src/main.tsx` → `src/App.tsx` (the build site)
+  - `buy.html` → `src/buy-main.tsx` → `src/Buy.tsx` (store preview, noindex)
+  - `privacy.html` → `src/legal-main.tsx` → `src/Legal.tsx` (privacy + disclaimers)
+- Styles: `src/index.css` holds the tokens and everything shared (buttons,
+  nav, `.titleblock`, `.shopfoot`). `buy.css` and `legal.css` hold only their
+  own page's furniture and are imported *after* index.css.
+- Typecheck `npx tsc -b --pretty false`, lint `npx oxlint`, build `npm run build`.
+  All three are currently clean; keep them that way.
+- Dev server: `.claude/launch.json` runs on port 5188.
+- Deploys to Cloudflare via `wrangler.jsonc` (static assets out of `dist`).
 
-## Current page structure (top → bottom)
-1. Status strip (black) → sticky nav (5 links: Sensing / Inside the ring / Design /
-   Hardware / Build status) → mobile hamburger menu.
-2. **Hero** — split: graphite ring in a floating studio-gray tile (deep shadow) +
-   headline + **finish selector** (graphite ↔ champagne gold, swaps the render) +
-   Apple-blue CTAs + meta row. This is the ONLY section that keeps an eyebrow label.
-3. EDA wave strip (thin animated divider).
-4. **Cinematic sensor film** (`FilmScroll`) — full-bleed video that **scroll-scrubs**
-   `currentTime` to scroll position on desktop; autoplay-loop on touch; poster only
-   under reduced-motion. Video lazy-loads after `window.load` + near-viewport.
-5. **Two signals** (`#signals`) — custom **dual-signal instrument readout**: animated
-   red PPG pulse trace + green EDA drift trace (colors = the ring's real red/green
-   LEDs) + two plain editorial notes ("The heart" / "The nerves"). NO cards/chips.
-6. **Inside the band** (`#inside`, dark) — chrome ring cutaway + feature list.
-7. Pillars (dark 3-col: Battery / Sealed / Solo full-stack).
-8. **Design** (`#design`) — the Fusion 360 CAD blueprint in a framed white sheet.
-9. Datasheet (`#spec`) — spec table (keeps `PMIC`/`MCU` mono sublabels — legit here).
-10. Build ledger (`#status`) — honest done/in-progress/planned list.
-11. CTA (`#follow`) — **real email signup** (see below).
-12. Footer + fixed bottom dock bar.
+## Page structure (top → bottom)
+Sticky nav (Signals / Stress / Inside / Finishes) + hamburger under 1080px.
 
-## Design system (Apple-premium, Ultrahuman-derived)
-- Tokens in `:root` at top of `index.css`. Palette: white, `--paper-2: #f5f5f7`,
-  near-black ink, true-black `--void`, `--studio` gray for product tiles.
-  Accent `--accent: #0071e3` (Apple blue, CTAs only). `--sensor: #30d158` (green).
-- Type: **Hanken Grotesk** (display+body, 800 for headlines) + **IBM Plex Mono**
-  (data labels only). Loaded via Google Fonts in `index.html`.
-- Borderless soft-shadow cards (`--shadow-sm/md/lg`), radius 24/32px, airy sections.
+1. **Hero.** A full-bleed film that plays once, fades to black, then cross-fades
+   into the black-glass still. Under `prefers-reduced-motion` the film is never
+   rendered or fetched and the still shows immediately. A refused autoplay
+   (iOS Low Power Mode) cuts to the still too, so it can never sit on a frozen
+   frame.
+2. **`#signals`.** The EDA readout. A drawn chart-recorder strip (red PPG
+   trace + green EDA trace, both generated from a seeded RNG so they never
+   repeat) plus two short editorial notes. **This leads on purpose**: EDA is
+   the reason the ring exists, so the signal comes before the argument.
+   Keeps the plain page ground, NOT the tint: the strip is a warm paper sheet
+   (`--chart-paper #f7f0e3`) and it vanishes against `--paper-2 #f2efe8`.
+3. **`#stress`.** "One nerve signal. Two ways to read it." Two chains that
+   start on the same nerve; the measured one is visibly half as long, and the
+   endpoints carry the argument typographically (a figure with a unit vs a
+   phrase in quote marks). **No explanatory paragraph under it**: the picture
+   is the section. Then the chrome render with the honest "hard part" note as
+   its caption.
+4. **`FilmScroll`.** A full-bleed **exploded view**, scroll-scrubbed on desktop
+   (`currentTime` follows scroll), autoplay-loop on touch, poster only under
+   reduced motion. See the video notes below before touching it.
+5. **`#inside`** (dark). Numbered sensing stack with real part numbers.
+6. **`#finish`.** Four ceramic finishes + the build-status meter, counted off
+   the `LEDGER` array so the tally can never drift from the list.
+7. **`#follow`.** Buttondown email capture on a deep green ground.
+8. Footer as an engineering **title block**. Cell spans must tile each row of
+   the 6-column grid exactly or the leftover gap prints as a solid hairline.
+
+## Video: read this before touching the films
+Both files are **faststart** (moov atom before mdat) and must stay that way;
+without it nothing plays until the whole file lands.
+
+`nerva-exploded.mp4` is **scroll-scrubbed**, so it is encoded with a uniform
+half-second GOP (`-g 12 -keyint_min 12 -sc_threshold 0`). A sparse GOP makes
+every seek decode a long way back and the scrub goes to mush. Re-encode with:
+
+```
+ffmpeg -i in.mp4 -an -c:v libx264 -preset slow -crf 21 \
+  -g 12 -keyint_min 12 -sc_threshold 0 -pix_fmt yuv420p \
+  -movflags +faststart out.mp4
+```
+
+The poster is **frame 0**. Scroll progress 0 maps to time 0, so the still the
+browser paints before the file arrives is the frame the scrub starts on and
+nothing jumps.
+
+**The scrub does not blanket-download the file.** It sends one two-byte Range
+request first: a 206 means it scrubs off the network and fetches only what a
+seek lands on; anything else falls back to downloading a blob, for a host that
+answers Range with a flat 200. Do not "simplify" that back into an
+unconditional fetch, and do not assume either branch: test it.
+
+Watch the weight. The old sensor film was 960x540 at **4271 kb/s**, four times
+the bitrate of the 1080p hero, for 12.4MB. Anything over ~1500 kb/s at 540p is
+a re-encode waiting to happen.
 
 ## HARD user directives (do not regress)
-- **Zero em dashes** anywhere in copy. Rewrite sentences; don't just swap punctuation.
-  Currently 0 in `App.tsx` and `index.html`. Keep it that way.
-- **No AI-slop patterns.** Ryan spots them instantly. Banned: symmetric light/dark
-  chip-cards, monospace pill "chips", mono-UPPERCASE eyebrow kickers on every section
-  (cut from 6→1), `real`/`actually`/`genuine` intensifiers, "it's not X it's Y" stacks.
-  When adding a section, tie it to the physiology/hardware, not generic feature cards.
-- **Apple-premium** look is the target. Cool grays, floating product, big tight type.
-- **Commerce:** no Shopify / no custom payment backend now. Email list only; pre-order
-  money should route through crowdfunding (Kickstarter/Indiegogo). Never hand-roll cards.
+- **Zero em dashes** anywhere in copy. Rewrite the sentence, don't swap the
+  punctuation. Currently 0 in the .tsx and .html files. Keep it that way.
+- **No AI-slop patterns.** Ryan spots them instantly. Banned: symmetric
+  light/dark chip-cards, monospace pill chips, mono-UPPERCASE eyebrows on
+  every section, `real`/`actually`/`genuine` intensifiers, "it's not X it's Y"
+  stacks. Tie new sections to the physiology or the hardware, not to a
+  generic feature grid. No purple gradients.
+- **Pictures over paragraphs.** The last round cut the stress section from
+  ~180 words to ~60 and added a render. If a section is turning into prose,
+  that is the signal to draw it instead.
+- **Claims stay hedged.** The site says "most rings", never "every other
+  ring". Keep it that way.
+- **Commerce:** no Shopify and no payment backend for now. Email list only;
+  pre-order money should route through crowdfunding.
+- All `:hover` rules live inside `@media (hover: hover)` so a tapped control
+  does not keep a stuck highlight.
 
-## Email signup (Buttondown; needs one env var)
-Wired to **Buttondown**. Set `VITE_BUTTONDOWN_USERNAME` to the account name only
-(no URL, no path); the form builds
-`https://buttondown.com/api/emails/embed-subscribe/<username>` itself. See
-`.env.example`. Unset, the form refuses to submit and says signup isn't connected
-rather than posting into the void.
+## Facts that must agree across the site
+The battery is **22 mAh** and the target is **about a month of standby**, not
+"days" (`nerva-ring-overview.md` is the source of truth). App.tsx said 23 mAh
+and "days" until recently. The privacy page asserts that **every ring image is
+a CAD render, not a photograph**. If that ever stops being true, fix that page
+in the same commit.
 
-**This is a native form POST on purpose. Do not "fix" it into a fetch().**
-Buttondown's docs are explicit: a subscriber sometimes has to follow the response
-to clear a CAPTCHA or a validation error. An XHR swallows that response, so those
-people look subscribed in our UI and never land on the list. The cost of doing it
-right is that a successful signup ends on Buttondown's confirmation page; point
-that back at nervaring.com from Buttondown's own settings once there's a
-thank-you page. There is no success state in our UI anymore for the same reason
-(`.signup__ok` was deleted), only client-side validation, a honeypot, and the
-not-configured error.
+## Email signup (Buttondown)
+Set `VITE_BUTTONDOWN_USERNAME` to the account name only; the form builds the
+endpoint itself. Unset, it refuses to submit and says so rather than posting
+into the void. **It is a native form POST on purpose. Do not "fix" it into a
+fetch()**. A subscriber sometimes has to follow the response to clear a
+CAPTCHA, and an XHR swallows that, so they look subscribed and never land on
+the list. There is deliberately no success state in our UI.
 
-## Assets & tooling gotchas
-- `src/assets/`: `ring-graphite.jpg`, `ring-gold2.jpg` (studio-gray bg → light tiles),
-  `ring-chrome.jpg` (dark bg → dark Inside section), `blueprint.jpg` (2600px CAD sheet).
-- `public/`: `nerva-sensors.mp4` (12.7MB, 540p H.264), `nerva-sensors-poster.jpg`,
-  `og-image.jpg` (1200×630 share card), `favicon.svg` (ring + green LED mark).
-- **Source images in `Pictures of NERVA Ring/` have a Unicode no-break space in their
-  filenames** — Read and `cp` fail on the literal name; use a glob (`cp Screenshot*10.13*.PNG`).
-- **No ffmpeg on this machine.** Compress video with macOS `avconvert -p Preset960x540
-  --multiPass`; grab video poster frames with `qlmanage -t -s 1600 -o <dir> <file>`.
-  Resize/convert images with `sips`.
+## Known open items
+1. **Self-host the two Google Fonts.** It is the only third party the privacy
+   page has to disclose, and it costs a render-blocking round trip. Blocked in
+   the cloud session (no egress to fonts.googleapis.com); easy locally.
+2. `ring_03_black_glass_web.png` is a **770KB PNG** at 2000x2000 rendered about
+   1200px wide. Should be WebP or a JPEG.
+3. No `<noscript>`, so a non-JS fetch gets a blank page. No React error
+   boundary either: one throw blanks the site.
+4. No security headers. A Cloudflare `_headers` file would add CSP,
+   X-Content-Type-Options, Referrer-Policy, HSTS.
+5. `wrangler.jsonc` has no `not_found_handling`, so unknown paths get a bare
+   Cloudflare 404 rather than a branded one.
+6. No CI. Nothing runs typecheck/lint/build on push.
+7. No analytics, so a launch cannot be measured. Deliberate so far; the privacy
+   page currently promises none, so adding any means editing that page too.
+8. `src/shopify.ts` defaults to Storefront API `2026-07`. Check Shopify's
+   release calendar before switching the store on; a version older than a year
+   stops being served.
+9. Main site shows Black/Blue/Coffee/Pink ceramic; the store preview still
+   offers Graphite/Champagne Gold. Two different product lines.
+10. `hello@nervaring.com` was replaced by `nervaring@gmail.com`. Confirm the
+    domain `nervaring.com` itself is live: it is hardcoded in canonical, OG,
+    Twitter and sitemap URLs.
 
-## Browser-pane quirks (waste hours if you don't know them)
-- The in-app Browser pane sometimes opens at a **0×0 viewport** → blank screenshots and
-  bogus "overflow" readings. Fix: `resize_window` to an explicit size (e.g. 1440×860)
-  before measuring/screenshotting.
-- Screenshots often **blank out when scrolled**; the pane reports `document.hidden=true`
-  so `requestAnimationFrame` and video autoplay don't run there. To verify below-fold
-  sections, isolate them via JS (`display:none` the other sections, force `.reveal.in`)
-  and screenshot at scroll 0. To verify the scrub, dispatch scroll events and read
-  `video.currentTime` — don't rely on rAF/animation in the pane.
-
-## Suggested next steps (Ryan's priorities)
-1. **Get an on-hand / on-finger lifestyle shot** — biggest remaining gap; every premium
-   wearable site leads with the product worn. Also a ring render on pure white/transparent
-   would let the hero truly float (currently sits in a gray tile).
-2. Wire up the real email endpoint (above).
-3. Update placeholder domain `https://nervaring.com` in `index.html` OG/canonical tags
-   once the real domain exists (absolute URLs required for social scrapers).
-4. Possible additions: FAQ ("how is this different from Oura"), companion-app preview.
-
-## Skills used this project
-`web-artifacts-builder` (noted it targets standalone claude.ai artifacts, NOT this Vite
-site — don't fork the project into one), `hallmark` (design de-slop audit), and
-`avoid-ai-writing` (copy audit). Ran hallmark audit → cut section eyebrows; ran
-avoid-ai-writing → light cleanup (copy was already mostly clean).
+## Cloud-session gotchas
+- **Pasted images never reach the container.** A file attached so that it
+  produces an `@"/root/.claude/uploads/..."` path does; an image pasted into
+  the composer is rendered into the conversation only, with no bytes on disk.
+  To get art in, push it to the branch (GitHub's web uploader works) and pull.
+- **No ffmpeg or image tooling preinstalled**, but `npm i ffmpeg-static` pulls
+  a full static build with libx264 and works fine through the proxy.
+- The bundled Playwright Chromium has **no H.264**, so video never decodes in
+  a headless check. You can verify which code path runs and what gets fetched,
+  but the scrub itself needs a real browser.
+- `vite preview` answers a zero-length Range with a 206 carrying the whole
+  body, which is a dev-server quirk and not what Cloudflare does.

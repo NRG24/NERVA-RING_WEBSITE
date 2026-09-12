@@ -19,7 +19,7 @@
   --paper-3:    #faf7f1;   /* page ground */
   --ink:        #0a0a0c;
   --ink-2:      #55565b;
-  --ink-3:      #86868b;
+  --ink-3:      #6b6c72;   /* clears 4.5:1 on paper AND on the tint: it sets real copy */
   --void:       #050506;
   --forest:     #06251a;   /* the CTA ground */
   --forest-2:   #0a2e20;   /* panel inside the CTA */
@@ -41,6 +41,10 @@
   /* ---- chart-recorder sheet ---- */
   --chart-paper: #f7f0e3;
 
+  --studio:     #7c8085;   /* the gray the product renders were shot against */
+
+  --radius-lg:  24px;
+  --shadow-sm:  0 1px 3px rgba(10,10,12,0.05), 0 8px 22px rgba(10,10,12,0.07);
   --shadow-md:  0 2px 6px rgba(10,10,12,0.05), 0 18px 48px rgba(10,10,12,0.09);
   --shadow-lg:  0 4px 12px rgba(10,10,12,0.06), 0 40px 90px rgba(10,10,12,0.16);
 
@@ -151,10 +155,13 @@ a { color: inherit; text-decoration: none; }
 /* the LED green, for buttons that sit on a dark or green ground */
 .btn--led { background: var(--sensor); color: #04231a; }
 .btn--onfilm { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.34); }
+/* the quiet way back: an outline, not a second primary action */
+.btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
 
 /* the lift belongs to a pointer. On a touchscreen there is nothing to
    un-hover, so a tapped button would keep the raised state. */
 @media (hover: hover) {
+  .btn--ghost:hover { border-color: var(--ink); background: var(--paper); }
   .btn--accent:hover { background: var(--accent-dk); }
   .btn--led:hover { background: #4ade74; box-shadow: 0 8px 26px rgba(48, 209, 88, 0.32); }
   .btn--onfilm:hover { border-color: #fff; background: rgba(255, 255, 255, 0.06); }
@@ -186,6 +193,9 @@ a { color: inherit; text-decoration: none; }
 .brand {
   display: inline-flex; align-items: center; gap: 10px;
   font-weight: 800; font-size: 19px; letter-spacing: 0.02em;
+  /* the wordmark is two words and will break across lines in the fallback
+     stack before the webfont lands, which grows the 64px nav mid-load */
+  white-space: nowrap;
 }
 .brand__mark { width: 22px; height: 22px; display: block; flex: none; }
 /* the stage is part of the wordmark: this is a prototype, and the page
@@ -202,6 +212,7 @@ a { color: inherit; text-decoration: none; }
 .nav__links { display: flex; gap: 28px; }
 .nav__links a {
   position: relative;
+  display: inline-flex; align-items: center; min-height: 24px;
   font-size: 14.5px; font-weight: 500; color: var(--ink-2);
   transition: color 0.15s var(--ease);
 }
@@ -335,56 +346,73 @@ a { color: inherit; text-decoration: none; }
 
 /* ------------------------------------------------------------
    THE TWO PATHS TO A STRESS NUMBER
-   Two ruled rows, not two cards: the point is a comparison of
-   distance, so each row runs the full width and the chain of steps is
-   allowed to be as long as it really is. The rule above each row is in
-   that channel's ink, and the last step carries the argument
-   typographically — one ends in an italic hedge, the other in a figure
-   with a unit on it.
+   The section is a picture, not a pair of cards. Both chains open on
+   the same nerve and the measured one is visibly about half as long,
+   which IS the argument: no paragraph restates it underneath. The rule
+   above each row is in that channel's ink, and the last link finishes
+   the point typographically, one ending in a figure with a unit on it
+   and the other in a phrase inside quotation marks.
    ------------------------------------------------------------ */
 .path {
   display: grid;
-  grid-template-columns: 56px minmax(0, 1.2fr) minmax(0, 0.8fr);
-  gap: clamp(18px, 3vw, 48px);
-  padding: clamp(26px, 3vw, 38px) 0;
+  gap: 14px;
+  padding: clamp(26px, 3.2vw, 40px) 0;
   border-top: 2px solid var(--line-2);
 }
 .path--inferred { border-top-color: rgba(192, 50, 43, 0.4); }
-.path--measured { border-top-color: rgba(26, 122, 66, 0.55); border-bottom: 1px solid var(--line); }
+.path--measured { border-top-color: rgba(26, 122, 66, 0.55); }
+.paths .path:last-child { border-bottom: 1px solid var(--line); }
 
-.path__idx { font-family: var(--font-mono); font-size: 13px; padding-top: 6px; }
-.path--inferred .path__idx { color: var(--pulse-ink); }
-.path--measured .path__idx { color: var(--green-ink); }
-
+/* a label on the chain, deliberately quieter than the chain itself */
 .path__h {
-  margin: 0; font-weight: 700; letter-spacing: -0.025em;
-  font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+  margin: 0; font-weight: 600; letter-spacing: -0.012em; font-size: 1rem;
 }
 .path--inferred .path__h { color: var(--pulse-ink); }
 .path--measured .path__h { color: var(--green-ink); }
 
 .path__steps {
-  list-style: none; margin: 22px 0 0; padding: 0;
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px;
-  font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
-  line-height: 1.5; color: #3d3e42; font-weight: 500;
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 14px;
+  font-size: clamp(1.08rem, 0.95rem + 0.72vw, 1.5rem);
+  line-height: 1.34; color: var(--ink);
+  font-weight: 600; letter-spacing: -0.022em;
 }
 /* the arrow leads its step rather than trailing the one before it, so a
    chain that wraps starts the next line with the link */
 .path__steps li:not(:first-child)::before {
-  content: '\2192'; margin-right: 16px; color: #b3b4b8;
+  content: '\2192'; margin-right: 16px; color: var(--ink-3); font-weight: 400;
 }
 /* a guess, set as one */
-.path--inferred .path__out { color: var(--ink-3); font-style: italic; }
+.path--inferred .path__out { color: var(--ink-2); font-style: italic; font-weight: 500; }
 /* a reading, with the unit still attached to it */
 .path--measured .path__out {
   color: var(--green-ink); font-weight: 700;
-  font-family: var(--font-mono); font-size: 0.92em;
+  font-family: var(--font-mono); font-size: 0.88em;
 }
-.path__note {
-  margin: 0; align-self: center;
-  color: var(--ink-2); font-size: 0.98rem; line-height: 1.62; max-width: 44ch;
+
+/* the chrome shot and the honest footnote, set as one object: the note is
+   the caption on the thing it is about */
+.stress__shot {
+  margin-top: clamp(44px, 5.5vw, 80px);
+  display: grid;
+  /* the render carries the section, so it takes the larger share and the
+     note sits tight against it rather than drifting off to the right */
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: clamp(26px, 3.5vw, 52px);
+  align-items: center;
 }
+.stress__stage {
+  margin: 0;
+  border-radius: var(--radius-lg); overflow: hidden;
+  aspect-ratio: 1 / 0.82;
+  /* sampled off the render itself, so the box reads as the same studio
+     sweep while the image is still loading: dark taupe overhead falling
+     to a cream floor */
+  background: linear-gradient(to bottom, #4a413a 0%, #9d9588 44%, #f3f1ec 100%);
+  box-shadow: var(--shadow-lg);
+}
+/* framed a little high: the render leaves a lot of empty floor under the ring */
+.stress__stage img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
 
 /* the honest footnote, marked in the electrode channel's gold */
 .caveat {
@@ -393,6 +421,7 @@ a { color: inherit; text-decoration: none; }
   border-left: 3px solid var(--gold);
   max-width: 72ch;
 }
+.stress__shot .caveat { margin-top: 0; max-width: 38ch; }
 .caveat p { margin: 0; color: var(--ink-2); font-size: 1rem; line-height: 1.62; }
 .caveat b { color: var(--ink); font-weight: 700; }
 
@@ -634,7 +663,7 @@ a { color: inherit; text-decoration: none; }
   margin: 12px 0 0; max-width: 46ch;
   font-size: 1.05rem; line-height: 1.5; color: var(--ink-2);
 }
-.finish__pills { display: flex; align-items: center; gap: 16px; }
+.finish__pills { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
 .pill {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 9px 18px 9px 10px;
@@ -717,10 +746,16 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--font-sans); font-size: 16px;
 }
 .signup input::placeholder { color: rgba(214, 245, 226, 0.45); }
-.signup input:focus { outline: none; border-color: var(--sensor); }
+.signup input:focus-visible { outline: 2.5px solid var(--paper); outline-offset: 2px; }
+.signup input:focus { border-color: var(--sensor); }
 .signup input[aria-invalid='true'] { border-color: #ff6a5e; }
 .signup__err { margin: 12px 0 0; max-width: 46ch; font-size: 14.5px; color: #ffb3ac; }
-.cta__fine { margin: 18px 0 0; font-size: 13px; color: rgba(214, 245, 226, 0.55); }
+.cta__fine {
+  margin: 18px 0 0; max-width: 46ch;
+  font-size: 13px; line-height: 1.5; color: rgba(214, 245, 226, 0.72);
+}
+.cta__fine a { color: var(--paper); border-bottom: 1px solid rgba(214, 245, 226, 0.4); }
+@media (hover: hover) { .cta__fine a:hover { border-color: var(--paper); } }
 
 .cta__sheet {
   border-radius: 18px; overflow: hidden;
@@ -771,7 +806,28 @@ a { color: inherit; text-decoration: none; }
   .tb__index a:hover::after { transform: scaleX(1); }
 }
 @media (prefers-reduced-motion: reduce) { .tb__index a::after { transition: none; } }
+/* a run of prose inside a title-block cell: the cell's own .tb__v is a
+   bold 15px value slot and reads far too loud for a sentence */
+.tb__note {
+  margin: 7px 0 0; max-width: 92ch;
+  font-size: 13.5px; line-height: 1.55; color: var(--ink-2);
+}
+.tb__note a { border-bottom: 1px solid var(--line-2); color: var(--ink); font-weight: 500; }
+@media (hover: hover) { .tb__note a:hover { border-color: var(--ink); } }
+
 .colophon__fine { margin: 20px 0 0; font-size: 12.5px; color: var(--ink-3); }
+
+/* ============================================================
+   COMPACT FOOTER (the store preview and the legal sheet)
+   ============================================================ */
+.shopfoot { border-top: 1px solid var(--line); padding: 32px 0 40px; }
+.shopfoot__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.shopfoot__inner p { margin: 0; font-size: 12.5px; color: var(--ink-3); }
+.shopfoot__link { border-bottom: 1px solid var(--line-2); color: var(--ink-2); }
+@media (hover: hover) { .shopfoot__link:hover { color: var(--ink); border-color: var(--ink); } }
 
 /* ============================================================
    RESPONSIVE
@@ -783,8 +839,7 @@ a { color: inherit; text-decoration: none; }
   .lead--split { grid-template-columns: 1fr; gap: 22px; }
   .lead__sub { padding-left: 0; border-left: 0; max-width: 56ch; }
 
-  .path { grid-template-columns: 40px minmax(0, 1fr); gap: 16px 18px; }
-  .path__note { grid-column: 2; }
+  .stress__shot { grid-template-columns: 1fr; gap: 28px; }
 
   .sig-notes { grid-template-columns: 1fr; gap: 28px; }
   .sig-note + .sig-note { padding-left: 0; padding-top: 28px; border-left: 0; border-top: 1px solid var(--line); }
@@ -803,15 +858,23 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 620px) {
   body { font-size: 16px; }
+  .shopfoot__inner { flex-direction: column; align-items: flex-start; gap: 12px; }
   .wrap, .nav__inner, .hero__copy { padding-left: 20px; padding-right: 20px; }
+
+  /* the wordmark, its stage badge, a CTA and the toggle do not fit one
+     phone line. The menu this toggle opens carries the same CTA. */
+  .nav__right .btn--accent { display: none; }
 
   .hero { min-height: 88vh; }
   .hero__title { font-size: clamp(2.4rem, 9vw, 3.2rem); }
   .hero__cta .btn { flex: 1; }
 
   .finish__head { gap: 20px; }
-  .finish__pills { width: 100%; }
-  .pill { flex: 1; justify-content: center; }
+  /* four pills will not fit on one phone line at any font size, and flex
+     items refuse to shrink below their label, so they tile two-up instead
+     of running off the right edge */
+  .finish__pills { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pill { justify-content: center; }
   .finish__stage { aspect-ratio: 4 / 3.4; }
 
   /* the strip keeps its lanes, but the key sits above the trace instead
