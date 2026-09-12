@@ -218,7 +218,7 @@ export default function Buy() {
               onClick={onBuy}
               disabled={!buyable || checkout === 'sending'}
             >
-              {checkout === 'sending' ? 'Opening checkout…' : buyable ? 'Add to cart' : 'Checkout not connected'}
+              {checkout === 'sending' ? 'Opening checkout…' : buyable ? 'Buy now' : 'Checkout not connected'}
             </button>
 
             <p className="buy__state">

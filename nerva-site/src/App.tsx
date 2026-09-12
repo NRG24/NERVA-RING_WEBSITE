@@ -4,6 +4,7 @@ import ringCoffee from './assets/ring-coffee.jpg'
 import ringPink from './assets/ring-pink.jpg'
 import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
 import ringMacro from './assets/ring-macro.jpg'
+import ringChrome from './assets/ring-chrome.jpg'
 import blueprint from './assets/blueprint.jpg'
 
 /* ---------- scroll reveal ---------- */
@@ -225,33 +226,56 @@ function SignalInstrument() {
    black-glass still. No loop: the reveal happens once and then the page
    settles onto a product shot. Video and still share identical framing
    (object-fit + object-position + scale) so the cross-fade does not jump. */
+/* Spread rather than written as a prop: React forwards the lowercase DOM
+   attribute as-is, so this does not break the build the day @types/react
+   adds its own camelCase declaration for it. */
+const HIGH_PRIORITY: Record<string, string> = { fetchpriority: 'high' }
+
 const HERO_FILM = '/ring_void_16x9_0001-0400.mp4'
 const HERO_STILL = '/ring_03_black_glass_web.png'
 const BLACK_HOLD_MS = 1700
 
 function Hero() {
-  const [faded, setFaded] = useState(false)
-  const [stillShown, setStillShown] = useState(false)
+  /* Reduced motion skips the film outright: it autoplays for ~16s with no
+     controls, which is exactly the thing that setting asks us not to do.
+     Decided before first paint so the still never fades in after the fact,
+     and the 2.4MB download never starts. */
+  const [playFilm] = useState(
+    () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  )
+  const [faded, setFaded] = useState(!playFilm)
+  const [stillShown, setStillShown] = useState(!playFilm)
+  const filmRef = useRef<HTMLVideoElement | null>(null)
 
   useEffect(() => {
-    if (!faded) return
+    if (!faded || stillShown) return
     const t = window.setTimeout(() => setStillShown(true), BLACK_HOLD_MS)
     return () => window.clearTimeout(t)
-  }, [faded])
+  }, [faded, stillShown])
+
+  /* A browser that refuses the autoplay (iOS Low Power Mode is the usual
+     one) rejects this promise and never fires onEnded, so without a cut the
+     hero would hold a stalled first frame for the life of the page. */
+  const cutToStill = () => { setFaded(true); setStillShown(true) }
+  useEffect(() => { filmRef.current?.play().catch(cutToStill) }, [])
 
   return (
     <section className="hero">
-      <video
-        className="hero__film"
-        src={HERO_FILM}
-        onEnded={() => setFaded(true)}
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        // @ts-expect-error -- fetchPriority landed in the DOM types after this React version
-        fetchPriority="high"
-      />
+      {playFilm && (
+        <video
+          ref={filmRef}
+          className="hero__film"
+          src={HERO_FILM}
+          onEnded={() => setFaded(true)}
+          onError={cutToStill}
+          onStalled={cutToStill}
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          {...HIGH_PRIORITY}
+        />
+      )}
       <img
         className="hero__still"
         src={HERO_STILL}
@@ -509,14 +533,14 @@ const SPECS = [
     title: 'Radio',
     part: 'ANNA-B402 - BLE 5',
     channel: 'sensor',
-    body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity',
+    body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity.',
   },
   {
     n: '04',
     title: 'Power',
-    part: 'BQ25120A - 23 mAh',
+    part: 'BQ25120A - 22 mAh',
     channel: 'sensor',
-    body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rain management and low-voltage threshold allow for days of battery life.',
+    body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rail management and a low-voltage threshold target about a month of standby on a 22 mAh cell.',
   },
   {
     n: '05',
@@ -600,66 +624,58 @@ function App() {
         <Hero />
 
         {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
-            Not a feature grid. The difference is a mechanism, so the section
-            draws the mechanism: how far each ring has to travel from a nerve
-            to the number it puts on your screen. */}
+            The argument is about distance, so the section draws the distance
+            instead of explaining it. Both chains start on the same nerve and
+            one of them is visibly half as long; the endpoints finish the
+            argument typographically, a reading with a unit against a phrase
+            in quotation marks. That is the whole section, so there is no
+            paragraph under it telling you what you just looked at. */}
         <section className="section section--tint" id="stress">
           <div className="wrap">
-            <Reveal className="lead lead--split">
-              <h2 className="display">What makes NERVA Ring Different</h2>
-              <p className="lead__sub">
-                NERVA Ring takes a step further with continuous EDA sensing,
-                a direct window into how your nervous system responds to the world around you. 
-                By learning your unique stress patterns over time, NERVA helps you recognize stress as it happens, 
-                understand what triggers it, and take control of your response.
-
-              </p>
+            <Reveal className="lead lead--wide">
+              <h2 className="display">One nerve signal. Two ways to read it.</h2>
             </Reveal>
 
             <div className="paths">
-              <Reveal className="path path--inferred">
-                <span className="path__idx">A</span>
-                <div>
-                  <h3 className="path__h">Inferred from the heart</h3>
-                  <ol className="path__steps">
-                    <li>Heart rate</li>
-                    <li>Beat-to-beat variation</li>
-                    <li>A model</li>
-                    <li className="path__out">a stress score</li>
-                  </ol>
-                </div>
-                <p className="path__note">
-                  Beat-to-beat variation (HRV) shifts with sleep, caffeine, alcohol, a cold
-                  coming on, and how hard you trained on Tuesday. The model has to decide
-                  for you how much of today’s change was stress.
-                </p>
+              <Reveal className="path path--measured">
+                <h3 className="path__h">NERVA measures it</h3>
+                <ol className="path__steps">
+                  <li>Sympathetic nerve</li>
+                  <li>Sweat glands</li>
+                  <li>Skin conductance</li>
+                  <li className="path__out">4.6 µS</li>
+                </ol>
               </Reveal>
 
-              <Reveal className="path path--measured" delay={90}>
-                <span className="path__idx">B</span>
-                <div>
-                  <h3 className="path__h">Measured at the skin</h3>
-                  <ol className="path__steps">
-                    <li>Sympathetic nerve</li>
-                    <li>Sweat glands</li>
-                    <li>Skin conductance</li>
-                    <li className="path__out">4.6 µS</li>
-                  </ol>
-                </div>
-                <p className="path__note">
-                  Your sympathetic nerves drive your sweat glands directly. Hearing something as small as a pin drop can spike your EDA.
-                  Two dry electrodes read it in microsiemens, capturing highly detailed short-term stress data. 
-                </p>
+              <Reveal className="path path--inferred" delay={90}>
+                <h3 className="path__h">Most rings infer it</h3>
+                <ol className="path__steps">
+                  <li>Sympathetic nerve</li>
+                  <li>Heart rate</li>
+                  <li>Beat-to-beat variation</li>
+                  <li>A model</li>
+                  <li className="path__out">“a stress score”</li>
+                </ol>
               </Reveal>
             </div>
 
-            <Reveal className="caveat">
-              <p>
-                <b>The hard part.</b> Skin conductance drifts with temperature, moves when
-                you move, and a finger is a small place for two electrodes. That difficulty
-                is most of why the signal is missing from other rings, and most of what
-                NERVA’s firmware is built to solve.
-              </p>
+            <Reveal className="stress__shot">
+              <figure className="stress__stage">
+                <img
+                  src={ringChrome}
+                  width={2200}
+                  height={2200}
+                  loading="lazy"
+                  alt="The inside of the NERVA Ring band, with the flex PCB and its green and red optical sensor visible through the polished housing."
+                />
+              </figure>
+              <div className="caveat">
+                <p>
+                  <b>The hard part.</b> Skin conductance drifts with temperature, moves
+                  when you move, and a finger is a small place for two electrodes. That
+                  difficulty is why most rings skip it.
+                </p>
+              </div>
             </Reveal>
           </div>
         </section>
@@ -681,9 +697,9 @@ function App() {
               <Reveal className="sig-note sig-note--hr">
                 <h3><HeartIcon />The heart</h3>
                 <p>
-                  Optical PPG reads pulse and blood oxygen from the finger, a dense,
-                  well-perfused site that gives clean signal. It is what most rings already
-                  measure, and NERVA measures it too.
+                  Optical PPG reads pulse and blood oxygen off the finger, a dense,
+                  well-perfused site that gives clean signal. Most rings already measure
+                  it. So does NERVA.
                 </p>
               </Reveal>
               <Reveal className="sig-note sig-note--eda" delay={80}>
@@ -691,8 +707,7 @@ function App() {
                 <p>
                   Two dry gold electrodes read skin conductance straight off the inner
                   band, the sympathetic arousal signal clinical stress research relies on.
-                  This is the read most rings leave on the table, and where <b>NERVA</b>
-                  {' '}Ring earns its name.
+                  This is the read most rings leave on the table.
                 </p>
               </Reveal>
             </div>
@@ -801,7 +816,7 @@ function App() {
                 See it go from a schematic to a working prototype.
               </h2>
               <p className="cta__lede">
-                We'll email you about new prototypes and project updates.
+                We’ll email you about new prototypes and project updates.
               </p>
               <Signup />
               <p className="cta__fine">Written by the person building it · no spam</p>

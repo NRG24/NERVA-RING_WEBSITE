@@ -42,8 +42,10 @@ const TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN as string | undefine
 
 /* Storefront API versions ship quarterly and each is supported for a year.
    Check https://shopify.dev/docs/api/usage/versioning and bump this when you
-   upgrade; override per environment with VITE_SHOPIFY_API_VERSION. */
-const API_VERSION = (import.meta.env.VITE_SHOPIFY_API_VERSION as string | undefined) ?? '2025-01'
+   upgrade; override per environment with VITE_SHOPIFY_API_VERSION.
+   NOTE: verify this against Shopify's release calendar before going live. A
+   version older than a year stops being served. */
+const API_VERSION = (import.meta.env.VITE_SHOPIFY_API_VERSION as string | undefined) ?? '2026-07'
 
 export const PRODUCT_HANDLE = 'nerva-ring'
 export const shopifyReady = Boolean(DOMAIN && TOKEN)
