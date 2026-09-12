@@ -697,7 +697,7 @@ function App() {
         <section className="section section--tint" id="stress">
           <div className="wrap">
             <Reveal className="lead lead--wide">
-              <h2 className="display">One nerve signal. Two ways to read it.</h2>
+              <h2 className="display">Two ways to read your nervous system.</h2>
             </Reveal>
 
             <div className="paths">
