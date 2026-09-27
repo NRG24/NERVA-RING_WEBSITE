@@ -70,20 +70,22 @@ under 1080px. Every light section opens with a **centered** `.head`.
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
 
-## Earlier versions of the site (git tags)
-Every earlier state is kept. To look at one, `git checkout <tag>` and
-`npm run build`; to put one back live, deploy that build.
+## Earlier versions of the site
+Every earlier state is a commit in `main`'s history, so none of it is lost.
+To look at one, `git checkout <commit>` then `npm run build`; to put one back
+live, deploy that build. (Tags could not be pushed from the cloud session;
+`git tag archive/<name> <commit> && git push --tags` from a laptop adds them.)
 
-| Tag | What it is |
+| Commit | What it is |
 |---|---|
-| `archive/2026-09-12-before-redesign` | The site as it stood before the 27 Sep work: warm paper, chart-recorder strip, original hero film |
-| `archive/2026-09-27-cleanup-webp` | Design cleanup + every image as WebP (PR #14) |
-| `archive/2026-09-27-serif-experiment` | Newsreader headlines, never went live; Ryan read it as B2B |
-| `archive/2026-09-27-product-page` | Product-page rebuild after the Ultrahuman references, old hero film |
+| `27cac32` | The site before the 27 Sep work: warm paper, chart-recorder strip, original hero film |
+| `0a480d9` | Design cleanup + every image as WebP (PR #14) |
+| `d5e9bb8` | Newsreader headline experiment. Never went live; Ryan read it as B2B |
+| `3b9cdbd` | Product-page rebuild after the Ultrahuman references, old hero film |
 
 The old hero files (`ring_void_16x9_0001-0400.mp4`,
-`ring_03_black_glass_web.webp`) left `public/` with the new hero, and live on in
-those tags.
+`ring_03_black_glass_web.webp`) left `public/` with the new hero; they live on
+in those commits.
 
 ## Video: read this before touching the films
 Both files are **faststart** (moov atom before mdat) and must stay that way;
