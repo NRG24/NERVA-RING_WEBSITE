@@ -33,11 +33,11 @@ Sticky nav (What it does / Signals / Stress / Inside / Finishes) + hamburger
 under 1080px. Every light section opens with a **centered** `.head`.
 
 1. **Hero.** `nerva-levitate.mp4`: the ring rises out of the dark and settles,
-   played **once**, holding its last frame (no loop). Source was a 4.08s
-   1080x1080 render; it is slowed 2x to 8s with **blended** in-between frames.
-   Motion interpolation (`minterpolate mi_mode=mci`) was tried twice and
-   smeared the rim on the fast turn; do not switch back without checking
-   frames ~100-103. The still (`nerva-levitate-still.webp`) is that last frame
+   played **once**, holding its last frame (no loop). It runs at the render's
+   own speed: 4.08s, 1080x1080, 24fps, re-encoded only for size (crf 22,
+   faststart, 777KB). A 2x slowdown went live briefly and Ryan asked for the
+   default speed back; interpolating it smeared the rim and blending ghosted
+   it, so slowing it cleanly needs a slower render, not ffmpeg. The still (`nerva-levitate-still.webp`) is that last frame
    and shows under reduced motion (film never fetched), refused autoplay, or a
    load error. The film is square on pure black, standing as tall as the hero
    against the right edge; on phones it runs across the top with its bottom
