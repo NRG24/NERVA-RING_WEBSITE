@@ -24,39 +24,68 @@ the sole builder. Contact is **nervaring@gmail.com**.
 - Deploys to Cloudflare via `wrangler.jsonc` (static assets out of `dist`).
 
 ## Page structure (top → bottom)
-Sticky nav (Signals / Stress / Inside / Finishes) + hamburger under 1080px.
+**Direction: a consumer product page, not a spec sheet.** Ryan's references
+are the Ultrahuman Ring PRO page (`/Reference website`). When he said the site
+"looks more like a b2b website and less like a product website", this layout
+is what fixed it. Build toward those screenshots, not away from them.
 
-1. **Hero.** A full-bleed film that plays once, fades to black, then cross-fades
-   into the black-glass still. Under `prefers-reduced-motion` the film is never
-   rendered or fetched and the still shows immediately. A refused autoplay
-   (iOS Low Power Mode) cuts to the still too, so it can never sit on a frozen
-   frame. The still is `ring_03_black_glass_web.webp` (43KB, was a 770KB PNG).
-   The hero ground is true `#000` and the still's edges are masked: the render
-   is scaled to 0.85 inside the box, and anything lighter than its (1,1,2) top
-   edge, or an unfeathered grey floor, prints as a visible rectangle. One green
-   button plus an underlined text link; the old looping green squiggle along
-   the bottom was cut (the page's rule is that nothing claims to be live).
-2. **`#signals`.** The EDA readout. A drawn chart-recorder strip (red PPG
-   trace + green EDA trace, both generated from a seeded RNG so they never
-   repeat) plus two short editorial notes. **This leads on purpose**: EDA is
-   the reason the ring exists, so the signal comes before the argument.
-   Keeps the plain page ground, NOT the tint: the strip is a warm paper sheet
-   (`--chart-paper #f7f0e3`) and it vanishes against `--paper-2 #f2efe8`.
-3. **`#stress`.** "One nerve signal. Two ways to read it." Two chains that
-   start on the same nerve; the measured one is visibly half as long, and the
-   endpoints carry the argument typographically (a figure with a unit vs a
-   phrase in quote marks). **No explanatory paragraph under it**: the picture
-   is the section. Then the chrome render with the honest "hard part" note as
-   its caption.
-4. **`FilmScroll`.** A full-bleed **exploded view**, scroll-scrubbed on desktop
+Sticky nav (What it does / Signals / Stress / Inside / Finishes) + hamburger
+under 1080px. Every light section opens with a **centered** `.head`.
+
+1. **Hero.** `nerva-levitate.mp4`: the ring rises out of the dark and settles,
+   played **once**, holding its last frame (no loop). Source was a 4.08s
+   1080x1080 render; it is slowed 2x to 8s with **blended** in-between frames.
+   Motion interpolation (`minterpolate mi_mode=mci`) was tried twice and
+   smeared the rim on the fast turn; do not switch back without checking
+   frames ~100-103. The still (`nerva-levitate-still.webp`) is that last frame
+   and shows under reduced motion (film never fetched), refused autoplay, or a
+   load error. The film is square on pure black, standing as tall as the hero
+   against the right edge; on phones it runs across the top with its bottom
+   edge feathered, because the film opens with the ring rising in from below.
+2. **`#does`.** Centered head, then `ring-app.webp` (two demo app screens
+   beside the silver ring) on a stage at the image's own 1957:1124 ratio, so
+   nothing crops. It came in as a 2000px chat image; ask Ryan for the
+   original PNG if it needs to be sharper. The phones say DEMO; the footer and
+   the privacy page both say the app screens are a design demo. Then the
+   three features side by side.
+3. **`#signals`.** The EDA readout: both traces on a white card inside a grey
+   stage, drawn like an app screen (red PPG + green EDA, generated from a
+   seeded RNG so they never repeat). Caption under it says it is modeled, not
+   recorded. Then the two notes, each keyed by a swatch of its own trace.
+4. **`#stress`.** Two chains on white cards inside a grey stage; the measured
+   one is visibly half as long. Then the "hard part" note, centered.
+5. **`FilmScroll`.** A full-bleed **exploded view**, scroll-scrubbed on desktop
    (`currentTime` follows scroll), autoplay-loop on touch, poster only under
    reduced motion. See the video notes below before touching it.
-5. **`#inside`** (dark). Numbered sensing stack with real part numbers.
-6. **`#finish`.** Four ceramic finishes + the build-status meter, counted off
-   the `LEDGER` array so the tally can never drift from the list.
-7. **`#follow`.** Buttondown email capture on a deep green ground.
-8. Footer as an engineering **title block**. Cell spans must tile each row of
+6. **`#inside`** (black). The reference's "Inside Out": centered head, macro
+   render on the left (sticky), plain headings + copy on the right, part
+   number small under each heading.
+7. **`#finish`.** A product configurator like the reference: render big on the
+   left; name, circular swatches (`aria-pressed`), "Finish. {name}", the build
+   meter (counted off `LEDGER`, so it cannot drift) and a black pill CTA.
+8. **`#follow`.** Buttondown email capture on a deep green ground.
+9. Footer as an engineering **title block**. Cell spans must tile each row of
    the 6-column grid exactly or the leftover gap prints as a solid hairline.
+10. **Launch bar.** Fixed to the bottom where the reference pins price and
+    "Continue". Shows once the hero is gone; hides while `#follow` or the
+    footer is on screen; `inert` while hidden. It must never show a price.
+
+## Earlier versions of the site
+Every earlier state is a commit in `main`'s history, so none of it is lost.
+To look at one, `git checkout <commit>` then `npm run build`; to put one back
+live, deploy that build. (Tags could not be pushed from the cloud session;
+`git tag archive/<name> <commit> && git push --tags` from a laptop adds them.)
+
+| Commit | What it is |
+|---|---|
+| `27cac32` | The site before the 27 Sep work: warm paper, chart-recorder strip, original hero film |
+| `0a480d9` | Design cleanup + every image as WebP (PR #14) |
+| `d5e9bb8` | Newsreader headline experiment. Never went live; Ryan read it as B2B |
+| `3b9cdbd` | Product-page rebuild after the Ultrahuman references, old hero film |
+
+The old hero files (`ring_void_16x9_0001-0400.mp4`,
+`ring_03_black_glass_web.webp`) left `public/` with the new hero; they live on
+in those commits.
 
 ## Video: read this before touching the films
 Both files are **faststart** (moov atom before mdat) and must stay that way;
@@ -103,15 +132,15 @@ a re-encode waiting to happen.
   pre-order money should route through crowdfunding.
 - All `:hover` rules live inside `@media (hover: hover)` so a tapped control
   does not keep a stuck highlight.
-- **Shape language is drawing-sheet, not app.** Buttons, fields and finish
-  toggles use `--radius-sm` (5px); image plates use `--radius-lg` (6px). No
-  capsule buttons, no hover glow, no big soft shadows on image plates. The
-  paper strip chart is the one object on the page with a drop shadow.
-- **No stock icons.** The "What it does" rows carry a short rule in their
-  channel color instead; the two signal notes carry a swatch of their own
-  trace as a legend key. The spec list is keyed by part number, not 01-05.
-- Nav is solid paper (no frosted blur); the stage reads "Prototype" as plain
-  gold text after a hairline, not a mono chip.
+- **Shapes and type follow the references.** Pills for buttons, fields and
+  swatches (`--radius-sm: 999px`); grey stages at `--radius-lg: 28px`. Hanken
+  Grotesk semibold (600) for heads, tight tracking; Plex Mono only for part
+  numbers and tick labels. An earlier pass tried square corners and a journal
+  serif (Newsreader); Ryan read that as B2B. Do not bring either back.
+- **No stock icons.** Features carry a short stroke in their channel color;
+  the signal notes carry a swatch of their own trace as a legend key.
+- The readout carries a caption saying it is modeled, not recorded. Remove it
+  only when it is a real capture off the ring.
 - Ryan changed `·` to ` - ` in the footer and part-number strings himself.
   Those are his, leave them.
 
@@ -131,9 +160,9 @@ CAPTCHA, and an XHR swallows that, so they look subscribed and never land on
 the list. There is deliberately no success state in our UI.
 
 ## Known open items
-1. **Self-host the two Google Fonts.** It is the only third party the privacy
-   page has to disclose, and it costs a render-blocking round trip. Blocked in
-   the cloud session (no egress to fonts.googleapis.com); easy locally.
+1. ~~Self-host the fonts~~ done via `@fontsource` packages, imported once in
+   `src/fonts.ts`. The privacy page no longer lists Google; if a font ever
+   loads from a CDN again, that clause has to come back in the same commit.
 2. ~~Image weight~~ done. The hero still and every render in `src/assets`
    are WebP now (4.9MB of JPEG/PNG down to 1.3MB). Renders were encoded at
    q86, the blueprint at q90 to keep its hairlines. `og-image.jpg` stays JPEG
