@@ -1,6 +1,6 @@
 # NERVA Website: Session Handoff
 
-_Last updated: 2026-09-12. Read this, then `CLAUDEwebdesign copy.md` (design law)
+_Last updated: 2026-09-27. Read this, then `CLAUDEwebdesign copy.md` (design law)
 and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
@@ -30,7 +30,12 @@ Sticky nav (Signals / Stress / Inside / Finishes) + hamburger under 1080px.
    into the black-glass still. Under `prefers-reduced-motion` the film is never
    rendered or fetched and the still shows immediately. A refused autoplay
    (iOS Low Power Mode) cuts to the still too, so it can never sit on a frozen
-   frame.
+   frame. The still is `ring_03_black_glass_web.webp` (43KB, was a 770KB PNG).
+   The hero ground is true `#000` and the still's edges are masked: the render
+   is scaled to 0.85 inside the box, and anything lighter than its (1,1,2) top
+   edge, or an unfeathered grey floor, prints as a visible rectangle. One green
+   button plus an underlined text link; the old looping green squiggle along
+   the bottom was cut (the page's rule is that nothing claims to be live).
 2. **`#signals`.** The EDA readout. A drawn chart-recorder strip (red PPG
    trace + green EDA trace, both generated from a seeded RNG so they never
    repeat) plus two short editorial notes. **This leads on purpose**: EDA is
@@ -98,6 +103,17 @@ a re-encode waiting to happen.
   pre-order money should route through crowdfunding.
 - All `:hover` rules live inside `@media (hover: hover)` so a tapped control
   does not keep a stuck highlight.
+- **Shape language is drawing-sheet, not app.** Buttons, fields and finish
+  toggles use `--radius-sm` (5px); image plates use `--radius-lg` (6px). No
+  capsule buttons, no hover glow, no big soft shadows on image plates. The
+  paper strip chart is the one object on the page with a drop shadow.
+- **No stock icons.** The "What it does" rows carry a short rule in their
+  channel color instead; the two signal notes carry a swatch of their own
+  trace as a legend key. The spec list is keyed by part number, not 01-05.
+- Nav is solid paper (no frosted blur); the stage reads "Prototype" as plain
+  gold text after a hairline, not a mono chip.
+- Ryan changed `·` to ` - ` in the footer and part-number strings himself.
+  Those are his, leave them.
 
 ## Facts that must agree across the site
 The battery is **22 mAh** and the target is **about a month of standby**, not
@@ -118,10 +134,12 @@ the list. There is deliberately no success state in our UI.
 1. **Self-host the two Google Fonts.** It is the only third party the privacy
    page has to disclose, and it costs a render-blocking round trip. Blocked in
    the cloud session (no egress to fonts.googleapis.com); easy locally.
-2. `ring_03_black_glass_web.png` is a **770KB PNG** at 2000x2000 rendered about
-   1200px wide. Should be WebP or a JPEG.
-3. No `<noscript>`, so a non-JS fetch gets a blank page. No React error
-   boundary either: one throw blanks the site.
+2. ~~Image weight~~ done. The hero still and every render in `src/assets`
+   are WebP now (4.9MB of JPEG/PNG down to 1.3MB). Renders were encoded at
+   q86, the blueprint at q90 to keep its hairlines. `og-image.jpg` stays JPEG
+   on purpose: some link-preview scrapers still refuse WebP.
+3. ~~`<noscript>`~~ done. Still no React error boundary: one throw blanks
+   the site.
 4. No security headers. A Cloudflare `_headers` file would add CSP,
    X-Content-Type-Options, Referrer-Policy, HSTS.
 5. `wrangler.jsonc` has no `not_found_handling`, so unknown paths get a bare
