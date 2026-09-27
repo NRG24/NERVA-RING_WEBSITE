@@ -4,8 +4,9 @@
    Written from what the site actually does, not from a template. Every
    factual claim here is checkable against the source: there is no
    analytics, no cookie, and no storage call anywhere in src/, the only
-   form posts to Buttondown, and the only other third-party origins the
-   pages touch are Cloudflare (the host) and Google's font servers.
+   form posts to Buttondown, and the only other third-party origin the
+   pages touch is Cloudflare (the host). The fonts are bundled with the
+   site, so nothing is fetched from Google.
 
    If any of that changes, this page changes in the same commit.
    ------------------------------------------------------------------ */
@@ -91,13 +92,6 @@ export default function Legal() {
               <dd>
                 Hosts the site, and sees what any web host sees: your IP address, your
                 browser's user agent, and which file you asked for.
-              </dd>
-
-              <dt>Google Fonts</dt>
-              <dd>
-                The two typefaces load from Google's servers, so Google receives your IP
-                address when the page fetches them. This is the one third party here I
-                would rather not have, and self-hosting the font files would remove it.
               </dd>
 
               <dt>Shopify</dt>

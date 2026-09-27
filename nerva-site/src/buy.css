@@ -51,7 +51,7 @@
 /* ---------------- panel ---------------- */
 .buy__panel { padding-top: clamp(4px, 1vw, 16px); }
 .buy__title {
-  margin: 0; font-weight: 800; letter-spacing: -0.04em; line-height: 1.02;
+  margin: 0; font-family: var(--font-display); font-weight: 420; letter-spacing: -0.022em; line-height: 1.02;
   font-size: clamp(2.2rem, 1.5rem + 2.4vw, 3.2rem);
 }
 .buy__sub {
@@ -139,7 +139,7 @@
   gap: clamp(20px, 4vw, 64px); align-items: start;
 }
 .shop-sec__h {
-  margin: 0; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+  margin: 0; font-family: var(--font-display); font-weight: 440; letter-spacing: -0.018em; line-height: 1.1;
   font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2.1rem);
 }
 .rows { display: flex; flex-direction: column; }

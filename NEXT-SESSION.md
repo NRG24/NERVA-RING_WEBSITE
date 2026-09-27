@@ -110,6 +110,12 @@ a re-encode waiting to happen.
 - **No stock icons.** The "What it does" rows carry a short rule in their
   channel color instead; the two signal notes carry a swatch of their own
   trace as a legend key. The spec list is keyed by part number, not 01-05.
+- **Type:** Newsreader (serif, optical sizing on) for `.display`, the hero
+  title and the store/legal page titles, at weight ~420, never bold. Hanken
+  Grotesk for body and subheads, Plex Mono for readings. The one italic
+  serif on the page is "a stress score": a guess, set as a quotation.
+- The strip chart carries a caption saying it is modeled, not recorded.
+  Remove it only when the strip is a real capture off the ring.
 - Nav is solid paper (no frosted blur); the stage reads "Prototype" as plain
   gold text after a hairline, not a mono chip.
 - Ryan changed `·` to ` - ` in the footer and part-number strings himself.
@@ -131,9 +137,9 @@ CAPTCHA, and an XHR swallows that, so they look subscribed and never land on
 the list. There is deliberately no success state in our UI.
 
 ## Known open items
-1. **Self-host the two Google Fonts.** It is the only third party the privacy
-   page has to disclose, and it costs a render-blocking round trip. Blocked in
-   the cloud session (no egress to fonts.googleapis.com); easy locally.
+1. ~~Self-host the fonts~~ done via `@fontsource` packages, imported once in
+   `src/fonts.ts`. The privacy page no longer lists Google; if a font ever
+   loads from a CDN again, that clause has to come back in the same commit.
 2. ~~Image weight~~ done. The hero still and every render in `src/assets`
    are WebP now (4.9MB of JPEG/PNG down to 1.3MB). Renders were encoded at
    q86, the blueprint at q90 to keep its hairlines. `og-image.jpg` stays JPEG

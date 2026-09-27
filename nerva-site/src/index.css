@@ -9,8 +9,11 @@
    channel, gold = the electrode channel. Neutrals are warmed off the
    usual cool grays so the paper has a temperature under them.
 
-   Type: Hanken Grotesk throughout. IBM Plex Mono for instrument
-   labels and for numerals that carry a unit.
+   Type: Newsreader for headlines, set the way a research journal sets
+   them, because the page's argument is physiology and not a spec sheet.
+   Hanken Grotesk for everything read in sentences and for subheads. IBM
+   Plex Mono for instrument labels and numerals that carry a unit. All
+   three are self-hosted (src/fonts.ts).
    ============================================================ */
 
 :root {
@@ -49,7 +52,8 @@
   --shadow-md:  0 2px 6px rgba(10,10,12,0.05), 0 18px 48px rgba(10,10,12,0.09);
   --shadow-lg:  0 4px 12px rgba(10,10,12,0.06), 0 40px 90px rgba(10,10,12,0.16);
 
-  --font-sans: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Hanken Grotesk Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --wrap: 1320px;
@@ -103,10 +107,12 @@ a { color: inherit; text-decoration: none; }
    DISPLAY TYPE
    ============================================================ */
 .display {
-  font-weight: 700;
-  font-size: clamp(2.2rem, 1.3rem + 3.8vw, 4.2rem);
-  line-height: 1.04;
-  letter-spacing: -0.032em;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 420;
+  font-size: clamp(2.5rem, 1.4rem + 4.3vw, 4.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
   margin: 0;
   color: var(--ink);
   text-wrap: balance;
@@ -327,11 +333,13 @@ a { color: inherit; text-decoration: none; }
   padding: 56px 32px clamp(48px, 8vh, 88px);
 }
 .hero__title {
-  margin: 0; max-width: 14ch;
-  font-weight: 700;
-  font-size: clamp(3rem, 1.6rem + 6vw, 6.4rem);
-  line-height: 0.96;
-  letter-spacing: -0.04em;
+  margin: 0; max-width: 12ch;
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: clamp(3.1rem, 1.5rem + 6.6vw, 7.2rem);
+  line-height: 0.97;
+  letter-spacing: -0.024em;
   color: #fff;
   text-wrap: balance;
 }
@@ -439,8 +447,11 @@ a { color: inherit; text-decoration: none; }
 .path__steps li:not(:first-child)::before {
   content: '\2192'; margin-right: 16px; color: var(--ink-3); font-weight: 400;
 }
-/* a guess, set as one */
-.path--inferred .path__out { color: var(--ink-2); font-style: italic; font-weight: 500; }
+/* a guess, set as one: the only italic serif on the page, a quotation */
+.path--inferred .path__out {
+  color: var(--ink-2); font-family: var(--font-display); font-style: italic;
+  font-weight: 400; font-size: 1.12em; letter-spacing: -0.01em;
+}
 /* a reading, with the unit still attached to it */
 .path--measured .path__out {
   color: var(--green-ink); font-weight: 700;
@@ -467,15 +478,13 @@ a { color: inherit; text-decoration: none; }
    live, so nothing loops; the pen lays each trace down once, when you
    reach it, and then it is a record.
    ------------------------------------------------------------ */
-.strip-chart {
-  margin: 0;
+.strip-chart { margin: 0; }
+.strip-chart__sheet {
   /* a sheet someone set down on the page, not a UI panel snapped to it */
   transform: rotate(-0.35deg);
   filter:
     drop-shadow(0 2px 3px rgba(10, 10, 12, 0.10))
     drop-shadow(0 24px 42px rgba(10, 10, 12, 0.14));
-}
-.strip-chart__sheet {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
   /* paper corners are cut, not rounded like a dashboard card */
@@ -535,6 +544,12 @@ a { color: inherit; text-decoration: none; }
 .lane__trace { width: 100%; display: block; }
 .lane--pulse .lane__trace { height: 76px; }
 .lane--eda   .lane__trace { height: 104px; }
+
+/* set like a figure legend in a paper: small, plain, directly under it */
+.strip-chart__cap {
+  margin: 22px 0 0; max-width: 64ch;
+  font-size: 13.5px; line-height: 1.5; color: var(--ink-3);
+}
 
 /* where the pen rests when the channel is flat */
 .chart-rest { fill: none; stroke: rgba(122, 94, 52, 0.3); stroke-width: 1; stroke-dasharray: 2 6; }
@@ -859,6 +874,14 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+/* Wide screens: the ring moves right, out from under the headline, so the
+   type sits on black instead of across the band. The film is not moved:
+   a black hold separates it from the still, so the two never cross-fade
+   and a change of framing between them cannot read as a jump. */
+@media (min-width: 1081px) {
+  .hero__still { transform: translateX(17%) scale(0.85); }
+}
+
 @media (max-width: 1080px) {
   .nav__links { display: none; }
   .nav__toggle { display: flex; }
@@ -894,7 +917,7 @@ a { color: inherit; text-decoration: none; }
   .nav__right .btn--accent { display: none; }
 
   .hero { min-height: 88vh; }
-  .hero__title { font-size: clamp(2.4rem, 9vw, 3.2rem); }
+  .hero__title { font-size: clamp(2.8rem, 12vw, 3.8rem); }
   .hero__cta .btn { flex: 1; }
 
   .finish__head { gap: 20px; }

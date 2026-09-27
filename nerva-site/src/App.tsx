@@ -142,12 +142,12 @@ function EdaKey() {
 
 function SignalInstrument() {
   return (
-    <figure
-      className="strip-chart"
-      role="img"
-      aria-label="A paper chart recording of two channels. The upper channel is a pulse trace at about 72 beats per minute, with the interval between beats varying slightly. The lower channel is skin conductance around 4.6 microsiemens, drifting slowly upward with several sharp rises that decay away, the largest of them marked as a spontaneous skin-conductance response."
-    >
-      <div className="strip-chart__sheet">
+    <figure className="strip-chart">
+      <div
+        className="strip-chart__sheet"
+        role="img"
+        aria-label="An illustration of a paper chart recording of two channels. The upper channel is a pulse trace at about 72 beats per minute, with the interval between beats varying slightly. The lower channel is skin conductance around 4.6 microsiemens, drifting slowly upward with several sharp rises that decay away, the largest of them marked as a spontaneous skin-conductance response."
+      >
         <div className="strip-chart__margin" aria-hidden="true" />
 
         <div className="strip-chart__body">
@@ -203,6 +203,13 @@ function SignalInstrument() {
           </div>
         </div>
       </div>
+      {/* The traces are modeled, not recorded, and the page says so in the
+          place a journal would: under the figure. Delete this line the day
+          the strip is a real capture off the ring. */}
+      <figcaption className="strip-chart__cap">
+        Illustration, not a recording. Both traces are modeled from how each
+        signal behaves; the ring’s firmware isn’t reading live data yet.
+      </figcaption>
     </figure>
   )
 }
