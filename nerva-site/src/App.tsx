@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import ringBlue from './assets/ring-blue.jpg'
-import ringCoffee from './assets/ring-coffee.jpg'
-import ringPink from './assets/ring-pink.jpg'
-import ringCeramicBlack from './assets/ring-ceramic-black.jpg'
-import ringMacro from './assets/ring-macro.jpg'
-import ringSilver from './assets/ring-silver.jpg'
-import blueprint from './assets/blueprint.jpg'
+import ringBlue from './assets/ring-blue.webp'
+import ringCoffee from './assets/ring-coffee.webp'
+import ringPink from './assets/ring-pink.webp'
+import ringCeramicBlack from './assets/ring-ceramic-black.webp'
+import ringMacro from './assets/ring-macro.webp'
+import ringSilver from './assets/ring-silver.webp'
+import blueprint from './assets/blueprint.webp'
 
 /* ---------- scroll reveal ---------- */
 function Reveal({ children, className = '', delay = 0 }: {

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import ringGraphite from './assets/ring-graphite.jpg'
-import ringGold from './assets/ring-gold2.jpg'
-import ringChrome from './assets/ring-chrome.jpg'
-import blueprint from './assets/blueprint.jpg'
+import ringGraphite from './assets/ring-graphite.webp'
+import ringGold from './assets/ring-gold2.webp'
+import ringChrome from './assets/ring-chrome.webp'
+import blueprint from './assets/blueprint.webp'
 import {
   PLACEHOLDER_PRODUCT,
   fetchProduct,

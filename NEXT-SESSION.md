@@ -134,8 +134,10 @@ the list. There is deliberately no success state in our UI.
 1. **Self-host the two Google Fonts.** It is the only third party the privacy
    page has to disclose, and it costs a render-blocking round trip. Blocked in
    the cloud session (no egress to fonts.googleapis.com); easy locally.
-2. ~~Hero still PNG~~ done (WebP, 43KB). The other renders in `src/assets`
-   are still 300 to 500KB JPEGs each; a WebP pass would save ~3MB.
+2. ~~Image weight~~ done. The hero still and every render in `src/assets`
+   are WebP now (4.9MB of JPEG/PNG down to 1.3MB). Renders were encoded at
+   q86, the blueprint at q90 to keep its hairlines. `og-image.jpg` stays JPEG
+   on purpose: some link-preview scrapers still refuse WebP.
 3. ~~`<noscript>`~~ done. Still no React error boundary: one throw blanks
    the site.
 4. No security headers. A Cloudflare `_headers` file would add CSP,
