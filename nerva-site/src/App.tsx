@@ -37,25 +37,6 @@ function Reveal({ children, className = '', delay = 0 }: {
   )
 }
 
-/* ---------- EDA / skin-conductance waveform (hero bezel) ---------- */
-const WAVE_D =
-  'M0 30 L60 30 L90 29 L120 31 ' +
-  'C150 31 160 12 185 12 C210 12 214 30 245 30 ' +
-  'L320 30 L360 28 ' +
-  'C395 28 402 18 425 18 C450 18 452 30 490 30 ' +
-  'L560 30 L600 31 ' +
-  'C640 31 648 8 675 8 C702 8 706 30 745 30 ' +
-  'L820 30 L870 29 L920 30 L1000 30'
-
-function EdaWave() {
-  return (
-    <svg className="hero__wave" viewBox="0 0 1000 46" preserveAspectRatio="none" aria-hidden="true">
-      <path className="wave-path" d={WAVE_D} />
-      <path className="wave-path wave-dash" d={WAVE_D} />
-    </svg>
-  )
-}
-
 /* ---------- chart-recorder strip ----------
    Both traces are generated rather than drawn by hand, because the thing
    that makes a real recording look real is that it never repeats. Seeded,
@@ -139,41 +120,21 @@ const TICKS = Array.from({ length: WINDOW_S + 1 }, (_, s) => ({
   major: s % 5 === 0,
 }))
 
-function HeartIcon() {
+/* Legend keys for the two notes under the strip: a swatch of each trace in
+   its own ink, one beat and one skin-conductance response, rather than a
+   stock heart and zigzag. They say which line on the sheet each note is
+   about. */
+function PulseKey() {
   return (
-    <svg className="sig-note__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 20.2C12 20.2 3.8 15.1 3.8 9.1C3.8 6.1 6.1 3.8 9 3.8C10.5 3.8 11.7 4.5 12 5.4C12.3 4.5 13.5 3.8 15 3.8C17.9 3.8 20.2 6.1 20.2 9.1C20.2 15.1 12 20.2 12 20.2Z" />
+    <svg className="sig-note__key" viewBox="0 0 40 16" fill="none" aria-hidden="true">
+      <path d="M0 10 H9 C10.5 10 11.5 2 13 2 C14.5 2 15.5 13 17 13 C18.5 13 19.3 7 20.8 7 C22.3 7 23.5 10 26 10 H40" />
     </svg>
   )
 }
-function NerveIcon() {
+function EdaKey() {
   return (
-    <svg className="sig-note__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M2 12h4l2.5 7L13 4l2.5 8H22" />
-    </svg>
-  )
-}
-
-/* ---------- what-it-does icons ---------- */
-function PedalIcon() {
-  return (
-    <svg className="doing__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M7.5 20V5" /><path d="M4 8.5 7.5 5 11 8.5" />
-      <path d="M16.5 4v15" /><path d="M13 15.5 16.5 19 20 15.5" />
-    </svg>
-  )
-}
-function BreathIcon() {
-  return (
-    <svg className="doing__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="3.1" /><circle cx="12" cy="12" r="8.4" />
-    </svg>
-  )
-}
-function RingMetricsIcon() {
-  return (
-    <svg className="doing__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M5 20.5v-4.5" /><path d="M12 20.5V6" /><path d="M19 20.5v-8.5" />
+    <svg className="sig-note__key" viewBox="0 0 40 16" fill="none" aria-hidden="true">
+      <path d="M0 13 H8 C11 13 11.5 3 15 3 C20 3 26 10.5 40 11.5" />
     </svg>
   )
 }
@@ -257,7 +218,7 @@ function SignalInstrument() {
 const HIGH_PRIORITY: Record<string, string> = { fetchpriority: 'high' }
 
 const HERO_FILM = '/ring_void_16x9_0001-0400.mp4'
-const HERO_STILL = '/ring_03_black_glass_web.png'
+const HERO_STILL = '/ring_03_black_glass_web.webp'
 const BLACK_HOLD_MS = 1700
 
 function Hero() {
@@ -319,14 +280,12 @@ function Hero() {
         <p className="hero__lede">
           Helping you understand and manage stress in real time with EDA sensors.
         </p>
+        {/* one button, one link: the page asks for one thing, and the way
+            down to the hardware is a place to go, not a second offer */}
         <div className="hero__cta">
           <a className="btn btn--led btn--lg" href="#follow">Get launch updates</a>
-          <a className="btn btn--onfilm btn--lg" href="#inside">See what’s inside</a>
+          <a className="textlink textlink--onfilm" href="#inside">See what’s inside</a>
         </div>
-      </div>
-
-      <div className="hero__bezel">
-        <EdaWave />
       </div>
     </section>
   )
@@ -556,12 +515,13 @@ function Signup() {
 /* Ryan's copy, cut down and reordered, never rewritten: each label and body
    below is a literal run from the brief. The channel colors keep the meanings
    set at the top of index.css: gold is the electrode channel that times the
-   two branches, green is the ring's own sensing, red is the pulse channel. */
+   two branches, green is the ring's own sensing, red is the pulse channel.
+   The color marks the rule over each row; there are no icons, because three
+   stock glyphs beside three headings is the feature grid this avoids. */
 const DOES = [
   {
     k: 'Gas pedal and brake',
     channel: 'gold',
-    Icon: PedalIcon,
     body: (
       <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and avoid burnout.</>
     ),
@@ -569,13 +529,11 @@ const DOES = [
   {
     k: 'In-app breathing exercises',
     channel: 'sensor',
-    Icon: BreathIcon,
     body: <>Exercises to train your nervous system and manage stress. Measures your ability to downregulate your nervous system so you can track progress.</>,
   },
   {
     k: 'Steps, calories burned, heart rate',
     channel: 'pulse',
-    Icon: RingMetricsIcon,
     body: <>All of the things you would expect in a premium wearable.</>,
   },
 ] as const
@@ -595,38 +553,34 @@ const FINISHES = [
   { id: 'pink', label: 'Pink', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
 ] as const
 
-/* the sensing stack, read as a numbered index rather than a feature grid */
+/* the sensing stack, read like a bill of materials: the part number owns
+   the left column, because it is the one thing here nobody could invent */
 const SPECS = [
   {
-    n: '01',
     title: 'Optical sensing',
     part: 'MAXM86161',
     channel: 'pulse',
     body: 'Pulse and SpO₂ read straight from the finger, run in a custom low-power polling mode rather than stock continuous mode to stretch the battery dramatically further.',
   },
   {
-    n: '02',
     title: 'Electrodermal front end',
     part: '2× Au ELECTRODES',
     channel: 'gold',
     body: 'A custom transimpedance-amplifier circuit tuned for the low-current, low-noise range of skin conductance, read through two dry gold-plated electrodes built into the flex PCB.',
   },
   {
-    n: '03',
     title: 'Radio',
     part: 'ANNA-B402 - BLE 5',
     channel: 'sensor',
     body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity.',
   },
   {
-    n: '04',
     title: 'Power',
     part: 'BQ25120A - 22 mAh',
     channel: 'sensor',
     body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rail management and a low-voltage threshold target about a month of standby on a 22 mAh cell.',
   },
   {
-    n: '05',
     title: 'Sealed build',
     part: 'RESIN-POTTED',
     channel: 'neutral',
@@ -660,6 +614,21 @@ function App() {
   const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('ceramic-black')
   const active = FINISHES.find((f) => f.id === finish)!
 
+  /* Escape closes the phone menu, and so does widening past the breakpoint,
+     where the toggle disappears and would leave the panel stuck open */
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    const wide = window.matchMedia('(min-width: 1081px)')
+    const onWide = () => { if (wide.matches) setMenuOpen(false) }
+    window.addEventListener('keydown', onKey)
+    wide.addEventListener('change', onWide)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      wide.removeEventListener('change', onWide)
+    }
+  }, [menuOpen])
+
   return (
     <>
       {/* ---------------- NAV ---------------- */}
@@ -668,7 +637,7 @@ function App() {
           <a className="brand" href="#top" aria-label="NERVA Ring home">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
             NERVA Ring
-            <span className="brand__tag">PROTO</span>
+            <span className="brand__tag">Prototype</span>
           </a>
           <nav className="nav__links" aria-label="Primary">
             {NAV.map((l) => (
@@ -679,7 +648,9 @@ function App() {
             <a className="btn btn--accent" href="#follow">Get updates</a>
             <button
               className="nav__toggle"
+              type="button"
               aria-label="Menu"
+              aria-controls="mobile-menu"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((v) => !v)}
             >
@@ -693,22 +664,22 @@ function App() {
             </button>
           </div>
         </div>
-        <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        <nav id="mobile-menu" className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-label="Menu">
           {NAV.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
           ))}
           <a className="btn btn--accent btn--block" href="#follow" onClick={() => setMenuOpen(false)}>
             Get updates
           </a>
-        </div>
+        </nav>
       </header>
 
       <main id="top">
         <Hero />
 
         {/* ---------------- WHAT IT DOES ----------------
-            Three ruled rows with the icon out in the margin, the same index
-            shape the sensing stack uses, rather than three cards. The rows are
+            Three ruled rows, each rule marked in its channel's color, rather
+            than three cards. The rows are
             short, so the render takes the column beside them: on its own the
             list left the right half and the foot of the section empty. */}
         <section className="section section--tint" id="does">
@@ -726,11 +697,8 @@ function App() {
               <div className="does">
                 {DOES.map((d, i) => (
                   <Reveal key={d.k} className={`doing doing--${d.channel}`} delay={i * 70}>
-                    <d.Icon />
-                    <div>
-                      <h3>{d.k}</h3>
-                      <p>{d.body}</p>
-                    </div>
+                    <h3>{d.k}</h3>
+                    <p>{d.body}</p>
                   </Reveal>
                 ))}
               </div>
@@ -765,7 +733,7 @@ function App() {
 
             <div className="sig-notes">
               <Reveal className="sig-note sig-note--hr">
-                <h3><HeartIcon />The heart</h3>
+                <h3><PulseKey />The heart</h3>
                 <p>
                   Optical PPG reads pulse and blood oxygen off the finger, a dense,
                   well-perfused site that gives clean signal. Most rings already measure
@@ -773,7 +741,7 @@ function App() {
                 </p>
               </Reveal>
               <Reveal className="sig-note sig-note--eda" delay={80}>
-                <h3><NerveIcon />The nerves</h3>
+                <h3><EdaKey />The nerves</h3>
                 <p>
                   Two dry gold electrodes read skin conductance straight off the inner
                   band, the sympathetic arousal signal clinical stress research relies on.
@@ -857,13 +825,10 @@ function App() {
 
             <div className="inside__list">
               {SPECS.map((s, i) => (
-                <Reveal key={s.n} className="spec" delay={i * 50}>
-                  <span className="spec__n">{s.n}</span>
+                <Reveal key={s.title} className="spec" delay={i * 50}>
+                  <span className={`spec__part spec__part--${s.channel}`}>{s.part}</span>
                   <div>
-                    <div className="spec__head">
-                      <h3>{s.title}</h3>
-                      <span className={`spec__part spec__part--${s.channel}`}>{s.part}</span>
-                    </div>
+                    <h3>{s.title}</h3>
                     <p>{s.body}</p>
                   </div>
                 </Reveal>
@@ -879,12 +844,14 @@ function App() {
               <div>
                 <h2 className="display">Ceramic in Four Finishes</h2>
               </div>
-              <div className="finish__pills" role="radiogroup" aria-label="Ring finish">
+              {/* toggle buttons, not role="radio": a radiogroup promises arrow
+                  keys and a roving tab stop, and these are four plain buttons */}
+              <div className="finish__pills" role="group" aria-label="Ring finish">
                 {FINISHES.map((f) => (
                   <button
                     key={f.id}
-                    role="radio"
-                    aria-checked={finish === f.id}
+                    type="button"
+                    aria-pressed={finish === f.id}
                     className={`pill ${finish === f.id ? 'is-active' : ''}`}
                     onClick={() => setFinish(f.id)}
                   >
@@ -905,9 +872,6 @@ function App() {
                 loading="lazy"
                 alt={`The NERVA Ring in ${active.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs.`}
               />
-              <div className="finish__caption">
-                <span className="finish__name">{active.label}</span>
-              </div>
             </Reveal>
 
             <Reveal className="statusline">
