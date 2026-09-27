@@ -214,9 +214,9 @@ function SignalInstrument() {
    visitor who never sees the film (reduced motion, refused autoplay, a
    failed load) lands on exactly the picture everyone else ends on.
 
-   The source render was a fast 4s; this cut is slowed to 8s. The in-between
-   frames are blended rather than motion-interpolated, because the ring turns
-   too far per frame for an interpolator to guess and it smeared the rim. */
+   Played at the render's own speed (4s). A 2x slowdown was tried and
+   dropped: the ring turns too far per frame, so interpolated frames smeared
+   the rim and blended ones ghosted it. */
 /* Spread rather than written as a prop: React forwards the lowercase DOM
    attribute as-is, so this does not break the build the day @types/react
    adds its own camelCase declaration for it. */
