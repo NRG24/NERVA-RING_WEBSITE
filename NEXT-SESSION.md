@@ -32,18 +32,22 @@ is what fixed it. Build toward those screenshots, not away from them.
 Sticky nav (What it does / Signals / Stress / Inside / Finishes) + hamburger
 under 1080px. Every light section opens with a **centered** `.head`.
 
-1. **Hero.** A full-bleed film that plays once, fades to black, then fades up
-   into the black-glass still. Under `prefers-reduced-motion` the film is never
-   rendered or fetched and the still shows immediately. A refused autoplay
-   (iOS Low Power Mode) cuts to the still too, so it can never sit on a frozen
-   frame. The still is `ring_03_black_glass_web.webp`. The hero ground is true
-   `#000` and the still's edges are masked: the render is scaled to 0.85, and
-   anything lighter than its (1,1,2) top edge, or an unfeathered grey floor,
-   prints as a visible rectangle. On wide screens the still shifts right so
-   the headline sits on black. One green pill plus an underlined text link.
-2. **`#does`.** Centered head, the silver ring big on a 4:3 grey stage (framed
-   low, `object-position: 50% 82%`, so the whole ring shows), then the three
-   features side by side, each topped by a short stroke in its channel color.
+1. **Hero.** `nerva-levitate.mp4`: the ring rises out of the dark and settles,
+   played **once**, holding its last frame (no loop). Source was a 4.08s
+   1080x1080 render; it is slowed 2x to 8s with **blended** in-between frames.
+   Motion interpolation (`minterpolate mi_mode=mci`) was tried twice and
+   smeared the rim on the fast turn; do not switch back without checking
+   frames ~100-103. The still (`nerva-levitate-still.webp`) is that last frame
+   and shows under reduced motion (film never fetched), refused autoplay, or a
+   load error. The film is square on pure black, standing as tall as the hero
+   against the right edge; on phones it runs across the top with its bottom
+   edge feathered, because the film opens with the ring rising in from below.
+2. **`#does`.** Centered head, then `ring-app.webp` (two demo app screens
+   beside the silver ring) on a stage at the image's own 1957:1124 ratio, so
+   nothing crops. It came in as a 2000px chat image; ask Ryan for the
+   original PNG if it needs to be sharper. The phones say DEMO; the footer and
+   the privacy page both say the app screens are a design demo. Then the
+   three features side by side.
 3. **`#signals`.** The EDA readout: both traces on a white card inside a grey
    stage, drawn like an app screen (red PPG + green EDA, generated from a
    seeded RNG so they never repeat). Caption under it says it is modeled, not
@@ -65,6 +69,21 @@ under 1080px. Every light section opens with a **centered** `.head`.
 10. **Launch bar.** Fixed to the bottom where the reference pins price and
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
+
+## Earlier versions of the site (git tags)
+Every earlier state is kept. To look at one, `git checkout <tag>` and
+`npm run build`; to put one back live, deploy that build.
+
+| Tag | What it is |
+|---|---|
+| `archive/2026-09-12-before-redesign` | The site as it stood before the 27 Sep work: warm paper, chart-recorder strip, original hero film |
+| `archive/2026-09-27-cleanup-webp` | Design cleanup + every image as WebP (PR #14) |
+| `archive/2026-09-27-serif-experiment` | Newsreader headlines, never went live; Ryan read it as B2B |
+| `archive/2026-09-27-product-page` | Product-page rebuild after the Ultrahuman references, old hero film |
+
+The old hero files (`ring_void_16x9_0001-0400.mp4`,
+`ring_03_black_glass_web.webp`) left `public/` with the new hero, and live on in
+those tags.
 
 ## Video: read this before touching the films
 Both files are **faststart** (moov atom before mdat) and must stay that way;

@@ -129,8 +129,10 @@ export default function Legal() {
             </p>
             <p>
               Every ring image on this site is a render of the CAD model, not a
-              photograph of a finished unit. Parts, specifications, finishes, and
-              timelines describe work in progress and will change.
+              photograph of a finished unit. The app screens are a design demo
+              filled with sample numbers, not anyone's data, and the readout on the
+              main page is modeled rather than recorded. Parts, specifications,
+              finishes, and timelines describe work in progress and will change.
             </p>
           </Clause>
 

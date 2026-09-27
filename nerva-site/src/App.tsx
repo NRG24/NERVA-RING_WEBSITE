@@ -4,7 +4,7 @@ import ringCoffee from './assets/ring-coffee.webp'
 import ringPink from './assets/ring-pink.webp'
 import ringCeramicBlack from './assets/ring-ceramic-black.webp'
 import ringMacro from './assets/ring-macro.webp'
-import ringSilver from './assets/ring-silver.webp'
+import ringApp from './assets/ring-app.webp'
 import blueprint from './assets/blueprint.webp'
 
 /* ---------- scroll reveal ---------- */
@@ -208,71 +208,69 @@ function SignalInstrument() {
 }
 
 /* ---------- HERO ----------
-   The film plays once, fades to black, holds, then fades up into the
-   black-glass still. No loop: the reveal happens once and then the page
-   settles onto a product shot. Video and still share identical framing
-   (object-fit + object-position + scale) so the cross-fade does not jump. */
+   The ring rises out of the dark and settles, once. No loop: the film ends
+   on its last frame and simply stays there, so the page opens on motion
+   and rests on the product. The still is that same last frame, so a
+   visitor who never sees the film (reduced motion, refused autoplay, a
+   failed load) lands on exactly the picture everyone else ends on.
+
+   The source render was a fast 4s; this cut is slowed to 8s. The in-between
+   frames are blended rather than motion-interpolated, because the ring turns
+   too far per frame for an interpolator to guess and it smeared the rim. */
 /* Spread rather than written as a prop: React forwards the lowercase DOM
    attribute as-is, so this does not break the build the day @types/react
    adds its own camelCase declaration for it. */
 const HIGH_PRIORITY: Record<string, string> = { fetchpriority: 'high' }
 
-const HERO_FILM = '/ring_void_16x9_0001-0400.mp4'
-const HERO_STILL = '/ring_03_black_glass_web.webp'
-const BLACK_HOLD_MS = 1700
+const HERO_FILM = '/nerva-levitate.mp4'
+const HERO_POSTER = '/nerva-levitate-poster.webp'
+const HERO_STILL = '/nerva-levitate-still.webp'
 
 function Hero() {
-  /* Reduced motion skips the film outright: it autoplays for ~16s with no
-     controls, which is exactly the thing that setting asks us not to do.
-     Decided before first paint so the still never fades in after the fact,
-     and the 2.4MB download never starts. */
+  /* Reduced motion skips the film outright: decided before first paint,
+     so the still never swaps in after the fact and the film is never
+     fetched. */
   const [playFilm] = useState(
     () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
-  const [faded, setFaded] = useState(!playFilm)
-  const [stillShown, setStillShown] = useState(!playFilm)
+  const [filmFailed, setFilmFailed] = useState(false)
   const filmRef = useRef<HTMLVideoElement | null>(null)
 
-  useEffect(() => {
-    if (!faded || stillShown) return
-    const t = window.setTimeout(() => setStillShown(true), BLACK_HOLD_MS)
-    return () => window.clearTimeout(t)
-  }, [faded, stillShown])
-
   /* A browser that refuses the autoplay (iOS Low Power Mode is the usual
-     one) rejects this promise and never fires onEnded, so without a cut the
-     hero would hold a stalled first frame for the life of the page. */
-  const cutToStill = () => { setFaded(true); setStillShown(true) }
-  useEffect(() => { filmRef.current?.play().catch(cutToStill) }, [])
+     one) rejects this promise, and the hero would otherwise hold the near
+     black first frame for the life of the page. */
+  const toStill = () => setFilmFailed(true)
+  useEffect(() => { filmRef.current?.play().catch(toStill) }, [])
+
+  const showFilm = playFilm && !filmFailed
 
   return (
     <section className="hero">
-      {playFilm && (
-        <video
-          ref={filmRef}
-          className="hero__film"
-          src={HERO_FILM}
-          onEnded={() => setFaded(true)}
-          onError={cutToStill}
-          onStalled={cutToStill}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          {...HIGH_PRIORITY}
-        />
-      )}
-      <img
-        className="hero__still"
-        src={HERO_STILL}
-        alt="The NERVA Ring in black glass finish, showing the internal flex PCB and its green and red optical sensor LEDs."
-        style={{ opacity: stillShown ? 1 : 0 }}
-      />
-      <div
-        className="hero__blackout"
-        aria-hidden="true"
-        style={{ opacity: faded && !stillShown ? 1 : 0 }}
-      />
+      <div className="hero__stage">
+        {showFilm ? (
+          <video
+            ref={filmRef}
+            className="hero__film"
+            src={HERO_FILM}
+            poster={HERO_POSTER}
+            onError={toStill}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            aria-label="The NERVA Ring rising out of the dark, turning to show the optical sensor and the gold electrodes on its inner band."
+            {...HIGH_PRIORITY}
+          />
+        ) : (
+          <img
+            className="hero__film"
+            src={HERO_STILL}
+            width={1080}
+            height={1080}
+            alt="The NERVA Ring held in the dark, its inner band showing the green and red optical sensor and a gold electrode."
+          />
+        )}
+      </div>
       <div className="hero__grade" aria-hidden="true" />
 
       <div className="hero__copy">
@@ -699,9 +697,9 @@ function App() {
         <Hero />
 
         {/* ---------------- WHAT IT DOES ----------------
-            The way a product page opens: a centered head, the ring as big
-            as the page allows, then the three things it does side by side
-            under it. */}
+            The way a product page opens: a centered head, the ring and the
+            app it talks to as big as the page allows, then the three things
+            it does side by side under it. */}
         <section className="section" id="does">
           <div className="wrap">
             <Reveal className="head">
@@ -716,11 +714,11 @@ function App() {
             <Reveal>
               <figure className="stage does__stage">
                 <img
-                  src={ringSilver}
-                  width={1500}
-                  height={1500}
+                  src={ringApp}
+                  width={1957}
+                  height={1124}
                   loading="lazy"
-                  alt="The NERVA Ring in polished silver, its clear inner band showing the flex PCB, the gold traces and the optical sensor."
+                  alt="Two demo screens of the NERVA companion app beside the ring in polished silver. One shows today: 68 percent of the day inside your range, with each stress spike and how long it took to fade. The other shows the week: a balance score of 78 and how settle time, carryover, reactivity and restorative time compare with your usual."
                 />
               </figure>
             </Reveal>
@@ -985,7 +983,8 @@ function App() {
                 NERVA Ring is a wellness product, not a medical device. It is not
                 intended to diagnose, treat, cure, or prevent any disease, and nothing
                 on this site is for sale. Every ring image is a render of the CAD
-                model. <a href="/privacy.html">Privacy and disclaimers</a>.
+                model, and the app screens are a design demo, not live data.{' '}
+                <a href="/privacy.html">Privacy and disclaimers</a>.
               </p>
             </div>
           </div>
