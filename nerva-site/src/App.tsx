@@ -721,32 +721,38 @@ function App() {
         <Hero />
 
         {/* ---------------- WHAT IT DOES ----------------
-            The way a product page opens: a centered head, the ring and the
-            app it talks to as big as the page allows, then the three things
-            it does side by side under it. */}
-        <section className="section" id="does">
+            Carries on in the hero's black rather than opening a new white
+            section, so it reads as what happens after the ring lands, not as
+            a separate card: a centered head, the ring and the app it talks
+            to coming out of the dark, then the three things it does. */}
+        <section className="section does" id="does">
           <div className="wrap">
-            <Reveal className="head">
-              <h2 className="display">What it does</h2>
+            <Reveal className="head head--light">
+              <h2 className="display display--light">What it does</h2>
               <p className="head__sub">
                 NERVA Ring is continuously monitoring your nervous system. Unlike
                 other wearables that are mainly beneficial to athletes, NERVA Ring
                 is tuned specifically for you.
               </p>
             </Reveal>
+          </div>
 
-            <Reveal>
-              <figure className="stage does__stage">
-                <img
-                  src={ringApp}
-                  width={1957}
-                  height={1124}
-                  loading="lazy"
-                  alt="Two demo screens of the NERVA companion app beside the ring in polished silver. One shows today: 68 percent of the day inside your range, with each stress spike and how long it took to fade. The other shows the week: a balance score of 78 and how settle time, carryover, reactivity and restorative time compare with your usual."
-                />
-              </figure>
-            </Reveal>
+          {/* wider than the text column and in no card: the render's black
+              top is the hero's black, so the phones and the ring come up out
+              of the same dark the ring landed in */}
+          <Reveal className="does__bleed">
+            <figure className="does__stage">
+              <img
+                src={ringApp}
+                width={1957}
+                height={1120}
+                loading="lazy"
+                alt="Two demo screens of the NERVA companion app beside the ring in polished silver. One shows today: 68 percent of the day inside your range, with each stress spike and how long it took to fade. The other shows the week: a balance score of 78 and how settle time, carryover, reactivity and restorative time compare with your usual."
+              />
+            </figure>
+          </Reveal>
 
+          <div className="wrap">
             <div className="feats">
               {DOES.map((d, i) => (
                 <Reveal key={d.k} className={`feat feat--${d.channel}`} delay={i * 70}>
