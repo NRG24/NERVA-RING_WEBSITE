@@ -68,9 +68,14 @@ under 1080px. Every light section opens with a **centered** `.head`.
    scroll-snap row you swipe below it (next card peeks in). Pictures:
    `does-today` (Today screen) and `does-ring` (silver ring) are cut from
    Ryan's app-and-ring render (`ring-app.webp`, now only in git history);
-   `does-breathe` is Ryan's breathing-exercise mockup (transparent PNG),
-   set on a dark radial backdrop at 4:5 with the phone at ~76% width so the
-   breath wave stays in frame. An earlier version put the whole render full
+   the breathing card is a **looping film**, `public/nerva-breathe.mp4`
+   (165KB, 10s at 25fps, faststart), made from Ryan's animated mockup
+   `nerva_breathe_phone.webp` (repo root, 2.6MB, 250 frames with alpha):
+   each frame set on a dark radial backdrop at 746x932 with the phone at
+   ~76% width so the breath wave stays in frame. First and last frames
+   match, so the loop has no seam. `CardFilm` fetches it only when the card
+   is on screen, pauses it off screen, and never loads it under reduced
+   motion, where `nerva-breathe-poster.webp` (frame 0) stands in. An earlier version put the whole render full
    width with a spotlight driven by tabs; Ryan preferred cards. **Better
    picture to ask Ryan for:** a Body/steps screen or the ring on a hand for
    the third card.

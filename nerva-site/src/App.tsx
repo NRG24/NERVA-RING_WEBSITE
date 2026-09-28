@@ -5,7 +5,6 @@ import ringPink from './assets/ring-pink.webp'
 import ringCeramicBlack from './assets/ring-ceramic-black.webp'
 import ringMacro from './assets/ring-macro.webp'
 import doesToday from './assets/does-today.webp'
-import doesBreathe from './assets/does-breathe.webp'
 import doesRing from './assets/does-ring.webp'
 import blueprint from './assets/blueprint.webp'
 
@@ -570,7 +569,8 @@ function Signup() {
 /* Each feature is a card with its own picture, the way Oura, Ultrahuman
    and RingConn lay theirs out. The Today screen and the ring are cut from
    Ryan's app-and-ring render (ring-app.webp, in git history); the breathing
-   screen is Ryan's own mockup, set on the same dark backdrop. */
+   card is Ryan's animated mockup, set on the same dark backdrop and cut to
+   a 165KB looping film. */
 const DOES = [
   {
     k: 'Gas pedal and brake',
@@ -584,8 +584,9 @@ const DOES = [
   {
     k: 'In-app breathing exercises',
     channel: 'sensor',
-    img: doesBreathe, w: 745, h: 931,
-    alt: 'The NERVA app on a phone during a breathing exercise: breathe 5 seconds in and 5 seconds out, the word Out, and a wave tracing each breath.',
+    img: '/nerva-breathe-poster.webp', w: 746, h: 932,
+    video: '/nerva-breathe.mp4',
+    alt: 'The NERVA app on a phone during a breathing exercise: breathe 5 seconds in and 5 seconds out. The screen fills with colour on each breath in and drains on each breath out, while a wave traces the breaths.',
     body: <>Exercises to train your nervous system and manage stress. Measures your ability to downregulate your nervous system so you can track progress.</>,
   },
   {
@@ -696,6 +697,28 @@ const TALLY = {
   done: LEDGER.filter((r) => r.s === 'done').length,
   wip: LEDGER.filter((r) => r.s === 'wip').length,
   todo: LEDGER.filter((r) => r.s === 'todo').length,
+}
+
+/* A card's looping film. Fetched and played only while the card is on
+   screen, paused off it, and never loaded under reduced motion, where the
+   first frame stands in as a still. */
+function CardFilm({ src, poster, label }: { src: string; poster: string; label: string }) {
+  const ref = useRef<HTMLVideoElement | null>(null)
+  const [still] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        if (!v.src) v.src = src
+        v.play().catch(() => {})
+      } else v.pause()
+    }, { threshold: 0.25 })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [src])
+  if (still) return <img src={poster} width={746} height={932} loading="lazy" alt={label} />
+  return <video ref={ref} poster={poster} muted loop playsInline preload="none" aria-label={label} />
 }
 
 function App() {
@@ -826,7 +849,9 @@ function App() {
                 <li key={d.k} className={`card card--${d.channel}`}>
                   <Reveal className="card__in" delay={i * 80}>
                     <figure className="card__img">
-                      <img src={d.img} width={d.w} height={d.h} loading="lazy" alt={d.alt} />
+                      {'video' in d
+                        ? <CardFilm src={d.video} poster={d.img} label={d.alt} />
+                        : <img src={d.img} width={d.w} height={d.h} loading="lazy" alt={d.alt} />}
                     </figure>
                     <div className="card__txt">
                       <h3>{d.k}</h3>
