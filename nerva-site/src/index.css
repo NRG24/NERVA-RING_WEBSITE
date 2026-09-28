@@ -122,11 +122,11 @@ a { color: inherit; text-decoration: none; }
 /* a section opens centered, the way a product page does: a head, one
    line under it, then the thing itself */
 .head {
-  max-width: 900px; margin: 0 auto clamp(40px, 5vw, 68px);
+  max-width: 900px; margin: 0 auto clamp(28px, 3.4vw, 44px);
   text-align: center;
 }
 .head__sub {
-  margin: 20px auto 0; max-width: 52ch;
+  margin: 14px auto 0; max-width: 52ch;
   font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem); line-height: 1.55;
   color: var(--ink-2);
   text-wrap: pretty;
@@ -355,7 +355,10 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
    SECTIONS
    ============================================================ */
-.section { padding: clamp(88px, 10vw, 150px) 0; }
+.section { padding: clamp(64px, 7vw, 108px) 0; }
+/* the first section comes straight off the hero, whose black already
+   separates the two: it needs a gap, not a second full section break */
+#does { padding-top: clamp(48px, 5vw, 76px); }
 .section--tint { background: var(--paper-2); }
 
 /* the grey studio stage a render sits on, as big as the page allows */
@@ -613,7 +616,7 @@ a { color: inherit; text-decoration: none; }
    The part number rides under each heading, small, for the people who
    want to look it up.
    ============================================================ */
-.inside { background: var(--void); color: #fff; padding: clamp(88px, 10vw, 150px) 0; }
+.inside { background: var(--void); color: #fff; padding: clamp(64px, 7vw, 108px) 0; }
 .inside__grid {
   display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: clamp(32px, 5vw, 96px); align-items: start;
@@ -699,7 +702,7 @@ a { color: inherit; text-decoration: none; }
    green-black. The drawing sits beside it, inverted onto the green so
    the sheet reads as a backlit plot rather than a pasted-in JPEG.
    ============================================================ */
-.cta { background: var(--forest); color: #fff; padding: clamp(88px, 10vw, 150px) 0; }
+.cta { background: var(--forest); color: #fff; padding: clamp(64px, 7vw, 108px) 0; }
 .cta__grid {
   display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: clamp(32px, 5vw, 80px); align-items: center;
