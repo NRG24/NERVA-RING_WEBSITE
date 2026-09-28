@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import ringBlue from './assets/ring-blue.webp'
 import ringCoffee from './assets/ring-coffee.webp'
 import ringPink from './assets/ring-pink.webp'
 import ringCeramicBlack from './assets/ring-ceramic-black.webp'
 import ringMacro from './assets/ring-macro.webp'
-import ringApp from './assets/ring-app.webp'
+import doesToday from './assets/does-today.webp'
+import doesWeek from './assets/does-week.webp'
+import doesRing from './assets/does-ring.webp'
 import blueprint from './assets/blueprint.webp'
 
 /* ---------- scroll reveal ---------- */
@@ -565,14 +567,15 @@ function Signup() {
    two branches, green is the ring's own sensing, red is the pulse channel.
    The color marks the rule over each row; there are no icons, because three
    stock glyphs beside three headings is the feature grid this avoids. */
-/* Each feature spotlights the part of the What it does image it lives in:
-   left, top, width, height as percentages of the 1957x1120 image, measured
-   off its pixels. Re-measure if the image is ever re-exported. */
+/* Each feature is a card with its own picture, the way Oura, Ultrahuman
+   and RingConn lay theirs out. The two phone screens and the ring are cut
+   from Ryan's app-and-ring render (ring-app.webp, in git history). */
 const DOES = [
   {
     k: 'Gas pedal and brake',
     channel: 'gold',
-    spot: [1.2, 0, 28.8, 100],
+    img: doesToday, w: 578, h: 722,
+    alt: 'The NERVA app on a phone, the Today screen: 68 percent of the day inside your range, a graph of the day, and minutes above your line against minutes restoring.',
     body: (
       <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and avoid burnout.</>
     ),
@@ -580,13 +583,15 @@ const DOES = [
   {
     k: 'In-app breathing exercises',
     channel: 'sensor',
-    spot: [29.8, 6.6, 24.2, 87.2],
+    img: doesWeek, w: 500, h: 625,
+    alt: 'The NERVA app on a phone, the Week screen: a balance score of 78 and how quickly stress spikes settled compared with your usual week.',
     body: <>Exercises to train your nervous system and manage stress. Measures your ability to downregulate your nervous system so you can track progress.</>,
   },
   {
     k: 'Steps, calories burned, heart rate',
     channel: 'pulse',
-    spot: [57.5, 17, 36, 68],
+    img: doesRing, w: 857, h: 1071,
+    alt: 'The NERVA Ring in polished silver, its clear inner band showing the flex PCB and the optical sensor.',
     body: <>All of the things you would expect in a premium wearable.</>,
   },
 ] as const
@@ -690,87 +695,6 @@ const TALLY = {
   done: LEDGER.filter((r) => r.s === 'done').length,
   wip: LEDGER.filter((r) => r.s === 'wip').length,
   todo: LEDGER.filter((r) => r.s === 'todo').length,
-}
-
-/* ---------- What it does: tabs over the image ----------
-   The way Oura and RingConn walk through features: a short list beside
-   the picture, pick one and the picture answers. Each tab moves a
-   spotlight onto the phone screen or the ring it describes and dims the
-   rest. List and picture sit side by side so both fit on a laptop screen
-   at once. Proper tabs: one tab stop, arrow keys move between them, and
-   the image is the panel they control. */
-function DoesExplorer() {
-  const [active, setActive] = useState(0)
-  const tabs = useRef<(HTMLButtonElement | null)[]>([])
-  const [l, t, w, h] = DOES[active].spot
-
-  const onKey = (e: ReactKeyboardEvent) => {
-    const last = DOES.length - 1
-    const next =
-      e.key === 'ArrowRight' || e.key === 'ArrowDown' ? (active === last ? 0 : active + 1)
-      : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? (active === 0 ? last : active - 1)
-      : e.key === 'Home' ? 0
-      : e.key === 'End' ? last
-      : -1
-    if (next < 0) return
-    e.preventDefault()
-    setActive(next)
-    tabs.current[next]?.focus()
-  }
-
-  return (
-    <div className="wrap does__explorer">
-      {/* the list first in the source: it is what you act on, and on a phone
-          CSS moves the picture above it */}
-      <Reveal className="does__tabs-wrap">
-        <div className="feats" role="tablist" aria-label="What it does" aria-orientation="vertical" onKeyDown={onKey}>
-          {DOES.map((d, i) => (
-            <button
-              key={d.k}
-              ref={(el) => { tabs.current[i] = el }}
-              type="button"
-              role="tab"
-              id={`does-tab-${i}`}
-              aria-selected={active === i}
-              aria-controls="does-panel"
-              aria-labelledby={`does-tab-${i}-h`}
-              aria-describedby={`does-tab-${i}-p`}
-              tabIndex={active === i ? 0 : -1}
-              className={`feat feat--${d.channel} ${active === i ? 'is-active' : ''}`}
-              onClick={() => setActive(i)}
-            >
-              <span className="feat__h" id={`does-tab-${i}-h`}>{d.k}</span>
-              {/* always in the page, so aria-describedby can read it; only
-                  the chosen feature's text is opened up */}
-              <span className="feat__body"><span className="feat__p" id={`does-tab-${i}-p`}>{d.body}</span></span>
-            </button>
-          ))}
-        </div>
-      </Reveal>
-
-      <Reveal className="does__visual" delay={90}>
-        <figure
-          className="does__stage"
-          id="does-panel"
-          role="tabpanel"
-          aria-labelledby={`does-tab-${active}`}
-        >
-          <img
-            src={ringApp}
-            width={1957}
-            height={1120}
-            loading="lazy"
-            alt="Two demo screens of the NERVA companion app beside the ring in polished silver. One shows today: 68 percent of the day inside your range, with each stress spike and how long it took to fade. The other shows the week: a balance score of 78 and how settle time, carryover, reactivity and restorative time compare with your usual."
-          />
-          <span
-            className={`does__spot does__spot--${DOES[active].channel}`}
-            style={{ left: `${l}%`, top: `${t}%`, width: `${w}%`, height: `${h}%` }}
-            aria-hidden="true"
-          />
-        </figure>
-      </Reveal>
-    </div>
-  )
 }
 
 function App() {
@@ -894,7 +818,24 @@ function App() {
           {/* wider than the text column and in no card: the render's black
               top is the hero's black, so the phones and the ring come up out
               of the same dark the ring landed in */}
-          <DoesExplorer />
+          <div className="wrap">
+            {/* a swipeable row on a phone, three across on a desktop */}
+            <ul className="cards" aria-label="What it does">
+              {DOES.map((d, i) => (
+                <li key={d.k} className={`card card--${d.channel}`}>
+                  <Reveal className="card__in" delay={i * 80}>
+                    <figure className="card__img">
+                      <img src={d.img} width={d.w} height={d.h} loading="lazy" alt={d.alt} />
+                    </figure>
+                    <div className="card__txt">
+                      <h3>{d.k}</h3>
+                      <p>{d.body}</p>
+                    </div>
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* ---------------- TWO SIGNALS ---------------- */}

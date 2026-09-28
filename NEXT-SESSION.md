@@ -57,27 +57,22 @@ under 1080px. Every light section opens with a **centered** `.head`.
    stops each); a linear dark-to-light ramp printed as a flat grey band. Ryan
    went through the other options first: a white section with the image in a
    card read as an island, pure black was too black with no break, and a
-   rounded charcoal sheet over the hero was awkward. Centered white head, then
-   `ring-app.webp` (two demo app screens beside the silver ring) at up to
-   1480px wide in no card, feathered at every edge, with
-   `mix-blend-mode: lighten` so the render's pure black takes the charcoal.
-   The image must start below `--fade-in` (it does: ~287px against ~230px at
-   1440 wide) or the blend shows a flat patch against the gradient. Its first
-   rows were re-cut after the white-band trim left a grey hairline; if it is
-   re-exported, check row 0 is near black. It came in as a 2000px chat image;
-   ask Ryan for the original PNG if it needs to be sharper. The phones say
+   rounded charcoal sheet over the hero was awkward. Centered white head,
+   then the picture cards below. The app screens came in as a 2000px chat
+   image; ask Ryan for originals if they need to be sharper. The phones say
    DEMO, and the footer and privacy page say the app screens are a design
-   demo. Then the three features, white on charcoal.
-   **Feature tabs** (`DoesExplorer`), after how Oura and RingConn walk
-   through features: the three features are an ARIA tablist (one tab stop,
-   arrow keys, Home/End) beside the image, and the chosen one moves a
-   rounded spotlight (`.does__spot`, a giant box-shadow clipped by the
-   stage) onto its phone screen or the ring. The spotlight rectangles in
-   `DOES[].spot` are percentages of the 1957x1120 image, measured off its
-   pixels: **re-measure if the image changes**. `.does__stage` must stay
-   `position: relative` or the spotlight lands against the wrong box. List
-   and image sit side by side above 1080px so both fit a 1280x720 screen;
-   a full-width image with tabs under it did not fit a laptop.
+   demo.
+   **Picture cards** (`.cards`), the way Oura, Ultrahuman and RingConn show
+   features: one rounded card per feature, picture on top at 4:5, channel
+   stroke, heading and Ryan's copy under it. Three across above 1080px, a
+   scroll-snap row you swipe below it (next card peeks in). Pictures are cut
+   from Ryan's app-and-ring render (`ring-app.webp`, now only in git
+   history): `does-today` (Today screen), `does-week` (Week screen),
+   `does-ring` (silver ring). An earlier version put the whole render full
+   width with a spotlight driven by tabs; Ryan preferred cards. **Better
+   pictures to ask Ryan for:** a Breathe screen for the breathing card (it
+   shows the Week screen now) and a Body/steps screen or the ring on a hand
+   for the third card.
    **The title trace** (`.does__trace`): one green skin-conductance line
    across the page at the title's height, masked out behind the words, with
    a small response left of the title and the big one right of it. It is the
