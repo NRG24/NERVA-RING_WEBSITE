@@ -276,6 +276,53 @@ a { color: inherit; text-decoration: none; }
   max-width: 100%;
 }
 .hero__film { object-fit: contain; object-position: right center; display: block; }
+
+/* ---- after it lands ----
+   The stage is square and the film fills it exactly, so a position in
+   the stage is a position in the frame. The light module sits at about
+   (452, 400) of the 1080px last frame. */
+.hero__pulse {
+  position: absolute; left: 41.9%; top: 37%;
+  width: 30%; aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.hero__pulse > span {
+  position: absolute; inset: 0; border-radius: 50%;
+  /* a tight hot core on the LED window, falling off into a wide wash */
+  background:
+    radial-gradient(circle, rgba(120, 255, 150, 0.55) 0%, rgba(48, 209, 88, 0.32) 7%, transparent 18%),
+    radial-gradient(circle, rgba(48, 209, 88, 0.3) 0%, rgba(48, 209, 88, 0.11) 36%, transparent 68%);
+  mix-blend-mode: screen;
+}
+.is-resting .hero__pulse { opacity: 1; }
+
+/* One beat at 72 bpm (0.833s): a sharp rise, a fall, the small second
+   bump of the dicrotic notch, then rest. The shape of the PPG trace the
+   readout draws, not a sine. */
+.is-resting .hero__pulse > span { animation: heartbeat 0.833s infinite; }
+@keyframes heartbeat {
+  0%   { opacity: 0.34; transform: scale(0.96); }
+  11%  { opacity: 1;    transform: scale(1.04); }
+  26%  { opacity: 0.5;  transform: scale(0.99); }
+  36%  { opacity: 0.72; transform: scale(1.01); }
+  58%  { opacity: 0.38; transform: scale(0.97); }
+  100% { opacity: 0.34; transform: scale(0.96); }
+}
+/* and the ring keeps hovering, a few pixels, slowly */
+.hero.is-resting .hero__stage { animation: hover 7s ease-in-out infinite; }
+@keyframes hover {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-1.3%) rotate(-0.5deg); }
+}
+.hero.is-offscreen .hero__stage,
+.hero.is-offscreen .hero__pulse > span { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .hero.is-resting .hero__stage { animation: none; }
+  .is-resting .hero__pulse > span { animation: none; opacity: 0.55; }
+}
 .hero__grade {
   position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(to bottom,

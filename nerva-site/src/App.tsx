@@ -234,7 +234,10 @@ function Hero() {
     () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
   const [filmFailed, setFilmFailed] = useState(false)
+  const [filmEnded, setFilmEnded] = useState(false)
+  const [onScreen, setOnScreen] = useState(true)
   const filmRef = useRef<HTMLVideoElement | null>(null)
+  const heroRef = useRef<HTMLElement | null>(null)
 
   /* A browser that refuses the autoplay (iOS Low Power Mode is the usual
      one) rejects this promise, and the hero would otherwise hold the near
@@ -243,9 +246,25 @@ function Hero() {
   useEffect(() => { filmRef.current?.play().catch(toStill) }, [])
 
   const showFilm = playFilm && !filmFailed
+  /* Once the ring has landed it stays alive: a slow hover, and the green
+     sensor light pulsing at 72 bpm, the same pulse the readout further
+     down draws. Anyone on the still lands straight in this state. */
+  const resting = !showFilm || filmEnded
+
+  /* the loop is cheap, but there is no reason to run it off screen */
+  useEffect(() => {
+    const el = heroRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting))
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
 
   return (
-    <section className="hero">
+    <section
+      ref={heroRef}
+      className={`hero ${resting ? 'is-resting' : ''} ${onScreen ? '' : 'is-offscreen'}`}
+    >
       <div className="hero__stage">
         {showFilm ? (
           <video
@@ -254,6 +273,7 @@ function Hero() {
             src={HERO_FILM}
             poster={HERO_POSTER}
             onError={toStill}
+            onEnded={() => setFilmEnded(true)}
             autoPlay
             muted
             playsInline
@@ -270,6 +290,10 @@ function Hero() {
             alt="The NERVA Ring held in the dark, its inner band showing the green and red optical sensor and a gold electrode."
           />
         )}
+        {/* the glow off the green LED, pinned to where the light module sits
+            in the last frame. The outer span fades it in when the ring lands;
+            the inner one carries the beat. */}
+        <span className="hero__pulse" aria-hidden="true"><span /></span>
       </div>
       <div className="hero__grade" aria-hidden="true" />
 

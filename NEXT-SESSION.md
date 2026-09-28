@@ -37,11 +37,19 @@ under 1080px. Every light section opens with a **centered** `.head`.
    own speed: 4.08s, 1080x1080, 24fps, re-encoded only for size (crf 22,
    faststart, 777KB). A 2x slowdown went live briefly and Ryan asked for the
    default speed back; interpolating it smeared the rim and blending ghosted
-   it, so slowing it cleanly needs a slower render, not ffmpeg. The still (`nerva-levitate-still.webp`) is that last frame
-   and shows under reduced motion (film never fetched), refused autoplay, or a
-   load error. The film is square on pure black, standing as tall as the hero
-   against the right edge; on phones it runs across the top with its bottom
-   edge feathered, because the film opens with the ring rising in from below.
+   it, so slowing it cleanly needs a slower render, not ffmpeg. The still
+   (`nerva-levitate-still.webp`) is that last frame and shows under reduced
+   motion (film never fetched), refused autoplay, or a load error. The film is
+   square on pure black, standing as tall as the hero against the right edge;
+   on phones it runs across the top with its bottom edge feathered, because
+   the film opens with the ring rising in from below.
+   **After it lands** (`onEnded`, or at once on the still) the hero gets
+   `.is-resting`: the stage hovers a few pixels on a 7s cycle, and
+   `.hero__pulse` glows off the green LED at 72 bpm (heartbeat-shaped
+   keyframes, matching the readout's 72 bpm). The glow is pinned at
+   41.9% / 37% of the stage, where the light module sits in the last frame;
+   **re-measure it if the film changes.** Paused off screen; a steady faint
+   glow and no hover under reduced motion.
 2. **`#does`.** Centered head, then `ring-app.webp` (two demo app screens
    beside the silver ring) on a stage at the image's own 1957:1124 ratio, so
    nothing crops. It came in as a 2000px chat image; ask Ryan for the
