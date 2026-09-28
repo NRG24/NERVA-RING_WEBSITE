@@ -65,14 +65,15 @@ under 1080px. Every light section opens with a **centered** `.head`.
    **Picture cards** (`.cards`), the way Oura, Ultrahuman and RingConn show
    features: one rounded card per feature, picture on top at 4:5, channel
    stroke, heading and Ryan's copy under it. Three across above 1080px, a
-   scroll-snap row you swipe below it (next card peeks in). Pictures are cut
-   from Ryan's app-and-ring render (`ring-app.webp`, now only in git
-   history): `does-today` (Today screen), `does-week` (Week screen),
-   `does-ring` (silver ring). An earlier version put the whole render full
+   scroll-snap row you swipe below it (next card peeks in). Pictures:
+   `does-today` (Today screen) and `does-ring` (silver ring) are cut from
+   Ryan's app-and-ring render (`ring-app.webp`, now only in git history);
+   `does-breathe` is Ryan's breathing-exercise mockup (transparent PNG),
+   set on a dark radial backdrop at 4:5 with the phone at ~76% width so the
+   breath wave stays in frame. An earlier version put the whole render full
    width with a spotlight driven by tabs; Ryan preferred cards. **Better
-   pictures to ask Ryan for:** a Breathe screen for the breathing card (it
-   shows the Week screen now) and a Body/steps screen or the ring on a hand
-   for the third card.
+   picture to ask Ryan for:** a Body/steps screen or the ring on a hand for
+   the third card.
    **The title trace** (`.does__trace`): one green skin-conductance line
    across the page at the title's height, masked out behind the words, with
    a small response left of the title and the big one right of it. It is the

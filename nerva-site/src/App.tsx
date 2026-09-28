@@ -5,7 +5,7 @@ import ringPink from './assets/ring-pink.webp'
 import ringCeramicBlack from './assets/ring-ceramic-black.webp'
 import ringMacro from './assets/ring-macro.webp'
 import doesToday from './assets/does-today.webp'
-import doesWeek from './assets/does-week.webp'
+import doesBreathe from './assets/does-breathe.webp'
 import doesRing from './assets/does-ring.webp'
 import blueprint from './assets/blueprint.webp'
 
@@ -568,8 +568,9 @@ function Signup() {
    The color marks the rule over each row; there are no icons, because three
    stock glyphs beside three headings is the feature grid this avoids. */
 /* Each feature is a card with its own picture, the way Oura, Ultrahuman
-   and RingConn lay theirs out. The two phone screens and the ring are cut
-   from Ryan's app-and-ring render (ring-app.webp, in git history). */
+   and RingConn lay theirs out. The Today screen and the ring are cut from
+   Ryan's app-and-ring render (ring-app.webp, in git history); the breathing
+   screen is Ryan's own mockup, set on the same dark backdrop. */
 const DOES = [
   {
     k: 'Gas pedal and brake',
@@ -583,8 +584,8 @@ const DOES = [
   {
     k: 'In-app breathing exercises',
     channel: 'sensor',
-    img: doesWeek, w: 500, h: 625,
-    alt: 'The NERVA app on a phone, the Week screen: a balance score of 78 and how quickly stress spikes settled compared with your usual week.',
+    img: doesBreathe, w: 745, h: 931,
+    alt: 'The NERVA app on a phone during a breathing exercise: breathe 5 seconds in and 5 seconds out, the word Out, and a wave tracing each breath.',
     body: <>Exercises to train your nervous system and manage stress. Measures your ability to downregulate your nervous system so you can track progress.</>,
   },
   {
