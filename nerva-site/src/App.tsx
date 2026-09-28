@@ -4,7 +4,8 @@ import ringCoffee from './assets/ring-coffee.webp'
 import ringPink from './assets/ring-pink.webp'
 import ringCeramicBlack from './assets/ring-ceramic-black.webp'
 import ringMacro from './assets/ring-macro.webp'
-import ringApp from './assets/ring-app.webp'
+import doesToday from './assets/does-today.webp'
+import doesRing from './assets/does-ring.webp'
 import blueprint from './assets/blueprint.webp'
 
 /* ---------- scroll reveal ---------- */
@@ -565,10 +566,17 @@ function Signup() {
    two branches, green is the ring's own sensing, red is the pulse channel.
    The color marks the rule over each row; there are no icons, because three
    stock glyphs beside three headings is the feature grid this avoids. */
+/* Each feature is a card with its own picture, the way Oura, Ultrahuman
+   and RingConn lay theirs out. The Today screen and the ring are cut from
+   Ryan's app-and-ring render (ring-app.webp, in git history); the breathing
+   card is Ryan's animated mockup, set on the same dark backdrop and cut to
+   a 165KB looping film. */
 const DOES = [
   {
     k: 'Gas pedal and brake',
     channel: 'gold',
+    img: doesToday, w: 578, h: 722,
+    alt: 'The NERVA app on a phone, the Today screen: 68 percent of the day inside your range, a graph of the day, and minutes above your line against minutes restoring.',
     body: (
       <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and avoid burnout.</>
     ),
@@ -576,12 +584,47 @@ const DOES = [
   {
     k: 'In-app breathing exercises',
     channel: 'sensor',
+    img: '/nerva-breathe-poster.webp', w: 746, h: 932,
+    video: '/nerva-breathe.mp4',
+    alt: 'The NERVA app on a phone during a breathing exercise: breathe 5 seconds in and 5 seconds out. The screen fills with colour on each breath in and drains on each breath out, while a wave traces the breaths.',
     body: <>Exercises to train your nervous system and manage stress. Measures your ability to downregulate your nervous system so you can track progress.</>,
   },
   {
     k: 'Steps, calories burned, heart rate',
     channel: 'pulse',
+    img: doesRing, w: 857, h: 1071,
+    alt: 'The NERVA Ring in polished silver, its clear inner band showing the flex PCB and the optical sensor.',
     body: <>All of the things you would expect in a premium wearable.</>,
+  },
+] as const
+
+/* Every answer here is checkable against nerva-ring-overview.md or the
+   site's own disclaimers. Keep it that way: no claim goes in this list that
+   the build cannot back yet. */
+const FAQ = [
+  {
+    q: 'Can I buy one yet?',
+    a: 'Not yet. NERVA Ring is an early prototype built by one person, and nothing on this site is for sale. The plan is a crowdfunding campaign once the prototype has been tested, and the update list hears about it first.',
+  },
+  {
+    q: 'What is EDA?',
+    a: 'Electrodermal activity: how easily your skin conducts a tiny current. When your sympathetic nervous system fires, your sweat glands respond and skin conductance rises within seconds. It is the arousal signal clinical stress research relies on.',
+  },
+  {
+    q: 'How is it different from other smart rings?',
+    a: 'Most rings estimate stress from heart rate and heart rate variability, through a model. NERVA adds two dry gold electrodes on the inner band that read skin conductance directly, alongside heart rate and blood oxygen.',
+  },
+  {
+    q: 'How long will the battery last?',
+    a: 'The ring carries a 22 mAh cell and sleeps between readings, targeting about a month of standby. Battery life in everyday wear will be measured during prototype testing and published in the update notes.',
+  },
+  {
+    q: 'Can I wear it in the shower?',
+    a: 'The electronics are fully potted in resin inside the band, so the ring is sealed with no seams, and it is designed for hand-washing and showering. It has not been through formal water-rating tests yet.',
+  },
+  {
+    q: 'Is it a medical device?',
+    a: 'No. NERVA Ring is a wellness product. It is not intended to diagnose, treat, cure, or prevent any disease.',
   },
 ] as const
 
@@ -654,6 +697,28 @@ const TALLY = {
   done: LEDGER.filter((r) => r.s === 'done').length,
   wip: LEDGER.filter((r) => r.s === 'wip').length,
   todo: LEDGER.filter((r) => r.s === 'todo').length,
+}
+
+/* A card's looping film. Fetched and played only while the card is on
+   screen, paused off it, and never loaded under reduced motion, where the
+   first frame stands in as a still. */
+function CardFilm({ src, poster, label }: { src: string; poster: string; label: string }) {
+  const ref = useRef<HTMLVideoElement | null>(null)
+  const [still] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        if (!v.src) v.src = src
+        v.play().catch(() => {})
+      } else v.pause()
+    }, { threshold: 0.25 })
+    io.observe(v)
+    return () => io.disconnect()
+  }, [src])
+  if (still) return <img src={poster} width={746} height={932} loading="lazy" alt={label} />
+  return <video ref={ref} poster={poster} muted loop playsInline preload="none" aria-label={label} />
 }
 
 function App() {
@@ -777,27 +842,25 @@ function App() {
           {/* wider than the text column and in no card: the render's black
               top is the hero's black, so the phones and the ring come up out
               of the same dark the ring landed in */}
-          <Reveal className="does__bleed">
-            <figure className="does__stage">
-              <img
-                src={ringApp}
-                width={1957}
-                height={1120}
-                loading="lazy"
-                alt="Two demo screens of the NERVA companion app beside the ring in polished silver. One shows today: 68 percent of the day inside your range, with each stress spike and how long it took to fade. The other shows the week: a balance score of 78 and how settle time, carryover, reactivity and restorative time compare with your usual."
-              />
-            </figure>
-          </Reveal>
-
           <div className="wrap">
-            <div className="feats">
+            {/* a swipeable row on a phone, three across on a desktop */}
+            <ul className="cards" aria-label="What it does">
               {DOES.map((d, i) => (
-                <Reveal key={d.k} className={`feat feat--${d.channel}`} delay={i * 70}>
-                  <h3>{d.k}</h3>
-                  <p>{d.body}</p>
-                </Reveal>
+                <li key={d.k} className={`card card--${d.channel}`}>
+                  <Reveal className="card__in" delay={i * 80}>
+                    <figure className="card__img">
+                      {'video' in d
+                        ? <CardFilm src={d.video} poster={d.img} label={d.alt} />
+                        : <img src={d.img} width={d.w} height={d.h} loading="lazy" alt={d.alt} />}
+                    </figure>
+                    <div className="card__txt">
+                      <h3>{d.k}</h3>
+                      <p>{d.body}</p>
+                    </div>
+                  </Reveal>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
@@ -984,6 +1047,29 @@ function App() {
           </div>
         </section>
 
+        {/* ---------------- FAQ ----------------
+            Native details/summary, so it opens with a keyboard and a screen
+            reader for free, and every answer is in the page for search. */}
+        <section className="section faq" id="faq">
+          <div className="wrap faq__grid">
+            <Reveal>
+              <h2 className="display">Questions</h2>
+              <p className="faq__lede">
+                Anything else, write to{' '}
+                <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+              </p>
+            </Reveal>
+            <Reveal className="faq__list">
+              {FAQ.map((f) => (
+                <details key={f.q} className="faq__item">
+                  <summary>{f.q}</summary>
+                  <p>{f.a}</p>
+                </details>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+
         {/* ---------------- CTA ---------------- */}
         <section className="cta" id="follow">
           <div className="wrap cta__grid">
@@ -1037,6 +1123,7 @@ function App() {
                 {NAV.map((l) => (
                   <a key={l.href} href={l.href}>{l.label}</a>
                 ))}
+                <a href="#faq">Questions</a>
                 <a href="#follow">Updates</a>
                 <a href="/privacy.html">Privacy</a>
               </nav>

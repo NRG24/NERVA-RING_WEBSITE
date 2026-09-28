@@ -376,8 +376,7 @@ a { color: inherit; text-decoration: none; }
    the section opens, so there is a change of tone without a line, and
    the charcoal eases into the light grey of the section below in empty
    space under the features, so no text ever sits on the mid-grey. The
-   image sits in no card, lightened into the charcoal so its black areas
-   take the section color, and feathered at every edge.
+   features sit on picture cards below the title.
    ------------------------------------------------------------ */
 .does {
   --sheet: #1c1c1f;
@@ -402,7 +401,7 @@ a { color: inherit; text-decoration: none; }
   color: #fff;
 }
 .does { position: relative; }
-.does > .wrap, .does > .does__bleed { position: relative; z-index: 1; }
+.does > .wrap { position: relative; z-index: 1; }
 
 /* The trace behind the title. Its baseline sits at 70% of its height and
    is lined up with the middle of the title's line; the middle of the
@@ -457,49 +456,45 @@ a { color: inherit; text-decoration: none; }
   .does__trace-ink--narrow { display: inline; }
 }
 
-.does__bleed { max-width: 1480px; margin: 0 auto; }
-.does__stage {
-  margin: 0;
-  /* the composite's own proportions, so nothing is cropped */
-  aspect-ratio: 1957 / 1120;
-  /* Its lit grey floor would stop at the sides and the bottom as hard
-     edges, so every side is feathered into the section's black, the top
-     too, so no row of the render can print as a line. */
-  -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
-    linear-gradient(to bottom, transparent, #000 5%, #000 72%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
-    linear-gradient(to bottom, transparent, #000 5%, #000 72%, transparent);
-  mask-composite: intersect;
-}
-.does__stage img {
-  width: 100%; height: 100%; display: block;
-  /* the render's pure black becomes the sheet's charcoal instead of
-     printing as a darker rectangle; everything brighter keeps its value */
-  mix-blend-mode: lighten;
-}
-/* the blend needs the sheet color behind the image inside the mask */
-.does__stage { background: var(--sheet); }
-
-.feats {
+/* The three features as picture cards, the way Oura, Ultrahuman and
+   RingConn show theirs: a rounded card, its picture on top at a 4:5 crop,
+   the channel stroke, heading and text under it. Three across on a
+   desktop, a row you swipe on a phone. */
+.cards {
+  list-style: none; margin: 0; padding: 0;
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(24px, 3.5vw, 56px);
-  margin-top: clamp(24px, 3vw, 44px);
+  gap: clamp(14px, 1.8vw, 24px);
 }
-.feat::before {
-  content: ''; display: block; width: 36px; height: 3px; border-radius: 2px;
-  margin-bottom: 20px; background: rgba(255, 255, 255, 0.3);
+.card { display: flex; }
+.card__in {
+  display: flex; flex-direction: column; width: 100%;
+  border-radius: var(--radius-lg); overflow: hidden;
+  background: #26262a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
-.feat--gold::before   { background: var(--gold); }
-.feat--sensor::before { background: var(--sensor); }
-.feat--pulse::before  { background: var(--pulse); }
-.feat h3 {
+.card__img {
+  margin: 0; aspect-ratio: 4 / 5; overflow: hidden;
+  background: #000;
+}
+.card__img img, .card__img video {
+  width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;
+  transition: transform 0.7s var(--ease-out);
+}
+@media (hover: hover) { .card__in:hover .card__img :is(img, video) { transform: scale(1.03); } }
+@media (prefers-reduced-motion: reduce) { .card__img :is(img, video) { transition: none; } }
+.card__txt { padding: clamp(20px, 2vw, 28px) clamp(20px, 2vw, 28px) clamp(24px, 2.4vw, 32px); }
+.card__txt::before {
+  content: ''; display: block; width: 32px; height: 3px; border-radius: 2px;
+  margin-bottom: 16px; background: rgba(255, 255, 255, 0.3);
+}
+.card--gold .card__txt::before   { background: var(--gold); }
+.card--sensor .card__txt::before { background: var(--sensor); }
+.card--pulse .card__txt::before  { background: var(--pulse); }
+.card__txt h3 {
   margin: 0; font-weight: 650; letter-spacing: -0.022em; color: #fff;
-  font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.45rem); line-height: 1.2;
+  font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.4rem); line-height: 1.2;
 }
-.feat p { margin: 10px 0 0; color: rgba(255, 255, 255, 0.66); font-size: 1.02rem; line-height: 1.6; }
+.card__txt p { margin: 10px 0 0; color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6; }
 .does .abbr { color: #fff; }
 /* the two abbreviations are the only data labels in this section, so they
    take the mono the rest of the page reserves for readings */
@@ -797,6 +792,39 @@ a { color: inherit; text-decoration: none; }
 .config__fine { margin: 12px 0 0; font-size: 13.5px; color: var(--ink-3); text-align: center; }
 
 /* ============================================================
+   FAQ
+   The accordion every ring site closes on: heading and an email on the
+   left, questions on the right, a plus that turns into a cross.
+   ============================================================ */
+.faq__grid {
+  display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 5vw, 96px); align-items: start;
+}
+.faq__lede { margin: 18px 0 0; color: var(--ink-2); font-size: 1.05rem; }
+.faq__lede a { color: var(--ink); border-bottom: 1px solid var(--line-2); }
+@media (hover: hover) { .faq__lede a:hover { border-color: var(--ink); } }
+.faq__list { border-top: 1px solid var(--line-2); }
+.faq__item { border-bottom: 1px solid var(--line-2); }
+.faq__item summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 22px 2px;
+  font-weight: 600; font-size: clamp(1.08rem, 1rem + 0.4vw, 1.3rem); letter-spacing: -0.018em;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: ''; flex: none; width: 16px; height: 16px;
+  background:
+    linear-gradient(currentColor, currentColor) center / 16px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 2px 16px no-repeat;
+  transition: transform 0.3s var(--ease-out);
+}
+.faq__item[open] summary::after { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) { .faq__item summary::after { transition: none; } }
+.faq__item summary:focus-visible { border-radius: 6px; }
+.faq__item p { margin: -6px 0 0; padding: 0 2px 24px; max-width: 62ch; color: var(--ink-2); line-height: 1.65; }
+
+/* ============================================================
    SIGNUP
    The one section that asks for something gets its own ground: a deep
    green-black. The drawing sits beside it, inverted onto the green so
@@ -940,7 +968,16 @@ a { color: inherit; text-decoration: none; }
   .nav__links { display: none; }
   .nav__toggle { display: flex; }
 
-  .feats { grid-template-columns: 1fr; gap: 32px; max-width: 620px; }
+  /* a row you swipe: each card most of the screen wide, the next one
+     peeking in at the edge so it is obvious there is more */
+  .cards {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(260px, 44%);
+    overflow-x: auto; scroll-snap-type: x mandatory;
+    margin: 0 -32px; padding: 0 32px 6px; scroll-padding: 0 32px;
+    scrollbar-width: none;
+  }
+  .cards::-webkit-scrollbar { display: none; }
+  .card { scroll-snap-align: start; }
 
   .sig-notes { grid-template-columns: 1fr; gap: 32px; }
 
@@ -953,6 +990,7 @@ a { color: inherit; text-decoration: none; }
   .config__panel { max-width: 560px; }
 
   .cta__grid { grid-template-columns: 1fr; gap: 44px; }
+  .faq__grid { grid-template-columns: 1fr; gap: 28px; }
 
   /* two-up title block: 6 columns become 2 half-width cells per row */
   .titleblock { grid-template-columns: repeat(2, 1fr); }
@@ -995,6 +1033,7 @@ a { color: inherit; text-decoration: none; }
   .lane--eda .lane__trace { height: 82px; }
 
   .swatch { width: 46px; height: 46px; }
+  .cards { grid-auto-columns: 80%; margin: 0 -20px; padding: 0 20px 6px; scroll-padding: 0 20px; }
 
   .titleblock { grid-template-columns: 1fr; }
   .tb--w1, .tb--w2, .tb--w3, .tb--w6 { grid-column: span 1; }

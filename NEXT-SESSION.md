@@ -57,17 +57,28 @@ under 1080px. Every light section opens with a **centered** `.head`.
    stops each); a linear dark-to-light ramp printed as a flat grey band. Ryan
    went through the other options first: a white section with the image in a
    card read as an island, pure black was too black with no break, and a
-   rounded charcoal sheet over the hero was awkward. Centered white head, then
-   `ring-app.webp` (two demo app screens beside the silver ring) at up to
-   1480px wide in no card, feathered at every edge, with
-   `mix-blend-mode: lighten` so the render's pure black takes the charcoal.
-   The image must start below `--fade-in` (it does: ~287px against ~230px at
-   1440 wide) or the blend shows a flat patch against the gradient. Its first
-   rows were re-cut after the white-band trim left a grey hairline; if it is
-   re-exported, check row 0 is near black. It came in as a 2000px chat image;
-   ask Ryan for the original PNG if it needs to be sharper. The phones say
+   rounded charcoal sheet over the hero was awkward. Centered white head,
+   then the picture cards below. The app screens came in as a 2000px chat
+   image; ask Ryan for originals if they need to be sharper. The phones say
    DEMO, and the footer and privacy page say the app screens are a design
-   demo. Then the three features, white on charcoal.
+   demo.
+   **Picture cards** (`.cards`), the way Oura, Ultrahuman and RingConn show
+   features: one rounded card per feature, picture on top at 4:5, channel
+   stroke, heading and Ryan's copy under it. Three across above 1080px, a
+   scroll-snap row you swipe below it (next card peeks in). Pictures:
+   `does-today` (Today screen) and `does-ring` (silver ring) are cut from
+   Ryan's app-and-ring render (`ring-app.webp`, now only in git history);
+   the breathing card is a **looping film**, `public/nerva-breathe.mp4`
+   (165KB, 10s at 25fps, faststart), made from Ryan's animated mockup
+   `nerva_breathe_phone.webp` (repo root, 2.6MB, 250 frames with alpha):
+   each frame set on a dark radial backdrop at 746x932 with the phone at
+   ~76% width so the breath wave stays in frame. First and last frames
+   match, so the loop has no seam. `CardFilm` fetches it only when the card
+   is on screen, pauses it off screen, and never loads it under reduced
+   motion, where `nerva-breathe-poster.webp` (frame 0) stands in. An earlier version put the whole render full
+   width with a spotlight driven by tabs; Ryan preferred cards. **Better
+   picture to ask Ryan for:** a Body/steps screen or the ring on a hand for
+   the third card.
    **The title trace** (`.does__trace`): one green skin-conductance line
    across the page at the title's height, masked out behind the words, with
    a small response left of the title and the big one right of it. It is the
@@ -93,10 +104,14 @@ under 1080px. Every light section opens with a **centered** `.head`.
 7. **`#finish`.** A product configurator like the reference: render big on the
    left; name, circular swatches (`aria-pressed`), "Finish. {name}", the build
    meter (counted off `LEDGER`, so it cannot drift) and a black pill CTA.
-8. **`#follow`.** Buttondown email capture on a deep green ground.
-9. Footer as an engineering **title block**. Cell spans must tile each row of
+8. **`#faq`.** "Questions": native `details`/`summary` accordion, heading
+   and contact email left, questions right. Every answer must be backed by
+   `nerva-ring-overview.md` or the site's disclaimers; nothing about price,
+   subscription or phone compatibility until those are decided.
+9. **`#follow`.** Buttondown email capture on a deep green ground.
+10. Footer as an engineering **title block**. Cell spans must tile each row of
    the 6-column grid exactly or the leftover gap prints as a solid hairline.
-10. **Launch bar.** Fixed to the bottom where the reference pins price and
+11. **Launch bar.** Fixed to the bottom where the reference pins price and
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
 
