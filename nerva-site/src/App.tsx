@@ -8,10 +8,12 @@ import ringApp from './assets/ring-app.webp'
 import blueprint from './assets/blueprint.webp'
 
 /* ---------- scroll reveal ---------- */
-function Reveal({ children, className = '', delay = 0 }: {
+function Reveal({ children, className = '', delay = 0, margin = '0px 0px -6% 0px' }: {
   children: ReactNode
   className?: string
   delay?: number
+  /* how far into the viewport it has to come before it counts as seen */
+  margin?: string
 }) {
   const ref = useRef<HTMLDivElement | null>(null)
   const [shown, setShown] = useState(false)
@@ -21,11 +23,11 @@ function Reveal({ children, className = '', delay = 0 }: {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setShown(true); return }
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect() } }),
-      { threshold: 0.14, rootMargin: '0px 0px -6% 0px' },
+      { threshold: 0.14, rootMargin: margin },
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [])
+  }, [margin])
   return (
     <div
       ref={ref}
@@ -112,6 +114,29 @@ function edaTrace(rest = 110) {
 
 const PULSE_D = pulsePath()
 const EDA = edaTrace()
+
+/* The line behind the What it does title: one skin-conductance record,
+   placed rather than random, so each response lands clear of the title.
+   Same model as edaTrace: a fast rise, a slow decay, on a slowly drifting
+   tonic level. The middle of the line is masked out in CSS where the title
+   sits. The title covers 38 to 62% of a desktop and 23 to 77% of a small
+   phone, so there are two placements, one per breakpoint. */
+function titleTrace(bursts: { at: number; amp: number }[]) {
+  const base = 70
+  const pts: string[] = []
+  for (let x = 0; x <= SPAN; x += 4) {
+    let y = base - 2.2 * Math.sin(x / 130)
+    for (const b of bursts) {
+      const t = x - b.at
+      if (t < 0) continue
+      y -= b.amp * (1 - Math.exp(-t / 9)) * Math.exp(-t / 75) * 1.35
+    }
+    pts.push(`${x} ${y.toFixed(1)}`)
+  }
+  return 'M' + pts.join(' L')
+}
+const TITLE_TRACE_WIDE = titleTrace([{ at: 150, amp: 9 }, { at: 790, amp: 50 }])
+const TITLE_TRACE_NARROW = titleTrace([{ at: 70, amp: 12 }, { at: 850, amp: 50 }])
 
 /* a tick per second, labelled every fifth */
 const TICKS = Array.from({ length: WINDOW_S + 1 }, (_, s) => ({
@@ -726,6 +751,18 @@ function App() {
             a separate card: a centered head, the ring and the app it talks
             to coming out of the dark, then the three things it does. */}
         <section className="section does" id="does">
+          {/* a stress response drawn across the page at the title's height,
+              picking up the green of the hero's pulsing sensor light and
+              leading on to the full readout further down */}
+          {/* held until it is a third of the way up the screen, so the pen
+              runs while you are looking at it, not while it is still at the
+              bottom edge */}
+          <Reveal className="does__trace" margin="0px 0px -34% 0px">
+            <svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">
+              <path className="does__trace-ink does__trace-ink--wide" d={TITLE_TRACE_WIDE} />
+              <path className="does__trace-ink does__trace-ink--narrow" d={TITLE_TRACE_NARROW} />
+            </svg>
+          </Reveal>
           <div className="wrap">
             <Reveal className="head head--light">
               <h2 className="display display--light">What it does</h2>

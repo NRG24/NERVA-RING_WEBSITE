@@ -58,6 +58,7 @@
   --font-display: var(--font-sans);
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
+  --display-size: clamp(2.3rem, 1.4rem + 3.6vw, 4.1rem);
   --wrap: 1280px;
   --nav-h: 64px;
 
@@ -110,7 +111,7 @@ a { color: inherit; text-decoration: none; }
    ============================================================ */
 .display {
   font-weight: 600;
-  font-size: clamp(2.3rem, 1.4rem + 3.6vw, 4.1rem);
+  font-size: var(--display-size);
   line-height: 1.04;
   letter-spacing: -0.034em;
   margin: 0;
@@ -371,12 +372,91 @@ a { color: inherit; text-decoration: none; }
 
 /* ------------------------------------------------------------
    WHAT IT DOES
-   The hero's black carries straight on, so this reads as the next
-   beat of the hero rather than an island of its own: the ring and the
-   app come up out of the dark, wider than the text column and in no
-   card, then the three things it does in white.
+   No hard edges on either side. The hero's black eases into charcoal as
+   the section opens, so there is a change of tone without a line, and
+   the charcoal eases into the light grey of the section below in empty
+   space under the features, so no text ever sits on the mid-grey. The
+   image sits in no card, lightened into the charcoal so its black areas
+   take the section color, and feathered at every edge.
    ------------------------------------------------------------ */
-.does { background: #000; color: #fff; }
+.does {
+  --sheet: #1c1c1f;
+  --fade-in: clamp(150px, 16vw, 240px);
+  --fade-out: clamp(170px, 19vw, 300px);
+  /* Both fades are eased (smoothstep, sampled at quarters) rather than
+     linear: a straight dark-to-light ramp bunches its change in the middle
+     and prints as a flat grey band. */
+  background: linear-gradient(to bottom,
+    #000 0,
+    #040405 calc(var(--fade-in) * 0.25),
+    #0e0e10 calc(var(--fade-in) * 0.5),
+    #18181b calc(var(--fade-in) * 0.75),
+    var(--sheet) var(--fade-in),
+    var(--sheet) calc(100% - var(--fade-out)),
+    #3e3e41 calc(100% - var(--fade-out) * 0.75),
+    #89898b calc(100% - var(--fade-out) * 0.5),
+    #d3d3d5 calc(100% - var(--fade-out) * 0.25),
+    var(--paper-2) 100%);
+  /* the usual bottom padding, plus the room the fade out needs */
+  padding-bottom: calc(clamp(40px, 5vw, 72px) + var(--fade-out));
+  color: #fff;
+}
+.does { position: relative; }
+.does > .wrap, .does > .does__bleed { position: relative; z-index: 1; }
+
+/* The trace behind the title. Its baseline sits at 70% of its height and
+   is lined up with the middle of the title's line; the middle of the
+   stroke is masked out where the title is, and both ends fade into the
+   page, so it reads as one record running behind the words. */
+.does__trace {
+  --trace-h: clamp(90px, 11vw, 150px);
+  position: absolute; left: 0; right: 0; z-index: 0;
+  top: calc(clamp(48px, 5vw, 76px) + var(--display-size) * 0.52 - var(--trace-h) * 0.7);
+  height: var(--trace-h);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right,
+    transparent 0, #000 7%, #000 28%, transparent 34%, transparent 66%, #000 72%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(to right,
+    transparent 0, #000 7%, #000 28%, transparent 34%, transparent 66%, #000 72%, #000 94%, transparent 100%);
+}
+.does__trace-ink--narrow { display: none; }
+.does__trace svg {
+  display: block; width: 100%; height: 100%; overflow: visible;
+  /* Drawn once, left to right at a recorder's constant speed, when it comes
+     into view. A wipe, not a dash animation: the stroke is non-scaling so
+     it stays 2px however far the svg is stretched, and a non-scaling stroke
+     measures its dashes on screen while pathLength measures them in the
+     viewBox, so a dash draw stops short by the stretch factor (at 1440px it
+     quit at ~69%). The trace is a function of x, so a wipe draws it
+     exactly the way a pen would. */
+  clip-path: inset(-24px 100% -24px 0);
+}
+/* the Reveal is the .does__trace box itself, so .in sits on it, not above it */
+.does__trace.in svg { animation: traceWipe 2.4s linear 0.2s forwards; }
+@keyframes traceWipe { to { clip-path: inset(-24px 0 -24px 0); } }
+.does__trace-ink {
+  fill: none; stroke: var(--sensor); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 6px rgba(48, 209, 88, 0.45));
+}
+@media (prefers-reduced-motion: reduce) {
+  .does__trace svg { clip-path: none; }
+  .does__trace.in svg { animation: none; }
+}
+/* on a phone the title fills half the width: widen the gap for it, and
+   switch to the placement that puts both responses outside that gap */
+@media (max-width: 620px) {
+  .does__trace {
+    -webkit-mask-image: linear-gradient(to right,
+      transparent 0, #000 3%, #000 18%, transparent 22%, transparent 78%, #000 82%, #000 97%, transparent 100%);
+    mask-image: linear-gradient(to right,
+      transparent 0, #000 3%, #000 18%, transparent 22%, transparent 78%, #000 82%, #000 97%, transparent 100%);
+  }
+  .does__trace-ink--wide { display: none; }
+  .does__trace-ink--narrow { display: inline; }
+}
+
 .does__bleed { max-width: 1480px; margin: 0 auto; }
 .does__stage {
   margin: 0;
@@ -394,7 +474,14 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(to bottom, transparent, #000 5%, #000 72%, transparent);
   mask-composite: intersect;
 }
-.does__stage img { width: 100%; height: 100%; display: block; }
+.does__stage img {
+  width: 100%; height: 100%; display: block;
+  /* the render's pure black becomes the sheet's charcoal instead of
+     printing as a darker rectangle; everything brighter keeps its value */
+  mix-blend-mode: lighten;
+}
+/* the blend needs the sheet color behind the image inside the mask */
+.does__stage { background: var(--sheet); }
 
 .feats {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
