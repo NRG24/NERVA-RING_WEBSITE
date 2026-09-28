@@ -371,12 +371,22 @@ a { color: inherit; text-decoration: none; }
 
 /* ------------------------------------------------------------
    WHAT IT DOES
-   The hero's black carries straight on, so this reads as the next
-   beat of the hero rather than an island of its own: the ring and the
-   app come up out of the dark, wider than the text column and in no
-   card, then the three things it does in white.
+   A charcoal sheet that rises over the bottom of the hero on rounded
+   corners: distinct from the hero's black, so the page has a clear
+   second beat, but still dark, so it is not a white island either. The
+   image sits in no card, lightened into the sheet so its black areas
+   take the charcoal, and feathered at every edge.
    ------------------------------------------------------------ */
-.does { background: #000; color: #fff; }
+.does {
+  --sheet: #1c1c1f;
+  position: relative; z-index: 1;
+  margin-top: calc(-1 * var(--radius-lg));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--sheet);
+  /* a hairline of light along the lip, so the edge reads on dim screens */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
 .does__bleed { max-width: 1480px; margin: 0 auto; }
 .does__stage {
   margin: 0;
@@ -394,7 +404,14 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(to bottom, transparent, #000 5%, #000 72%, transparent);
   mask-composite: intersect;
 }
-.does__stage img { width: 100%; height: 100%; display: block; }
+.does__stage img {
+  width: 100%; height: 100%; display: block;
+  /* the render's pure black becomes the sheet's charcoal instead of
+     printing as a darker rectangle; everything brighter keeps its value */
+  mix-blend-mode: lighten;
+}
+/* the blend needs the sheet color behind the image inside the mask */
+.does__stage { background: var(--sheet); }
 
 .feats {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));

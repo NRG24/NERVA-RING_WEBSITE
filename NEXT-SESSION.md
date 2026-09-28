@@ -50,12 +50,14 @@ under 1080px. Every light section opens with a **centered** `.head`.
    41.9% / 37% of the stage, where the light module sits in the last frame;
    **re-measure it if the film changes.** Paused off screen; a steady faint
    glow and no hover under reduced motion.
-2. **`#does`.** Continues the hero's **black** on purpose: as a white section
-   with the image in a rounded card it read as an island between the hero
-   and the grey section below. Centered white head, then `ring-app.webp`
-   (two demo app screens beside the silver ring) at up to 1480px wide in no
-   card, every edge feathered into the black by a CSS mask. The image's top
-   is pure black, so it rises out of the same dark the hero ring landed in.
+2. **`#does`.** A **charcoal sheet** (`--sheet: #1c1c1f`) that rises over the
+   bottom of the hero on rounded top corners. Ryan tried both ends: a white
+   section with the image in a card read as an island, and pure black
+   running on from the hero was too black with no break. The sheet is the
+   middle. Centered white head, then `ring-app.webp` (two demo app screens
+   beside the silver ring) at up to 1480px wide in no card, feathered at
+   every edge, with `mix-blend-mode: lighten` so the render's pure black
+   takes the sheet color instead of printing as a darker rectangle.
    Its first rows were re-cut after the white-band trim left a grey hairline;
    if it is re-exported, check row 0 is near black. It came in as a 2000px
    chat image; ask Ryan for the original PNG if it needs to be sharper. The
