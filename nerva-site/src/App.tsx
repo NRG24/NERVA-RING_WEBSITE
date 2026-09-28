@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react'
 import ringBlue from './assets/ring-blue.webp'
 import ringCoffee from './assets/ring-coffee.webp'
 import ringPink from './assets/ring-pink.webp'
@@ -565,10 +565,14 @@ function Signup() {
    two branches, green is the ring's own sensing, red is the pulse channel.
    The color marks the rule over each row; there are no icons, because three
    stock glyphs beside three headings is the feature grid this avoids. */
+/* Each feature spotlights the part of the What it does image it lives in:
+   left, top, width, height as percentages of the 1957x1120 image, measured
+   off its pixels. Re-measure if the image is ever re-exported. */
 const DOES = [
   {
     k: 'Gas pedal and brake',
     channel: 'gold',
+    spot: [1.2, 0, 28.8, 100],
     body: (
       <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and avoid burnout.</>
     ),
@@ -576,12 +580,44 @@ const DOES = [
   {
     k: 'In-app breathing exercises',
     channel: 'sensor',
+    spot: [29.8, 6.6, 24.2, 87.2],
     body: <>Exercises to train your nervous system and manage stress. Measures your ability to downregulate your nervous system so you can track progress.</>,
   },
   {
     k: 'Steps, calories burned, heart rate',
     channel: 'pulse',
+    spot: [57.5, 17, 36, 68],
     body: <>All of the things you would expect in a premium wearable.</>,
+  },
+] as const
+
+/* Every answer here is checkable against nerva-ring-overview.md or the
+   site's own disclaimers. Keep it that way: no claim goes in this list that
+   the build cannot back yet. */
+const FAQ = [
+  {
+    q: 'Can I buy one yet?',
+    a: 'Not yet. NERVA Ring is an early prototype built by one person, and nothing on this site is for sale. The plan is a crowdfunding campaign once the prototype has been tested, and the update list hears about it first.',
+  },
+  {
+    q: 'What is EDA?',
+    a: 'Electrodermal activity: how easily your skin conducts a tiny current. When your sympathetic nervous system fires, your sweat glands respond and skin conductance rises within seconds. It is the arousal signal clinical stress research relies on.',
+  },
+  {
+    q: 'How is it different from other smart rings?',
+    a: 'Most rings estimate stress from heart rate and heart rate variability, through a model. NERVA adds two dry gold electrodes on the inner band that read skin conductance directly, alongside heart rate and blood oxygen.',
+  },
+  {
+    q: 'How long will the battery last?',
+    a: 'The ring carries a 22 mAh cell and sleeps between readings, targeting about a month of standby. Battery life in everyday wear will be measured during prototype testing and published in the update notes.',
+  },
+  {
+    q: 'Can I wear it in the shower?',
+    a: 'The electronics are fully potted in resin inside the band, so the ring is sealed with no seams, and it is designed for hand-washing and showering. It has not been through formal water-rating tests yet.',
+  },
+  {
+    q: 'Is it a medical device?',
+    a: 'No. NERVA Ring is a wellness product. It is not intended to diagnose, treat, cure, or prevent any disease.',
   },
 ] as const
 
@@ -654,6 +690,87 @@ const TALLY = {
   done: LEDGER.filter((r) => r.s === 'done').length,
   wip: LEDGER.filter((r) => r.s === 'wip').length,
   todo: LEDGER.filter((r) => r.s === 'todo').length,
+}
+
+/* ---------- What it does: tabs over the image ----------
+   The way Oura and RingConn walk through features: a short list beside
+   the picture, pick one and the picture answers. Each tab moves a
+   spotlight onto the phone screen or the ring it describes and dims the
+   rest. List and picture sit side by side so both fit on a laptop screen
+   at once. Proper tabs: one tab stop, arrow keys move between them, and
+   the image is the panel they control. */
+function DoesExplorer() {
+  const [active, setActive] = useState(0)
+  const tabs = useRef<(HTMLButtonElement | null)[]>([])
+  const [l, t, w, h] = DOES[active].spot
+
+  const onKey = (e: ReactKeyboardEvent) => {
+    const last = DOES.length - 1
+    const next =
+      e.key === 'ArrowRight' || e.key === 'ArrowDown' ? (active === last ? 0 : active + 1)
+      : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? (active === 0 ? last : active - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : -1
+    if (next < 0) return
+    e.preventDefault()
+    setActive(next)
+    tabs.current[next]?.focus()
+  }
+
+  return (
+    <div className="wrap does__explorer">
+      {/* the list first in the source: it is what you act on, and on a phone
+          CSS moves the picture above it */}
+      <Reveal className="does__tabs-wrap">
+        <div className="feats" role="tablist" aria-label="What it does" aria-orientation="vertical" onKeyDown={onKey}>
+          {DOES.map((d, i) => (
+            <button
+              key={d.k}
+              ref={(el) => { tabs.current[i] = el }}
+              type="button"
+              role="tab"
+              id={`does-tab-${i}`}
+              aria-selected={active === i}
+              aria-controls="does-panel"
+              aria-labelledby={`does-tab-${i}-h`}
+              aria-describedby={`does-tab-${i}-p`}
+              tabIndex={active === i ? 0 : -1}
+              className={`feat feat--${d.channel} ${active === i ? 'is-active' : ''}`}
+              onClick={() => setActive(i)}
+            >
+              <span className="feat__h" id={`does-tab-${i}-h`}>{d.k}</span>
+              {/* always in the page, so aria-describedby can read it; only
+                  the chosen feature's text is opened up */}
+              <span className="feat__body"><span className="feat__p" id={`does-tab-${i}-p`}>{d.body}</span></span>
+            </button>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal className="does__visual" delay={90}>
+        <figure
+          className="does__stage"
+          id="does-panel"
+          role="tabpanel"
+          aria-labelledby={`does-tab-${active}`}
+        >
+          <img
+            src={ringApp}
+            width={1957}
+            height={1120}
+            loading="lazy"
+            alt="Two demo screens of the NERVA companion app beside the ring in polished silver. One shows today: 68 percent of the day inside your range, with each stress spike and how long it took to fade. The other shows the week: a balance score of 78 and how settle time, carryover, reactivity and restorative time compare with your usual."
+          />
+          <span
+            className={`does__spot does__spot--${DOES[active].channel}`}
+            style={{ left: `${l}%`, top: `${t}%`, width: `${w}%`, height: `${h}%` }}
+            aria-hidden="true"
+          />
+        </figure>
+      </Reveal>
+    </div>
+  )
 }
 
 function App() {
@@ -777,28 +894,7 @@ function App() {
           {/* wider than the text column and in no card: the render's black
               top is the hero's black, so the phones and the ring come up out
               of the same dark the ring landed in */}
-          <Reveal className="does__bleed">
-            <figure className="does__stage">
-              <img
-                src={ringApp}
-                width={1957}
-                height={1120}
-                loading="lazy"
-                alt="Two demo screens of the NERVA companion app beside the ring in polished silver. One shows today: 68 percent of the day inside your range, with each stress spike and how long it took to fade. The other shows the week: a balance score of 78 and how settle time, carryover, reactivity and restorative time compare with your usual."
-              />
-            </figure>
-          </Reveal>
-
-          <div className="wrap">
-            <div className="feats">
-              {DOES.map((d, i) => (
-                <Reveal key={d.k} className={`feat feat--${d.channel}`} delay={i * 70}>
-                  <h3>{d.k}</h3>
-                  <p>{d.body}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
+          <DoesExplorer />
         </section>
 
         {/* ---------------- TWO SIGNALS ---------------- */}
@@ -984,6 +1080,29 @@ function App() {
           </div>
         </section>
 
+        {/* ---------------- FAQ ----------------
+            Native details/summary, so it opens with a keyboard and a screen
+            reader for free, and every answer is in the page for search. */}
+        <section className="section faq" id="faq">
+          <div className="wrap faq__grid">
+            <Reveal>
+              <h2 className="display">Questions</h2>
+              <p className="faq__lede">
+                Anything else, write to{' '}
+                <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+              </p>
+            </Reveal>
+            <Reveal className="faq__list">
+              {FAQ.map((f) => (
+                <details key={f.q} className="faq__item">
+                  <summary>{f.q}</summary>
+                  <p>{f.a}</p>
+                </details>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+
         {/* ---------------- CTA ---------------- */}
         <section className="cta" id="follow">
           <div className="wrap cta__grid">
@@ -1037,6 +1156,7 @@ function App() {
                 {NAV.map((l) => (
                   <a key={l.href} href={l.href}>{l.label}</a>
                 ))}
+                <a href="#faq">Questions</a>
                 <a href="#follow">Updates</a>
                 <a href="/privacy.html">Privacy</a>
               </nav>

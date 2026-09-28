@@ -68,6 +68,16 @@ under 1080px. Every light section opens with a **centered** `.head`.
    ask Ryan for the original PNG if it needs to be sharper. The phones say
    DEMO, and the footer and privacy page say the app screens are a design
    demo. Then the three features, white on charcoal.
+   **Feature tabs** (`DoesExplorer`), after how Oura and RingConn walk
+   through features: the three features are an ARIA tablist (one tab stop,
+   arrow keys, Home/End) beside the image, and the chosen one moves a
+   rounded spotlight (`.does__spot`, a giant box-shadow clipped by the
+   stage) onto its phone screen or the ring. The spotlight rectangles in
+   `DOES[].spot` are percentages of the 1957x1120 image, measured off its
+   pixels: **re-measure if the image changes**. `.does__stage` must stay
+   `position: relative` or the spotlight lands against the wrong box. List
+   and image sit side by side above 1080px so both fit a 1280x720 screen;
+   a full-width image with tabs under it did not fit a laptop.
    **The title trace** (`.does__trace`): one green skin-conductance line
    across the page at the title's height, masked out behind the words, with
    a small response left of the title and the big one right of it. It is the
@@ -93,10 +103,14 @@ under 1080px. Every light section opens with a **centered** `.head`.
 7. **`#finish`.** A product configurator like the reference: render big on the
    left; name, circular swatches (`aria-pressed`), "Finish. {name}", the build
    meter (counted off `LEDGER`, so it cannot drift) and a black pill CTA.
-8. **`#follow`.** Buttondown email capture on a deep green ground.
-9. Footer as an engineering **title block**. Cell spans must tile each row of
+8. **`#faq`.** "Questions": native `details`/`summary` accordion, heading
+   and contact email left, questions right. Every answer must be backed by
+   `nerva-ring-overview.md` or the site's disclaimers; nothing about price,
+   subscription or phone compatibility until those are decided.
+9. **`#follow`.** Buttondown email capture on a deep green ground.
+10. Footer as an engineering **title block**. Cell spans must tile each row of
    the 6-column grid exactly or the leftover gap prints as a solid hairline.
-10. **Launch bar.** Fixed to the bottom where the reference pins price and
+11. **Launch bar.** Fixed to the bottom where the reference pins price and
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
 
