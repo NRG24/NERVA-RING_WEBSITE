@@ -371,20 +371,33 @@ a { color: inherit; text-decoration: none; }
 
 /* ------------------------------------------------------------
    WHAT IT DOES
-   A charcoal sheet that rises over the bottom of the hero on rounded
-   corners: distinct from the hero's black, so the page has a clear
-   second beat, but still dark, so it is not a white island either. The
-   image sits in no card, lightened into the sheet so its black areas
-   take the charcoal, and feathered at every edge.
+   No hard edges on either side. The hero's black eases into charcoal as
+   the section opens, so there is a change of tone without a line, and
+   the charcoal eases into the light grey of the section below in empty
+   space under the features, so no text ever sits on the mid-grey. The
+   image sits in no card, lightened into the charcoal so its black areas
+   take the section color, and feathered at every edge.
    ------------------------------------------------------------ */
 .does {
   --sheet: #1c1c1f;
-  position: relative; z-index: 1;
-  margin-top: calc(-1 * var(--radius-lg));
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  background: var(--sheet);
-  /* a hairline of light along the lip, so the edge reads on dim screens */
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --fade-in: clamp(150px, 16vw, 240px);
+  --fade-out: clamp(170px, 19vw, 300px);
+  /* Both fades are eased (smoothstep, sampled at quarters) rather than
+     linear: a straight dark-to-light ramp bunches its change in the middle
+     and prints as a flat grey band. */
+  background: linear-gradient(to bottom,
+    #000 0,
+    #040405 calc(var(--fade-in) * 0.25),
+    #0e0e10 calc(var(--fade-in) * 0.5),
+    #18181b calc(var(--fade-in) * 0.75),
+    var(--sheet) var(--fade-in),
+    var(--sheet) calc(100% - var(--fade-out)),
+    #3e3e41 calc(100% - var(--fade-out) * 0.75),
+    #89898b calc(100% - var(--fade-out) * 0.5),
+    #d3d3d5 calc(100% - var(--fade-out) * 0.25),
+    var(--paper-2) 100%);
+  /* the usual bottom padding, plus the room the fade out needs */
+  padding-bottom: calc(clamp(40px, 5vw, 72px) + var(--fade-out));
   color: #fff;
 }
 .does__bleed { max-width: 1480px; margin: 0 auto; }
