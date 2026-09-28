@@ -50,12 +50,17 @@ under 1080px. Every light section opens with a **centered** `.head`.
    41.9% / 37% of the stage, where the light module sits in the last frame;
    **re-measure it if the film changes.** Paused off screen; a steady faint
    glow and no hover under reduced motion.
-2. **`#does`.** Centered head, then `ring-app.webp` (two demo app screens
-   beside the silver ring) on a stage at the image's own 1957:1124 ratio, so
-   nothing crops. It came in as a 2000px chat image; ask Ryan for the
-   original PNG if it needs to be sharper. The phones say DEMO; the footer and
-   the privacy page both say the app screens are a design demo. Then the
-   three features side by side.
+2. **`#does`.** Continues the hero's **black** on purpose: as a white section
+   with the image in a rounded card it read as an island between the hero
+   and the grey section below. Centered white head, then `ring-app.webp`
+   (two demo app screens beside the silver ring) at up to 1480px wide in no
+   card, every edge feathered into the black by a CSS mask. The image's top
+   is pure black, so it rises out of the same dark the hero ring landed in.
+   Its first rows were re-cut after the white-band trim left a grey hairline;
+   if it is re-exported, check row 0 is near black. It came in as a 2000px
+   chat image; ask Ryan for the original PNG if it needs to be sharper. The
+   phones say DEMO, and the footer and privacy page both say the app screens
+   are a design demo. Then the three features, white on black.
 3. **`#signals`.** The EDA readout: both traces on a white card inside a grey
    stage, drawn like an app screen (red PPG + green EDA, generated from a
    seeded RNG so they never repeat). Caption under it says it is modeled, not
