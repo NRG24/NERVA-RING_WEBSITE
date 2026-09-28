@@ -68,6 +68,16 @@ under 1080px. Every light section opens with a **centered** `.head`.
    ask Ryan for the original PNG if it needs to be sharper. The phones say
    DEMO, and the footer and privacy page say the app screens are a design
    demo. Then the three features, white on charcoal.
+   **The title trace** (`.does__trace`): one green skin-conductance line
+   across the page at the title's height, masked out behind the words, with
+   a small response left of the title and the big one right of it. It is the
+   same rise/decay model as the readout, placed by hand (`titleTrace()`), with
+   a second placement for phones where the title fills half the width. It
+   draws once by a **clip-path wipe**, not a dash animation: the stroke is
+   `vector-effect: non-scaling-stroke`, which measures dashes on screen while
+   `pathLength` measures them in the stretched viewBox, so a dash draw quit at
+   ~69% at 1440px. Its `Reveal` waits until it is a third of the way up the
+   screen (`margin` prop) so the draw happens while you look at it.
 3. **`#signals`.** The EDA readout: both traces on a white card inside a grey
    stage, drawn like an app screen (red PPG + green EDA, generated from a
    seeded RNG so they never repeat). Caption under it says it is modeled, not
