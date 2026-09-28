@@ -50,19 +50,24 @@ under 1080px. Every light section opens with a **centered** `.head`.
    41.9% / 37% of the stage, where the light module sits in the last frame;
    **re-measure it if the film changes.** Paused off screen; a steady faint
    glow and no hover under reduced motion.
-2. **`#does`.** A **charcoal sheet** (`--sheet: #1c1c1f`) that rises over the
-   bottom of the hero on rounded top corners. Ryan tried both ends: a white
-   section with the image in a card read as an island, and pure black
-   running on from the hero was too black with no break. The sheet is the
-   middle. Centered white head, then `ring-app.webp` (two demo app screens
-   beside the silver ring) at up to 1480px wide in no card, feathered at
-   every edge, with `mix-blend-mode: lighten` so the render's pure black
-   takes the sheet color instead of printing as a darker rectangle.
-   Its first rows were re-cut after the white-band trim left a grey hairline;
-   if it is re-exported, check row 0 is near black. It came in as a 2000px
-   chat image; ask Ryan for the original PNG if it needs to be sharper. The
-   phones say DEMO, and the footer and privacy page both say the app screens
-   are a design demo. Then the three features, white on black.
+2. **`#does`.** Charcoal (`--sheet: #1c1c1f`) with **no hard edge on either
+   side**: the hero's black eases into it over `--fade-in`, and it eases into
+   the light grey of `#signals` over `--fade-out`, in empty padding under the
+   features so no text sits on mid-grey. Both fades are smoothstep-eased (four
+   stops each); a linear dark-to-light ramp printed as a flat grey band. Ryan
+   went through the other options first: a white section with the image in a
+   card read as an island, pure black was too black with no break, and a
+   rounded charcoal sheet over the hero was awkward. Centered white head, then
+   `ring-app.webp` (two demo app screens beside the silver ring) at up to
+   1480px wide in no card, feathered at every edge, with
+   `mix-blend-mode: lighten` so the render's pure black takes the charcoal.
+   The image must start below `--fade-in` (it does: ~287px against ~230px at
+   1440 wide) or the blend shows a flat patch against the gradient. Its first
+   rows were re-cut after the white-band trim left a grey hairline; if it is
+   re-exported, check row 0 is near black. It came in as a 2000px chat image;
+   ask Ryan for the original PNG if it needs to be sharper. The phones say
+   DEMO, and the footer and privacy page say the app screens are a design
+   demo. Then the three features, white on charcoal.
 3. **`#signals`.** The EDA readout: both traces on a white card inside a grey
    stage, drawn like an app screen (red PPG + green EDA, generated from a
    seeded RNG so they never repeat). Caption under it says it is modeled, not
