@@ -121,6 +121,14 @@ already almond. `?palette=dark` shows the original black design;
 `?palette=linen|blackberry|petal` show the other trial schemes. When Ryan
 settles for good, the other three blocks and the dark-only rules can go.
 
+The light-scheme hero has a **sage disc behind the ring** (`.hero__backdrop`),
+after a reference Ryan sent: flat `--pal-bg2`, 70% of the film frame, centred
+at 49% / 49.5%. It lives on its own layer that copies the stage's geometry
+(same box, translate and scale at every breakpoint), so it holds still while
+the ring hovers; it eases in one frame after mount (`.is-ready`). Its left edge
+clears "system." by 19px at 1440 wide, the tightest width. Hidden on the dark
+design. If the ring's position changes, re-check that gap.
+
 Almond **swaps two section colours**: What it does is the sage-green
 (`--sheet: #cdc6a5`, Dry Sage) and Signals is the blue from the linen scheme
 (Pale Sky paled a third of the way to white, `--almond-blue: #d0e1e7`,

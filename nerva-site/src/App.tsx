@@ -281,6 +281,12 @@ function Hero() {
   const [filmFailed, setFilmFailed] = useState(false)
   const [filmEnded, setFilmEnded] = useState(false)
   const [onScreen, setOnScreen] = useState(true)
+  /* one frame after mount, so the backdrop disc can ease in */
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setReady(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
   const filmRef = useRef<HTMLVideoElement | null>(null)
   const heroRef = useRef<HTMLElement | null>(null)
 
@@ -317,8 +323,12 @@ function Hero() {
   return (
     <section
       ref={heroRef}
-      className={`hero ${resting ? 'is-resting' : ''} ${onScreen ? '' : 'is-offscreen'}`}
+      className={`hero ${ready ? 'is-ready' : ''} ${resting ? 'is-resting' : ''} ${onScreen ? '' : 'is-offscreen'}`}
     >
+      {/* a flat disc behind where the ring comes to rest, on its own layer so
+          it holds still while the ring hovers in front of it (light schemes
+          only; CSS hides it on the dark design) */}
+      <div className="hero__backdrop" aria-hidden="true"><span /></div>
       <div className="hero__stage">
         {showFilm && USE_ANIM ? (
           <img
