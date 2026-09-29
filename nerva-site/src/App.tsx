@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { lightHero } from './palette.ts'
 import ringBlue from './assets/ring-blue.webp'
 import ringCoffee from './assets/ring-coffee.webp'
 import ringPink from './assets/ring-pink.webp'
@@ -248,9 +249,27 @@ function SignalInstrument() {
    adds its own camelCase declaration for it. */
 const HIGH_PRIORITY: Record<string, string> = { fetchpriority: 'high' }
 
-const HERO_FILM = '/nerva-levitate.mp4'
-const HERO_POSTER = '/nerva-levitate-poster.webp'
-const HERO_STILL = '/nerva-levitate-still.webp'
+/* Two renders of the flight: the black glass ring on black for the dark
+   design, and the ceramic ring with a transparent background for the light
+   palettes, so it sits straight on whatever colour the page is. */
+const LIGHT = lightHero()
+const HERO_FILM = LIGHT ? '/nerva-levitate-ceramic.webm' : '/nerva-levitate.mp4'
+const HERO_POSTER = LIGHT ? undefined : '/nerva-levitate-poster.webp'
+const HERO_STILL = LIGHT ? '/nerva-levitate-ceramic-still.webp' : '/nerva-levitate-still.webp'
+/* Safari, and every browser on an iPhone or iPad (they all run WebKit),
+   plays a VP9 WebM but throws its transparency away and paints the ring on
+   a black square. There the flight plays as an animated WebP instead,
+   which WebKit does draw transparently. It plays once and holds its last
+   frame, like the film. */
+const HERO_ANIM = '/nerva-levitate-ceramic.webp'
+const HERO_ANIM_MS = 4100
+const WEBKIT_ONLY = (() => {
+  const ua = navigator.userAgent
+  if (/iPhone|iPad|iPod/.test(ua)) return true
+  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return true // iPadOS as a Mac
+  return /AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|OPR|Android/.test(ua)
+})()
+const USE_ANIM = LIGHT && WEBKIT_ONLY
 
 function Hero() {
   /* Reduced motion skips the film outright: decided before first paint,
@@ -269,9 +288,18 @@ function Hero() {
      one) rejects this promise, and the hero would otherwise hold the near
      black first frame for the life of the page. */
   const toStill = () => setFilmFailed(true)
-  useEffect(() => { filmRef.current?.play().catch(toStill) }, [])
+  useEffect(() => { if (!USE_ANIM) filmRef.current?.play().catch(toStill) }, [])
 
   const showFilm = playFilm && !filmFailed
+
+  /* the animated WebP has no ended event: count its length from when it
+     has loaded and started drawing */
+  const [animLoaded, setAnimLoaded] = useState(false)
+  useEffect(() => {
+    if (!animLoaded) return
+    const t = window.setTimeout(() => setFilmEnded(true), HERO_ANIM_MS)
+    return () => window.clearTimeout(t)
+  }, [animLoaded])
   /* Once the ring has landed it stays alive: a slow hover, and the green
      sensor light pulsing at 72 bpm, the same pulse the readout further
      down draws. Anyone on the still lands straight in this state. */
@@ -292,7 +320,18 @@ function Hero() {
       className={`hero ${resting ? 'is-resting' : ''} ${onScreen ? '' : 'is-offscreen'}`}
     >
       <div className="hero__stage">
-        {showFilm ? (
+        {showFilm && USE_ANIM ? (
+          <img
+            className="hero__film"
+            src={HERO_ANIM}
+            width={810}
+            height={810}
+            alt="The NERVA Ring rising into view and turning to show the optical sensor and the gold electrodes on its inner band."
+            onLoad={() => setAnimLoaded(true)}
+            onError={toStill}
+            {...HIGH_PRIORITY}
+          />
+        ) : showFilm ? (
           <video
             ref={filmRef}
             className="hero__film"

@@ -115,6 +115,43 @@ under 1080px. Every light section opens with a **centered** `.head`.
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
 
+## Colour schemes on trial (`?palette=`)
+Ryan picked four five-colour schemes. Each is switchable on the live page
+with a URL parameter, and with none the page is the dark design:
+`?palette=almond` (almond cream, sage, slate), `?palette=linen` (soft linen,
+pale sky, olive), `?palette=blackberry` (bone, almond silk, blackberry) and
+`?palette=petal` (powder petal, blush, dusty olive). `src/palette.ts` sets
+`data-palette` on `<html>` before first render; the end of `index.css` maps
+each scheme onto the page's own tokens (`--paper`, `--ink`, `--accent`...),
+so everything that reads them follows. Roles: light ground, a tint for
+alternating sections, an accent (the title trace), and a deep band for
+Inside, the signup, the launch bar and every primary button. Almond and petal
+had no colour dark enough to carry white text, so their band is their
+darkest colour taken darker (4.5:1 checked). The sensing channels keep
+green / red / gold; the exploded-view film stays black.
+
+**Ryan's favourite so far is almond.** The light schemes play the **ceramic
+render with a transparent background**, so the ring sits straight on the
+palette colour with no blending: `nerva-levitate-ceramic.webm` (VP9 with
+alpha, 1.07MB, re-encoded from Ryan's `nerva_air_levitate_ceramic_alpha.webm`
+at the repo root) for Chrome, Edge and Firefox, and
+`nerva-levitate-ceramic.webp` (animated WebP with alpha, 810px, plays once,
+1.5MB) for Safari and every iPhone/iPad browser, because **WebKit plays VP9
+WebM but drops its alpha and paints a black square**. `WEBKIT_ONLY` in
+`App.tsx` picks the path by user agent; the WebP has no ended event, so
+the resting state starts 4.1s after it loads. Both end on
+`nerva-levitate-ceramic-still.webp` (transparent last frame), which is also
+the reduced-motion image. The ring lands in the middle half of its frame
+(x 20-75%), so on wide screens the stage steps 10% right at scale 0.96
+(about 75px to the headline and 120px to the edge at 1440 wide; 12% at 0.9
+between 1081 and 1250px, where the bigger ring would touch the full stop). That offset is set with
+the individual `translate` / `scale` properties, **not `transform`**: the
+resting hover animates `transform` and replaced it on landing, so the ring
+jumped 240px left. The LED glow sits at
+44.9% / 36.9%. The white-ground film tried first is gone. **To pick one**: set
+`data-palette="<name>"` on `<html>` in `index.html` (or make it the default in
+`palette.ts`) and delete the other three blocks.
+
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
 To look at one, `git checkout <commit>` then `npm run build`; to put one back
