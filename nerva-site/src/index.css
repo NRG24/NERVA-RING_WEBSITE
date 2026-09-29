@@ -1112,13 +1112,17 @@ a { color: inherit; text-decoration: none; }
    with it. */
 @media (min-width: 1081px) {
   /* the ceramic render lands in the middle half of its frame (x 20-75%);
-     12% right balances the space: ~130px to the headline and ~90px to the
-     window edge at 1440 wide, still clear of the words at 1100 */
+     10% right at 0.96 leaves ~75px to the headline and ~120px to the
+     window edge at 1440 wide */
   /* Set with the individual translate / scale properties, not transform:
      the resting hover animates transform, and a transform here was
      replaced by it the moment the ring landed, so the ring jumped 240px
      left. The individual properties compose with the animation instead. */
-  [data-palette] .hero__stage { translate: 12% 2%; scale: 0.9; transform-origin: right center; }
+  [data-palette] .hero__stage { translate: 10% 2%; scale: 0.96; transform-origin: right center; }
+}
+/* on narrow laptops the larger ring would reach the headline's full stop */
+@media (min-width: 1081px) and (max-width: 1250px) {
+  [data-palette] .hero__stage { translate: 12% 2%; scale: 0.9; }
 }
 [data-palette] .hero__title { color: var(--pal-ink); }
 [data-palette] .hero__lede { color: var(--ink-2); }
