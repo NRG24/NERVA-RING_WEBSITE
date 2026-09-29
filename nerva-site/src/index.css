@@ -1247,9 +1247,11 @@ a { color: inherit; text-decoration: none; }
    linen scheme (Pale Sky), so the page reads almond, green, blue. What it
    does fades in from the almond hero and out into the blue. (Tried
    before: blue What it does over sage Signals, and the blackberry rose.) */
-/* the blue is Pale Sky taken well toward white and a touch greyer, at
-   Ryan's ask (it was #d0e1e7 before that) */
-[data-palette='almond'] { --almond-blue: #dce7ea; }
+/* A pastel blue warmed toward the sage above it, so the two sections sit
+   together instead of contrasting: the pale blue (#dce7ea) with 15% of the
+   sage and 10% of the almond mixed in. More sage than that and it turns
+   grey-green. */
+[data-palette='almond'] { --almond-blue: #dce1de; }
 [data-palette='almond'] .does { --sheet: #cdc6a5; --does-end: var(--almond-blue); }
 [data-palette='almond'] #signals { background: var(--almond-blue); }
 /* the readout's backing panel follows its section: a lighter blue, not the

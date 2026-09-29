@@ -141,8 +141,8 @@ scale placement notes below are superseded.
 
 Almond **swaps two section colours**: What it does is the sage-green
 (`--sheet: #cdc6a5`, Dry Sage) and Signals is the blue from the linen scheme
-(Pale Sky paled well toward white and a touch greyer, `--almond-blue:
-#dce7ea`, at Ryan's ask, twice), with the readout's backing panel lighter still. What
+(a pastel blue warmed toward the sage so it does not contrast with it,
+`--almond-blue: #dce1de`, after two paler steps from Pale Sky), with the readout's backing panel lighter still. What
 it does fades in from the almond hero and out into the blue (`--does-end`).
 The page reads almond, green, blue. Tried before: the blackberry rose, then
 blue What it does over sage Signals.
