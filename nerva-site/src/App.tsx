@@ -380,9 +380,8 @@ function Hero() {
       <div className="hero__grade" aria-hidden="true" />
 
       <div className="hero__copy">
-        {/* the kicker and the strip below are light-scheme furniture; CSS
-            hides both on the dark design */}
-        <p className="hero__kicker">NERVA Ring · Prototype</p>
+        {/* the fact strip below is light-scheme furniture; CSS hides it on
+            the dark design */}
         <h1 className="hero__title">The ring that reads your <em>nervous system.</em></h1>
         <p className="hero__lede">
           Helping you understand and manage stress in real time with EDA sensors.
