@@ -130,13 +130,21 @@ had no colour dark enough to carry white text, so their band is their
 darkest colour taken darker (4.5:1 checked). The sensing channels keep
 green / red / gold; the exploded-view film stays black.
 
-The light schemes play `nerva-levitate-white.mp4` (Ryan's white-ground
-render, 690KB, faststart) with **`mix-blend-mode: multiply` on
-`.hero__stage`**, so the white becomes the palette colour. Put the blend on
-the stage, not the video: the stage has a transform and the hover animation,
-which isolates it, and a blend on the video inside only meets the stage's
-empty backdrop and prints a white box. On wide screens the stage steps right
-so the dark ring clears the headline. **To pick one**: set
+**Ryan's favourite so far is almond.** The light schemes play the **ceramic
+render with a transparent background**, so the ring sits straight on the
+palette colour with no blending: `nerva-levitate-ceramic.webm` (VP9 with
+alpha, 1.07MB, re-encoded from Ryan's `nerva_air_levitate_ceramic_alpha.webm`
+at the repo root) for Chrome, Edge and Firefox, and
+`nerva-levitate-ceramic.webp` (animated WebP with alpha, 810px, plays once,
+1.5MB) for Safari and every iPhone/iPad browser, because **WebKit plays VP9
+WebM but drops its alpha and paints a black square**. `WEBKIT_ONLY` in
+`App.tsx` picks the path by user agent; the WebP has no ended event, so
+the resting state starts 4.1s after it loads. Both end on
+`nerva-levitate-ceramic-still.webp` (transparent last frame), which is also
+the reduced-motion image. The ring lands in the middle half of its frame
+(x 20-75%), so on wide screens the stage steps 19% right to clear the
+headline (100px+ of gap from 1100 to 1920px wide); the LED glow sits at
+44.9% / 36.9%. The white-ground film tried first is gone. **To pick one**: set
 `data-palette="<name>"` on `<html>` in `index.html` (or make it the default in
 `palette.ts`) and delete the other three blocks.
 
