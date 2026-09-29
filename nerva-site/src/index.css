@@ -1045,3 +1045,123 @@ a { color: inherit; text-decoration: none; }
   .launchbar__txt span { display: none; }
   .launchbar .btn { --pad-y: 10px; --pad-x: 18px; font-size: 14.5px; }
 }
+
+/* ============================================================
+   COLOUR SCHEMES UNDER TRIAL (?palette=…, see src/palette.ts)
+
+   Each scheme is five colours Ryan chose, given roles: a light page
+   ground, a tint for alternating sections, a mid tone, an accent, and a
+   deep band for Inside the band, the signup, the launch bar and every
+   primary button. Where a scheme's darkest colour was too light to carry
+   text (almond, petal), the band is that colour taken darker so button
+   and band text clear 4.5:1. Ink is the band's hue taken nearly black.
+
+   The green / red / gold of the sensing channels keep their meaning in
+   the readout and the part numbers; everything else takes the scheme.
+   The exploded-view film stays black: it is a film, not a section.
+   ============================================================ */
+[data-palette='almond'] {
+  --pal-bg: #f0dcca; --pal-bg2: #cdc6a5; --pal-mid: #8d9f87;
+  --pal-accent: #6f9283; --pal-deep: #696d7d; --pal-band: #3e4250; --pal-ink: #2a2c34;
+}
+[data-palette='linen'] {
+  --pal-bg: #e2e8dd; --pal-bg2: #b7d1da; --pal-mid: #95a3a4;
+  --pal-accent: #697268; --pal-deep: #4e5340; --pal-band: #4e5340; --pal-ink: #23261c;
+}
+[data-palette='blackberry'] {
+  --pal-bg: #ece2d0; --pal-bg2: #d5b9b2; --pal-mid: #bfb5af;
+  --pal-accent: #a26769; --pal-deep: #582c4d; --pal-band: #582c4d; --pal-ink: #2e1628;
+}
+[data-palette='petal'] {
+  --pal-bg: #f5e4d7; --pal-bg2: #e5d1d0; --pal-mid: #bdbbb6;
+  --pal-accent: #839788; --pal-deep: #73877b; --pal-band: #4c5a51; --pal-ink: #27302b;
+}
+
+/* re-point the page's own tokens, so every rule that reads them follows */
+[data-palette] {
+  --paper: color-mix(in srgb, #fff 55%, var(--pal-bg));
+  --paper-2: var(--pal-bg2);
+  --paper-3: var(--pal-bg);
+  --stage: color-mix(in srgb, var(--pal-bg) 55%, var(--pal-bg2));
+  --ink: var(--pal-ink);
+  --ink-2: color-mix(in srgb, var(--pal-ink) 80%, var(--pal-bg));
+  --ink-3: color-mix(in srgb, var(--pal-ink) 70%, var(--pal-bg));
+  --line: color-mix(in srgb, var(--pal-ink) 14%, transparent);
+  --line-2: color-mix(in srgb, var(--pal-ink) 22%, transparent);
+  --accent: var(--pal-band);
+  --accent-dk: color-mix(in srgb, var(--pal-band) 82%, #000);
+}
+[data-palette] body { background: var(--pal-bg); }
+[data-palette] ::selection { background: var(--pal-band); color: var(--pal-bg); }
+[data-palette] :focus-visible { outline-color: var(--pal-band); }
+
+[data-palette] .nav { background: color-mix(in srgb, var(--pal-bg) 90%, transparent); }
+
+/* ---- hero: the ring on the palette ground ---- */
+[data-palette] .hero { background: var(--pal-bg); }
+[data-palette] .hero__grade { display: none; }
+/* The film's white turns into whatever ground is behind it; the black
+   ring stays black. The blend sits on the stage, not the video: the stage
+   carries a transform (and the hover animation), which makes it its own
+   stacking context, so a blend on the video inside it only ever meets the
+   stage's empty backdrop and the white prints as a box. */
+[data-palette] .hero__stage { mix-blend-mode: multiply; }
+/* A dark ring on a light ground reads far heavier than on black, and at
+   the dark design's framing it sat on the full stop of the headline. On
+   wide screens the stage steps right and down a touch so the ring lands
+   clear of the words; the heartbeat glow is inside the stage and moves
+   with it. */
+@media (min-width: 1081px) {
+  [data-palette] .hero__stage { transform: translate(7%, 4%) scale(0.92); transform-origin: right center; }
+}
+[data-palette] .hero__title { color: var(--pal-ink); }
+[data-palette] .hero__lede { color: var(--ink-2); }
+[data-palette] .btn--led { background: var(--pal-band); color: var(--pal-bg); }
+@media (hover: hover) { [data-palette] .btn--led:hover { background: var(--accent-dk); } }
+[data-palette] .textlink--onfilm { color: var(--pal-ink); text-decoration-color: color-mix(in srgb, var(--pal-ink) 40%, transparent); }
+@media (hover: hover) { [data-palette] .textlink--onfilm:hover { text-decoration-color: var(--pal-ink); } }
+[data-palette] .hero :focus-visible { outline-color: var(--pal-band); box-shadow: none; }
+/* a screen-blended glow disappears on a light ground; lay it on instead */
+[data-palette] .hero__pulse > span { mix-blend-mode: normal; opacity: 0.8; }
+
+/* ---- what it does: the hero ground eases into the tint below ---- */
+[data-palette] .does {
+  --sheet: color-mix(in srgb, var(--pal-bg) 75%, var(--pal-bg2));
+  background: linear-gradient(to bottom,
+    var(--pal-bg) 0,
+    var(--sheet) var(--fade-in),
+    var(--sheet) calc(100% - var(--fade-out)),
+    var(--pal-bg2) 100%);
+  color: var(--pal-ink);
+}
+[data-palette] .does .display--light { color: var(--pal-ink); }
+[data-palette] .does .head--light .head__sub { color: var(--ink-2); }
+[data-palette] .does__trace-ink { stroke: var(--pal-accent); filter: none; }
+[data-palette] .card__in { background: var(--paper); border-color: var(--line); }
+[data-palette] .card__txt h3 { color: var(--pal-ink); }
+[data-palette] .card__txt p { color: var(--ink-2); }
+[data-palette] .card--gold .card__txt::before { background: var(--gold-ink); }
+[data-palette] .card--sensor .card__txt::before { background: var(--green-ink); }
+[data-palette] .card--pulse .card__txt::before { background: var(--pulse-ink); }
+[data-palette] .does .abbr { color: var(--pal-ink); }
+
+/* ---- the deep bands ---- */
+[data-palette] .inside { background: var(--pal-band); }
+[data-palette] .cta { background: var(--pal-band); }
+[data-palette] .cta__sheet { background: color-mix(in srgb, var(--pal-band) 88%, #fff); }
+[data-palette] .cta .btn--led, [data-palette] .launchbar .btn--led { background: var(--pal-bg); color: var(--pal-ink); }
+@media (hover: hover) {
+  [data-palette] .cta .btn--led:hover, [data-palette] .launchbar .btn--led:hover { background: #fff; }
+}
+[data-palette] .signup input { border-color: rgba(255, 255, 255, 0.24); background: rgba(0, 0, 0, 0.18); }
+[data-palette] .signup input::placeholder { color: rgba(255, 255, 255, 0.5); }
+[data-palette] .cta__fine { color: rgba(255, 255, 255, 0.74); }
+[data-palette] .cta__fine a { border-color: rgba(255, 255, 255, 0.4); }
+[data-palette] .launchbar { background: color-mix(in srgb, var(--pal-band) 95%, transparent); }
+[data-palette] .inside :focus-visible, [data-palette] .cta :focus-visible, [data-palette] .launchbar :focus-visible {
+  outline-color: #fff; box-shadow: none;
+}
+
+/* ---- the rest of the light sections ---- */
+[data-palette] .colophon { background: var(--pal-bg); }
+[data-palette] .tally__seg:not(.tally__seg--done):not(.tally__seg--wip) { background: color-mix(in srgb, var(--pal-ink) 12%, transparent); }

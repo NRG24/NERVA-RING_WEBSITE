@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { lightHero } from './palette.ts'
 import ringBlue from './assets/ring-blue.webp'
 import ringCoffee from './assets/ring-coffee.webp'
 import ringPink from './assets/ring-pink.webp'
@@ -248,9 +249,12 @@ function SignalInstrument() {
    adds its own camelCase declaration for it. */
 const HIGH_PRIORITY: Record<string, string> = { fetchpriority: 'high' }
 
-const HERO_FILM = '/nerva-levitate.mp4'
-const HERO_POSTER = '/nerva-levitate-poster.webp'
-const HERO_STILL = '/nerva-levitate-still.webp'
+/* the same flight rendered twice: on black for the dark design, on white
+   for the light palettes, where CSS multiplies the white into the ground */
+const LIGHT = lightHero()
+const HERO_FILM = LIGHT ? '/nerva-levitate-white.mp4' : '/nerva-levitate.mp4'
+const HERO_POSTER = LIGHT ? '/nerva-levitate-white-poster.webp' : '/nerva-levitate-poster.webp'
+const HERO_STILL = LIGHT ? '/nerva-levitate-white-still.webp' : '/nerva-levitate-still.webp'
 
 function Hero() {
   /* Reduced motion skips the film outright: decided before first paint,

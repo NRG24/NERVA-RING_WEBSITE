@@ -115,6 +115,31 @@ under 1080px. Every light section opens with a **centered** `.head`.
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
 
+## Colour schemes on trial (`?palette=`)
+Ryan picked four five-colour schemes. Each is switchable on the live page
+with a URL parameter, and with none the page is the dark design:
+`?palette=almond` (almond cream, sage, slate), `?palette=linen` (soft linen,
+pale sky, olive), `?palette=blackberry` (bone, almond silk, blackberry) and
+`?palette=petal` (powder petal, blush, dusty olive). `src/palette.ts` sets
+`data-palette` on `<html>` before first render; the end of `index.css` maps
+each scheme onto the page's own tokens (`--paper`, `--ink`, `--accent`...),
+so everything that reads them follows. Roles: light ground, a tint for
+alternating sections, an accent (the title trace), and a deep band for
+Inside, the signup, the launch bar and every primary button. Almond and petal
+had no colour dark enough to carry white text, so their band is their
+darkest colour taken darker (4.5:1 checked). The sensing channels keep
+green / red / gold; the exploded-view film stays black.
+
+The light schemes play `nerva-levitate-white.mp4` (Ryan's white-ground
+render, 690KB, faststart) with **`mix-blend-mode: multiply` on
+`.hero__stage`**, so the white becomes the palette colour. Put the blend on
+the stage, not the video: the stage has a transform and the hover animation,
+which isolates it, and a blend on the video inside only meets the stage's
+empty backdrop and prints a white box. On wide screens the stage steps right
+so the dark ring clears the headline. **To pick one**: set
+`data-palette="<name>"` on `<html>` in `index.html` (or make it the default in
+`palette.ts`) and delete the other three blocks.
+
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
 To look at one, `git checkout <commit>` then `npm run build`; to put one back
