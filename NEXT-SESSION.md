@@ -115,6 +115,12 @@ under 1080px. Every light section opens with a **centered** `.head`.
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
 
+## Colour scheme: **almond is live as the default** (29 Sep 2026)
+`index.html` sets `data-palette="almond"` on `<html>`, so the first paint is
+already almond. `?palette=dark` shows the original black design;
+`?palette=linen|blackberry|petal` show the other trial schemes. When Ryan
+settles for good, the other three blocks and the dark-only rules can go.
+
 ## Colour schemes on trial (`?palette=`)
 Ryan picked four five-colour schemes. Each is switchable on the live page
 with a URL parameter, and with none the page is the dark design:
