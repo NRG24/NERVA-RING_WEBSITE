@@ -123,7 +123,8 @@ settles for good, the other three blocks and the dark-only rules can go.
 
 Almond **swaps two section colours**: What it does is the sage-green
 (`--sheet: #cdc6a5`, Dry Sage) and Signals is the blue from the linen scheme
-(`#b7d1da`, Pale Sky), with the readout's backing panel a lighter blue. What
+(Pale Sky paled a third of the way to white, `--almond-blue: #d0e1e7`,
+at Ryan's ask), with the readout's backing panel lighter still. What
 it does fades in from the almond hero and out into the blue (`--does-end`).
 The page reads almond, green, blue. Tried before: the blackberry rose, then
 blue What it does over sage Signals.
@@ -156,8 +157,8 @@ the resting state starts 4.1s after it loads. Both end on
 `nerva-levitate-ceramic-still.webp` (transparent last frame), which is also
 the reduced-motion image. The ring lands in the middle half of its frame
 (x 20-75%). Ryan asked for it bigger and further left, so on wide screens
-the stage is `translate: 8% -6%; scale: 1.08` (Ryan then asked for it a
-touch lower and right of 5% -10%): the lift keeps its lower
+the stage is `translate: 14% 1%; scale: 1.08` (Ryan moved it lower and
+right twice, from 5% -10%): it sits level with the headline, and its lower
 left curve above "system." (checked at 1280, 1366, 1440, 1536 and 1920);
 between 1081 and 1250px it stays at 12% / 0.9, where it would hit the
 headline. That offset is set with

@@ -1115,14 +1115,14 @@ a { color: inherit; text-decoration: none; }
    with it. */
 @media (min-width: 1081px) {
   /* The ceramic render lands in the middle half of its frame (x 20-75%).
-     Ryan wanted it bigger and further left: at 1.08 it would sit on the
-     headline's last line, so it also rides up 6% (8% right) and its lower left curve
-     passes above "system." instead of through it. */
+     At scale 1.08, 14% right and level with the headline (Ryan moved it
+     from higher and further left, twice); its lower left curve clears
+     "system." at every width from 1280 to 1920. */
   /* Set with the individual translate / scale properties, not transform:
      the resting hover animates transform, and a transform here was
      replaced by it the moment the ring landed, so the ring jumped 240px
      left. The individual properties compose with the animation instead. */
-  [data-palette] .hero__stage { translate: 8% -6%; scale: 1.08; transform-origin: right center; }
+  [data-palette] .hero__stage { translate: 14% 1%; scale: 1.08; transform-origin: right center; }
 }
 /* on narrow laptops the larger ring would reach the headline's full stop */
 @media (min-width: 1081px) and (max-width: 1250px) {
@@ -1153,11 +1153,13 @@ a { color: inherit; text-decoration: none; }
    linen scheme (Pale Sky), so the page reads almond, green, blue. What it
    does fades in from the almond hero and out into the blue. (Tried
    before: blue What it does over sage Signals, and the blackberry rose.) */
-[data-palette='almond'] .does { --sheet: #cdc6a5; --does-end: #b7d1da; }
-[data-palette='almond'] #signals { background: #b7d1da; }
+/* the blue is Pale Sky taken a third of the way to white, at Ryan's ask */
+[data-palette='almond'] { --almond-blue: #d0e1e7; }
+[data-palette='almond'] .does { --sheet: #cdc6a5; --does-end: var(--almond-blue); }
+[data-palette='almond'] #signals { background: var(--almond-blue); }
 /* the readout's backing panel follows its section: a lighter blue, not the
    sand it had on the sage */
-[data-palette='almond'] #signals .stage { background: color-mix(in srgb, #fff 45%, #b7d1da); }
+[data-palette='almond'] #signals .stage { background: color-mix(in srgb, #fff 50%, var(--almond-blue)); }
 [data-palette] .does .display--light { color: var(--pal-ink); }
 [data-palette] .does .head--light .head__sub { color: var(--ink-2); }
 [data-palette] .does__trace-ink { stroke: var(--pal-accent); filter: none; }
