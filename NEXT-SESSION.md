@@ -127,8 +127,9 @@ Hanken Grotesk at 500 with "nervous system." at 750 on one line (Ryan tried
 and dropped a serif Newsreader headline and a kicker line above it), the
 lede, a dark pill and
 an underlined link, then a ruled strip of four facts (`HERO_FACTS` in
-`App.tsx`; every line is in `nerva-ring-overview.md`, and the battery one
-says "the target"). Behind the ring is a flat sage disc (`.hero__backdrop`,
+`App.tsx`: heart rate, skin conductance and blood oxygen from
+`nerva-ring-overview.md`, and stress management, which replaced a battery
+line at Ryan's ask). Behind the ring is a flat sage disc (`.hero__backdrop`,
 `--pal-bg2`, 87% of the film frame) on its own layer, so it holds still while
 the ring hovers. On desktop the film frame and disc are **placed directly
 with left/top/width** (`--box`, the ring centre at 69% across and halfway
@@ -140,8 +141,8 @@ scale placement notes below are superseded.
 
 Almond **swaps two section colours**: What it does is the sage-green
 (`--sheet: #cdc6a5`, Dry Sage) and Signals is the blue from the linen scheme
-(Pale Sky paled a third of the way to white, `--almond-blue: #d0e1e7`,
-at Ryan's ask), with the readout's backing panel lighter still. What
+(Pale Sky paled well toward white and a touch greyer, `--almond-blue:
+#dce7ea`, at Ryan's ask, twice), with the readout's backing panel lighter still. What
 it does fades in from the almond hero and out into the blue (`--does-end`).
 The page reads almond, green, blue. Tried before: the blackberry rose, then
 blue What it does over sage Signals.
