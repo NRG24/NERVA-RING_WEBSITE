@@ -121,6 +121,23 @@ already almond. `?palette=dark` shows the original black design;
 `?palette=linen|blackberry|petal` show the other trial schemes. When Ryan
 settles for good, the other three blocks and the dark-only rules can go.
 
+The light-scheme hero is **laid out after a reference Ryan chose** (a Nerva
+mock with a sage circle behind the ring): a spaced uppercase kicker ("NERVA
+Ring · Prototype"), the headline in **Newsreader** (serif, re-added for this
+headline only) with "nervous system." set bold (Ryan preferred bold to the
+reference's italic), the lede, a dark pill and
+an underlined link, then a ruled strip of four facts (`HERO_FACTS` in
+`App.tsx`; every line is in `nerva-ring-overview.md`, and the battery one
+says "the target"). Behind the ring is a flat sage disc (`.hero__backdrop`,
+`--pal-bg2`, 87% of the film frame) on its own layer, so it holds still while
+the ring hovers. On desktop the film frame and disc are **placed directly
+with left/top/width** (`--box`, the ring centre at 69% across and halfway
+down the space above the strip), not with translate/transform: the resting
+hover animates transform on the stage. At 1080px and below the ring and disc
+take a square of their own at the top and the words start below it. The dark
+design hides the kicker and the strip, and keeps its own headline. The earlier translate /
+scale placement notes below are superseded.
+
 Almond **swaps two section colours**: What it does is the sage-green
 (`--sheet: #cdc6a5`, Dry Sage) and Signals is the blue from the linen scheme
 (Pale Sky paled a third of the way to white, `--almond-blue: #d0e1e7`,

@@ -271,6 +271,13 @@ const WEBKIT_ONLY = (() => {
 })()
 const USE_ANIM = LIGHT && WEBKIT_ONLY
 
+const HERO_FACTS = [
+  { k: 'Heart rate', v: 'Green and red light, read at the finger' },
+  { k: 'Skin conductance', v: 'Two gold electrodes on the inner band' },
+  { k: 'Blood oxygen', v: 'SpO₂ from the same optical sensor' },
+  { k: 'Battery', v: 'About a month of standby, the target' },
+] as const
+
 function Hero() {
   /* Reduced motion skips the film outright: decided before first paint,
      so the still never swaps in after the fact and the film is never
@@ -281,6 +288,12 @@ function Hero() {
   const [filmFailed, setFilmFailed] = useState(false)
   const [filmEnded, setFilmEnded] = useState(false)
   const [onScreen, setOnScreen] = useState(true)
+  /* one frame after mount, so the backdrop disc can ease in */
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setReady(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
   const filmRef = useRef<HTMLVideoElement | null>(null)
   const heroRef = useRef<HTMLElement | null>(null)
 
@@ -317,8 +330,12 @@ function Hero() {
   return (
     <section
       ref={heroRef}
-      className={`hero ${resting ? 'is-resting' : ''} ${onScreen ? '' : 'is-offscreen'}`}
+      className={`hero ${ready ? 'is-ready' : ''} ${resting ? 'is-resting' : ''} ${onScreen ? '' : 'is-offscreen'}`}
     >
+      {/* a flat disc behind where the ring comes to rest, on its own layer so
+          it holds still while the ring hovers in front of it (light schemes
+          only; CSS hides it on the dark design) */}
+      <div className="hero__backdrop" aria-hidden="true"><span /></div>
       <div className="hero__stage">
         {showFilm && USE_ANIM ? (
           <img
@@ -363,7 +380,10 @@ function Hero() {
       <div className="hero__grade" aria-hidden="true" />
 
       <div className="hero__copy">
-        <h1 className="hero__title">The ring that reads your nervous system.</h1>
+        {/* the kicker and the strip below are light-scheme furniture; CSS
+            hides both on the dark design */}
+        <p className="hero__kicker">NERVA Ring · Prototype</p>
+        <h1 className="hero__title">The ring that reads your <em>nervous system.</em></h1>
         <p className="hero__lede">
           Helping you understand and manage stress in real time with EDA sensors.
         </p>
@@ -374,6 +394,18 @@ function Hero() {
           <a className="textlink textlink--onfilm" href="#inside">See what’s inside</a>
         </div>
       </div>
+
+      {/* what the ring reads, one line each; every line is in
+          nerva-ring-overview.md, and the battery one says target because it
+          is one */}
+      <ul className="hero__facts" aria-label="What it reads">
+        {HERO_FACTS.map((f) => (
+          <li key={f.k}>
+            <span className="hero__fact-k">{f.k}</span>
+            <span className="hero__fact-v">{f.v}</span>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }
