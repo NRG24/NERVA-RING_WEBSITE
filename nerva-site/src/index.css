@@ -1156,15 +1156,19 @@ a { color: inherit; text-decoration: none; }
   color: color-mix(in srgb, var(--pal-accent) 55%, var(--pal-ink));
 }
 [data-palette] .hero__title {
-  max-width: 11ch;
+  max-width: 12ch;
   font-family: 'Newsreader Variable', Georgia, serif;
   font-optical-sizing: auto;
   font-weight: 450;
-  font-size: clamp(3rem, 1.6rem + 3.9vw, 5.4rem);
+  /* a size down from the reference's: the bold last line is the widest,
+     and at this size it clears the disc from 1100 to 1920 wide */
+  font-size: clamp(2.9rem, 1.5rem + 3.3vw, 4.7rem);
   line-height: 1.02;
   letter-spacing: -0.02em;
 }
-[data-palette] .hero__title em { font-style: italic; font-weight: 420; }
+/* the last phrase set bold rather than italic, at Ryan's ask, and kept on
+   one line: bold is wider and broke it in two */
+[data-palette] .hero__title em { font-style: normal; font-weight: 700; white-space: nowrap; }
 [data-palette] .hero__lede {
   margin-top: 30px; max-width: 27em;
   font-size: clamp(1.08rem, 1rem + 0.35vw, 1.28rem); line-height: 1.6;
@@ -1211,6 +1215,7 @@ a { color: inherit; text-decoration: none; }
 }
 @media (max-width: 1080px) {
   [data-palette] .hero__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-palette] .hero__title { font-size: clamp(2.3rem, 10.6vw, 3.6rem); }
   /* the ring and its disc take a square of their own at the top, and the
      words start below it: layered, the kicker pushed the headline up
      under the ring */

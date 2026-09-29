@@ -124,7 +124,8 @@ settles for good, the other three blocks and the dark-only rules can go.
 The light-scheme hero is **laid out after a reference Ryan chose** (a Nerva
 mock with a sage circle behind the ring): a spaced uppercase kicker ("NERVA
 Ring · Prototype"), the headline in **Newsreader** (serif, re-added for this
-headline only) with "nervous system." in italic, the lede, a dark pill and
+headline only) with "nervous system." set bold (Ryan preferred bold to the
+reference's italic), the lede, a dark pill and
 an underlined link, then a ruled strip of four facts (`HERO_FACTS` in
 `App.tsx`; every line is in `nerva-ring-overview.md`, and the battery one
 says "the target"). Behind the ring is a flat sage disc (`.hero__backdrop`,
@@ -134,7 +135,7 @@ with left/top/width** (`--box`, the ring centre at 69% across and halfway
 down the space above the strip), not with translate/transform: the resting
 hover animates transform on the stage. At 1080px and below the ring and disc
 take a square of their own at the top and the words start below it. The dark
-design hides the kicker, the strip and the italic. The earlier translate /
+design hides the kicker and the strip, and keeps its own headline. The earlier translate /
 scale placement notes below are superseded.
 
 Almond **swaps two section colours**: What it does is the sage-green
