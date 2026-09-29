@@ -1148,10 +1148,11 @@ a { color: inherit; text-decoration: none; }
     var(--pal-bg2) 100%);
   color: var(--pal-ink);
 }
-/* Almond's What it does takes the rose from the blackberry scheme (Almond
-   Silk), fading in from the almond hero and out into the sage below, so
-   the page reads almond, rose, sage instead of almond running on. */
-[data-palette='almond'] .does { --sheet: #d5b9b2; }
+/* Almond's What it does takes the blue from the linen scheme (Pale Sky),
+   fading in from the almond hero and out into the sage below, so the page
+   reads almond, blue, sage instead of almond running on. The rose from the
+   blackberry scheme (#d5b9b2) was tried first. */
+[data-palette='almond'] .does { --sheet: #b7d1da; }
 [data-palette] .does .display--light { color: var(--pal-ink); }
 [data-palette] .does .head--light .head__sub { color: var(--ink-2); }
 [data-palette] .does__trace-ink { stroke: var(--pal-accent); filter: none; }

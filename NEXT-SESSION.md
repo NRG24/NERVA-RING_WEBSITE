@@ -121,9 +121,10 @@ already almond. `?palette=dark` shows the original black design;
 `?palette=linen|blackberry|petal` show the other trial schemes. When Ryan
 settles for good, the other three blocks and the dark-only rules can go.
 
-Almond's What it does uses the **rose from the blackberry scheme**
-(`--sheet: #d5b9b2`, Almond Silk), fading in from the almond hero and out
-into the sage Signals, so the page reads almond, rose, sage.
+Almond's What it does uses the **blue from the linen scheme**
+(`--sheet: #b7d1da`, Pale Sky), fading in from the almond hero and out into
+the sage Signals, so the page reads almond, blue, sage. The blackberry rose
+(`#d5b9b2`) was tried first.
 
 ## Colour schemes on trial (`?palette=`)
 Ryan picked four five-colour schemes. Each is switchable on the live page
