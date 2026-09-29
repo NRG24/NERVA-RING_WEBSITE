@@ -29,7 +29,7 @@ are the Ultrahuman Ring PRO page (`/Reference website`). When he said the site
 "looks more like a b2b website and less like a product website", this layout
 is what fixed it. Build toward those screenshots, not away from them.
 
-Sticky nav (What it does / Signals / Stress / Inside / Finishes) + hamburger
+Sticky nav (What it does / Signals / Inside / Finishes) + hamburger
 under 1080px. Every light section opens with a **centered** `.head`.
 
 1. **Hero.** `nerva-levitate.mp4`: the ring rises out of the dark and settles,
@@ -93,8 +93,13 @@ under 1080px. Every light section opens with a **centered** `.head`.
    stage, drawn like an app screen (red PPG + green EDA, generated from a
    seeded RNG so they never repeat). Caption under it says it is modeled, not
    recorded. Then the two notes, each keyed by a swatch of its own trace.
-4. **`#stress`.** Two chains on white cards inside a grey stage; the measured
-   one is visibly half as long. Then the "hard part" note, centered.
+   Signals ends in a short eased fade to black (`--fade-black`, in extra
+   bottom padding) so it does not cut from pale blue into the film. Its
+   colour is `--signals-bg`; the almond override has to come after the
+   generic `[data-palette] #signals` rule (same specificity).
+4. ~~`#stress`~~ **removed** at Ryan's ask ("we already said what we
+   needed to say"). The comparison it drew lives on in the FAQ answer
+   "How is it different from other smart rings?".
 5. **`FilmScroll`.** A full-bleed **exploded view**, scroll-scrubbed on desktop
    (`currentTime` follows scroll), autoplay-loop on touch, poster only under
    reduced motion. See the video notes below before touching it.
@@ -141,8 +146,8 @@ scale placement notes below are superseded.
 
 Almond **swaps two section colours**: What it does is the sage-green
 (`--sheet: #cdc6a5`, Dry Sage) and Signals is the blue from the linen scheme
-(Pale Sky paled well toward white and a touch greyer, `--almond-blue:
-#dce7ea`, at Ryan's ask, twice), with the readout's backing panel lighter still. What
+(a pastel blue warmed toward the sage so it does not contrast with it,
+`--almond-blue: #dce1de`, after two paler steps from Pale Sky), with the readout's backing panel lighter still. What
 it does fades in from the almond hero and out into the blue (`--does-end`).
 The page reads almond, green, blue. Tried before: the blackberry rose, then
 blue What it does over sage Signals.

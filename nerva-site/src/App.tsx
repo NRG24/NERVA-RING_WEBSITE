@@ -700,7 +700,6 @@ const FAQ = [
 const NAV = [
   { href: '#does', label: 'What it does' },
   { href: '#signals', label: 'Signals' },
-  { href: '#stress', label: 'Stress' },
   { href: '#inside', label: 'Inside' },
   { href: '#finish', label: 'Finishes' },
 ]
@@ -964,52 +963,6 @@ function App() {
                 </p>
               </Reveal>
             </div>
-          </div>
-        </section>
-
-        {/* ---------------- WHERE YOUR STRESS NUMBER COMES FROM ----------------
-            The argument is about distance, so the section draws the distance.
-            Both chains start on the same nerve and one is visibly half as long;
-            the endpoints finish it, a reading with a unit against a phrase in
-            quotation marks. */}
-        <section className="section" id="stress">
-          <div className="wrap">
-            <Reveal className="head">
-              <h2 className="display">Two ways to read your nervous system.</h2>
-            </Reveal>
-
-            <div className="stage paths-stage">
-              <div className="paths">
-                <Reveal className="path path--measured">
-                  <h3 className="path__h">NERVA measures it</h3>
-                  <ol className="path__steps">
-                    <li>Sympathetic nerve</li>
-                    <li>Sweat glands</li>
-                    <li>Skin conductance</li>
-                    <li className="path__out">4.6 µS</li>
-                  </ol>
-                </Reveal>
-
-                <Reveal className="path path--inferred" delay={90}>
-                  <h3 className="path__h">Most rings infer it</h3>
-                  <ol className="path__steps">
-                    <li>Sympathetic nerve</li>
-                    <li>Heart rate</li>
-                    <li>Beat-to-beat variation</li>
-                    <li>A model</li>
-                    <li className="path__out">“a stress score”</li>
-                  </ol>
-                </Reveal>
-              </div>
-            </div>
-
-            <Reveal className="caveat">
-              <p>
-                <b>The hard part.</b> Skin conductance drifts with temperature, moves
-                when you move, and a finger is a small place for two electrodes. That
-                difficulty is why most rings skip it.
-              </p>
-            </Reveal>
           </div>
         </section>
 
