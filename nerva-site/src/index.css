@@ -353,7 +353,7 @@ a { color: inherit; text-decoration: none; }
 }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin: 34px 0 0; }
 /* light-scheme furniture: off on the dark design, which stays as it was */
-.hero__kicker, .hero__facts { display: none; }
+.hero__facts { display: none; }
 .hero__title em { font-style: inherit; }
 
 /* ============================================================
@@ -1145,30 +1145,22 @@ a { color: inherit; text-decoration: none; }
   [data-palette] .hero__backdrop > span { transition: none; opacity: 1; scale: 1; }
 }
 /* ---- the light-scheme hero, laid out after Ryan's reference ----
-   A kicker, a serif headline whose last phrase is italic, the lede, a
-   dark pill and an underlined link, all centred in the space above a ruled
+   The headline in the site's own sans with its last phrase bold, the
+   lede, a dark pill and an underlined link, all centred in the space above a ruled
    strip of four facts. On wide screens the ring sits right of the words
    inside the sage disc, sized so ring and disc keep the reference's
    proportions (ring about 0.63 of the disc). */
-[data-palette] .hero__kicker {
-  display: block; margin: 0 0 22px;
-  font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  color: color-mix(in srgb, var(--pal-accent) 55%, var(--pal-ink));
-}
 [data-palette] .hero__title {
   max-width: 12ch;
-  font-family: 'Newsreader Variable', Georgia, serif;
-  font-optical-sizing: auto;
-  font-weight: 450;
+  font-weight: 500;
   /* a size down from the reference's: the bold last line is the widest,
      and at this size it clears the disc from 1100 to 1920 wide */
   font-size: clamp(2.9rem, 1.5rem + 3.3vw, 4.7rem);
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
 }
-/* the last phrase set bold rather than italic, at Ryan's ask, and kept on
-   one line: bold is wider and broke it in two */
-[data-palette] .hero__title em { font-style: normal; font-weight: 700; white-space: nowrap; }
+/* the last phrase set bold, at Ryan's ask, and kept on one line */
+[data-palette] .hero__title em { font-style: normal; font-weight: 750; white-space: nowrap; }
 [data-palette] .hero__lede {
   margin-top: 30px; max-width: 27em;
   font-size: clamp(1.08rem, 1rem + 0.35vw, 1.28rem); line-height: 1.6;
@@ -1217,7 +1209,7 @@ a { color: inherit; text-decoration: none; }
   [data-palette] .hero__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   [data-palette] .hero__title { font-size: clamp(2.3rem, 10.6vw, 3.6rem); }
   /* the ring and its disc take a square of their own at the top, and the
-     words start below it: layered, the kicker pushed the headline up
+     words start below it: layered, the headline sat up
      under the ring */
   [data-palette] .hero { padding-top: min(78vw, 460px); }
   [data-palette] .hero__stage, [data-palette] .hero__backdrop {
