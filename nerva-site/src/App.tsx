@@ -275,7 +275,7 @@ const HERO_FACTS = [
   { k: 'Heart rate', v: 'Green and red light, read at the finger' },
   { k: 'Skin conductance', v: 'Two gold electrodes on the inner band' },
   { k: 'Blood oxygen', v: 'SpO₂ from the same optical sensor' },
-  { k: 'Battery', v: 'About a month of standby, the target' },
+  { k: 'Stress management', v: 'Breathing exercises that train your nervous system' },
 ] as const
 
 function Hero() {
@@ -394,9 +394,8 @@ function Hero() {
         </div>
       </div>
 
-      {/* what the ring reads, one line each; every line is in
-          nerva-ring-overview.md, and the battery one says target because it
-          is one */}
+      {/* what the ring does, one line each; the first three are in
+          nerva-ring-overview.md, the last is Ryan's What it does copy */}
       <ul className="hero__facts" aria-label="What it reads">
         {HERO_FACTS.map((f) => (
           <li key={f.k}>
