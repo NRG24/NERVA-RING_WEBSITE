@@ -1198,7 +1198,23 @@ a { color: inherit; text-decoration: none; }
    grey-green. */
 [data-palette='almond'] { --almond-blue: #dce1de; }
 [data-palette='almond'] .does { --sheet: #cdc6a5; --does-end: var(--almond-blue); }
-[data-palette='almond'] #signals { background: var(--almond-blue); }
+/* A short fade from Signals into the black of the exploded-view film, so
+   the page does not cut from pale blue to black. Eased over four stops
+   (a straight ramp bands), in extra padding so no text sits in it. */
+[data-palette] #signals {
+  --signals-bg: var(--pal-bg2);
+  --fade-black: clamp(110px, 11vw, 170px);
+  background: linear-gradient(to bottom,
+    var(--signals-bg) 0,
+    var(--signals-bg) calc(100% - var(--fade-black)),
+    color-mix(in srgb, var(--signals-bg) 84%, #000) calc(100% - var(--fade-black) * 0.75),
+    color-mix(in srgb, var(--signals-bg) 50%, #000) calc(100% - var(--fade-black) * 0.5),
+    color-mix(in srgb, var(--signals-bg) 16%, #000) calc(100% - var(--fade-black) * 0.25),
+    #000 100%);
+  padding-bottom: calc(clamp(64px, 7vw, 108px) + var(--fade-black));
+}
+/* after the rule above, which it has to beat at equal specificity */
+[data-palette='almond'] #signals { --signals-bg: var(--almond-blue); }
 /* the readout's backing panel follows its section: a lighter blue, not the
    sand it had on the sage */
 [data-palette='almond'] #signals .stage { background: color-mix(in srgb, #fff 50%, var(--almond-blue)); }

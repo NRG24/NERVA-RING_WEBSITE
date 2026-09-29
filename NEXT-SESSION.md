@@ -93,6 +93,10 @@ under 1080px. Every light section opens with a **centered** `.head`.
    stage, drawn like an app screen (red PPG + green EDA, generated from a
    seeded RNG so they never repeat). Caption under it says it is modeled, not
    recorded. Then the two notes, each keyed by a swatch of its own trace.
+   Signals ends in a short eased fade to black (`--fade-black`, in extra
+   bottom padding) so it does not cut from pale blue into the film. Its
+   colour is `--signals-bg`; the almond override has to come after the
+   generic `[data-palette] #signals` rule (same specificity).
 4. ~~`#stress`~~ **removed** at Ryan's ask ("we already said what we
    needed to say"). The comparison it drew lives on in the FAQ answer
    "How is it different from other smart rings?".
