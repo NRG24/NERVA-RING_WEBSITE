@@ -29,7 +29,7 @@ are the Ultrahuman Ring PRO page (`/Reference website`). When he said the site
 "looks more like a b2b website and less like a product website", this layout
 is what fixed it. Build toward those screenshots, not away from them.
 
-Sticky nav (What it does / Signals / Stress / Inside / Finishes) + hamburger
+Sticky nav (What it does / Signals / Inside / Finishes) + hamburger
 under 1080px. Every light section opens with a **centered** `.head`.
 
 1. **Hero.** `nerva-levitate.mp4`: the ring rises out of the dark and settles,
@@ -93,8 +93,9 @@ under 1080px. Every light section opens with a **centered** `.head`.
    stage, drawn like an app screen (red PPG + green EDA, generated from a
    seeded RNG so they never repeat). Caption under it says it is modeled, not
    recorded. Then the two notes, each keyed by a swatch of its own trace.
-4. **`#stress`.** Two chains on white cards inside a grey stage; the measured
-   one is visibly half as long. Then the "hard part" note, centered.
+4. ~~`#stress`~~ **removed** at Ryan's ask ("we already said what we
+   needed to say"). The comparison it drew lives on in the FAQ answer
+   "How is it different from other smart rings?".
 5. **`FilmScroll`.** A full-bleed **exploded view**, scroll-scrubbed on desktop
    (`currentTime` follows scroll), autoplay-loop on touch, poster only under
    reduced motion. See the video notes below before touching it.
