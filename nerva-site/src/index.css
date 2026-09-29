@@ -352,6 +352,9 @@ a { color: inherit; text-decoration: none; }
   color: rgba(255, 255, 255, 0.8);
 }
 .hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin: 34px 0 0; }
+/* light-scheme furniture: off on the dark design, which stays as it was */
+.hero__kicker, .hero__facts { display: none; }
+.hero__title em { font-style: inherit; }
 
 /* ============================================================
    SECTIONS
@@ -1141,26 +1144,87 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   [data-palette] .hero__backdrop > span { transition: none; opacity: 1; scale: 1; }
 }
-/* A dark ring on a light ground reads far heavier than on black, and at
-   the dark design's framing it sat on the full stop of the headline. On
-   wide screens the stage steps right and down a touch so the ring lands
-   clear of the words; the heartbeat glow is inside the stage and moves
-   with it. */
+/* ---- the light-scheme hero, laid out after Ryan's reference ----
+   A kicker, a serif headline whose last phrase is italic, the lede, a
+   dark pill and an underlined link, all centred in the space above a ruled
+   strip of four facts. On wide screens the ring sits right of the words
+   inside the sage disc, sized so ring and disc keep the reference's
+   proportions (ring about 0.63 of the disc). */
+[data-palette] .hero__kicker {
+  display: block; margin: 0 0 22px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--pal-accent) 55%, var(--pal-ink));
+}
+[data-palette] .hero__title {
+  max-width: 11ch;
+  font-family: 'Newsreader Variable', Georgia, serif;
+  font-optical-sizing: auto;
+  font-weight: 450;
+  font-size: clamp(3rem, 1.6rem + 3.9vw, 5.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+[data-palette] .hero__title em { font-style: italic; font-weight: 420; }
+[data-palette] .hero__lede {
+  margin-top: 30px; max-width: 27em;
+  font-size: clamp(1.08rem, 1rem + 0.35vw, 1.28rem); line-height: 1.6;
+}
+[data-palette] .hero__cta { margin-top: 36px; }
+[data-palette] .hero__cta .btn--led { background: var(--pal-ink); }
+
+[data-palette] .hero__facts {
+  position: relative;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px 36px;
+  list-style: none; margin: 0;
+  padding: 28px max(32px, calc((100vw - var(--wrap)) / 2 + 32px)) 34px;
+  border-top: 1px solid var(--pal-accent);
+}
+[data-palette] .hero__facts li { min-width: 0; }
+[data-palette] .hero__fact-k {
+  display: block;
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--pal-accent) 55%, var(--pal-ink));
+}
+[data-palette] .hero__fact-v { display: block; margin-top: 8px; font-size: 15.5px; line-height: 1.5; color: var(--ink-2); }
+
 @media (min-width: 1081px) {
-  /* The ceramic render lands in the middle half of its frame (x 20-75%).
-     At scale 1.08, 14% right and level with the headline (Ryan moved it
-     from higher and further left, twice); its lower left curve clears
-     "system." at every width from 1280 to 1920. */
-  /* Set with the individual translate / scale properties, not transform:
-     the resting hover animates transform, and a transform here was
-     replaced by it the moment the ring landed, so the ring jumped 240px
-     left. The individual properties compose with the animation instead. */
-  [data-palette] .hero__stage, [data-palette] .hero__backdrop { translate: 14% 1%; scale: 1.08; transform-origin: right center; }
+  [data-palette] .hero {
+    --strip: 124px;
+    /* the box the film frame is drawn in: the ring spans 55% of it */
+    --box: min(46vw, calc((100svh - var(--nav-h) - var(--strip)) * 1.02));
+    min-height: max(640px, calc(100svh - var(--nav-h)));
+  }
+  /* the words sit centred in the space above the strip */
+  [data-palette] .hero__copy { margin: auto; padding-top: 40px; padding-bottom: 40px; }
+  /* The film frame and the disc are placed directly: the ring rests at
+     47.3% / 49.5% of the frame, so these put its centre at 69% across and
+     halfway down the space above the strip. Not transform or translate:
+     the resting hover animates transform on the stage. */
+  [data-palette] .hero__stage, [data-palette] .hero__backdrop {
+    width: var(--box); height: var(--box); max-width: none; aspect-ratio: auto;
+    right: auto; bottom: auto;
+    left: calc(69% - var(--box) * 0.473);
+    top: calc((100% - var(--strip)) / 2 - var(--box) * 0.495);
+  }
+  [data-palette] .hero__backdrop > span { left: 47.3%; width: 87%; }
 }
-/* on narrow laptops the larger ring would reach the headline's full stop */
-@media (min-width: 1081px) and (max-width: 1250px) {
-  [data-palette] .hero__stage, [data-palette] .hero__backdrop { translate: 12% 2%; scale: 0.9; }
+@media (max-width: 1080px) {
+  [data-palette] .hero__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* the ring and its disc take a square of their own at the top, and the
+     words start below it: layered, the kicker pushed the headline up
+     under the ring */
+  [data-palette] .hero { padding-top: min(78vw, 460px); }
+  [data-palette] .hero__stage, [data-palette] .hero__backdrop {
+    top: 8px; bottom: auto; right: auto; left: 50%;
+    width: min(78vw, 460px); height: auto; aspect-ratio: 1 / 1; max-width: none;
+    translate: -50% 0;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  [data-palette] .hero__backdrop > span { left: 47.3%; width: 87%; }
+  [data-palette] .hero__copy { margin-top: 0; padding-top: 12px; }
 }
+
 [data-palette] .hero__title { color: var(--pal-ink); }
 [data-palette] .hero__lede { color: var(--ink-2); }
 [data-palette] .btn--led { background: var(--pal-band); color: var(--pal-bg); }
