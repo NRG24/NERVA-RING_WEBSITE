@@ -1111,9 +1111,14 @@ a { color: inherit; text-decoration: none; }
    clear of the words; the heartbeat glow is inside the stage and moves
    with it. */
 @media (min-width: 1081px) {
-  /* the ceramic render lands in the middle half of its frame (x 20-75%),
-     so the stage can step well right before the ring meets the edge */
-  [data-palette] .hero__stage { transform: translate(19%, 2%) scale(0.9); transform-origin: right center; }
+  /* the ceramic render lands in the middle half of its frame (x 20-75%);
+     12% right balances the space: ~130px to the headline and ~90px to the
+     window edge at 1440 wide, still clear of the words at 1100 */
+  /* Set with the individual translate / scale properties, not transform:
+     the resting hover animates transform, and a transform here was
+     replaced by it the moment the ring landed, so the ring jumped 240px
+     left. The individual properties compose with the animation instead. */
+  [data-palette] .hero__stage { translate: 12% 2%; scale: 0.9; transform-origin: right center; }
 }
 [data-palette] .hero__title { color: var(--pal-ink); }
 [data-palette] .hero__lede { color: var(--ink-2); }

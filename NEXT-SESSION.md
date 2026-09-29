@@ -142,8 +142,11 @@ WebM but drops its alpha and paints a black square**. `WEBKIT_ONLY` in
 the resting state starts 4.1s after it loads. Both end on
 `nerva-levitate-ceramic-still.webp` (transparent last frame), which is also
 the reduced-motion image. The ring lands in the middle half of its frame
-(x 20-75%), so on wide screens the stage steps 19% right to clear the
-headline (100px+ of gap from 1100 to 1920px wide); the LED glow sits at
+(x 20-75%), so on wide screens the stage steps 12% right (about 130px to
+the headline and 90px to the edge at 1440 wide). That offset is set with
+the individual `translate` / `scale` properties, **not `transform`**: the
+resting hover animates `transform` and replaced it on landing, so the ring
+jumped 240px left. The LED glow sits at
 44.9% / 36.9%. The white-ground film tried first is gone. **To pick one**: set
 `data-palette="<name>"` on `<html>` in `index.html` (or make it the default in
 `palette.ts`) and delete the other three blocks.
