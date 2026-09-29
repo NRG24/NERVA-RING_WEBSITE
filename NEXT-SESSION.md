@@ -121,6 +121,10 @@ already almond. `?palette=dark` shows the original black design;
 `?palette=linen|blackberry|petal` show the other trial schemes. When Ryan
 settles for good, the other three blocks and the dark-only rules can go.
 
+Almond's What it does uses the **rose from the blackberry scheme**
+(`--sheet: #d5b9b2`, Almond Silk), fading in from the almond hero and out
+into the sage Signals, so the page reads almond, rose, sage.
+
 ## Colour schemes on trial (`?palette=`)
 Ryan picked four five-colour schemes. Each is switchable on the live page
 with a URL parameter, and with none the page is the dark design:
@@ -148,13 +152,16 @@ WebM but drops its alpha and paints a black square**. `WEBKIT_ONLY` in
 the resting state starts 4.1s after it loads. Both end on
 `nerva-levitate-ceramic-still.webp` (transparent last frame), which is also
 the reduced-motion image. The ring lands in the middle half of its frame
-(x 20-75%), so on wide screens the stage steps 10% right at scale 0.96
-(about 75px to the headline and 120px to the edge at 1440 wide; 12% at 0.9
-between 1081 and 1250px, where the bigger ring would touch the full stop). That offset is set with
+(x 20-75%). Ryan asked for it bigger and further left, so on wide screens
+the stage is `translate: 5% -10%; scale: 1.08`: the lift keeps its lower
+left curve above "system." (checked at 1280, 1366, 1440, 1536 and 1920);
+between 1081 and 1250px it stays at 12% / 0.9, where it would hit the
+headline. That offset is set with
 the individual `translate` / `scale` properties, **not `transform`**: the
 resting hover animates `transform` and replaced it on landing, so the ring
 jumped 240px left. The LED glow sits at
-44.9% / 36.9%. The white-ground film tried first is gone. **To pick one**: set
+42% / 36.2% at width 24% (measured off a close-up of the LED; a colour
+threshold over the whole frame caught reflections and put it 3% right). The white-ground film tried first is gone. **To pick one**: set
 `data-palette="<name>"` on `<html>` in `index.html` (or make it the default in
 `palette.ts`) and delete the other three blocks.
 
