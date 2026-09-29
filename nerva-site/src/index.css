@@ -1102,23 +1102,27 @@ a { color: inherit; text-decoration: none; }
 [data-palette] .hero__grade { display: none; }
 /* The light palettes play the ceramic render, whose background is
    transparent (VP9 alpha WebM, or an animated WebP on WebKit), so the ring
-   sits straight on the palette colour with no blending. Its green LED rests
-   a little right of the glass ring's, so the glow moves with it. */
-[data-palette] .hero__pulse { left: 44.9%; top: 36.9%; }
+   sits straight on the palette colour with no blending. Its green LED is
+   at 42% / 36.2% of the frame, measured off a close-up of the LED itself
+   (a colour threshold over the whole frame also caught green reflections
+   and put it 3% right). The glow is tighter than on black: a wide wash
+   reads as light on black but as a stain on a light ground. */
+[data-palette] .hero__pulse { left: 42%; top: 36.2%; width: 24%; }
 /* A dark ring on a light ground reads far heavier than on black, and at
    the dark design's framing it sat on the full stop of the headline. On
    wide screens the stage steps right and down a touch so the ring lands
    clear of the words; the heartbeat glow is inside the stage and moves
    with it. */
 @media (min-width: 1081px) {
-  /* the ceramic render lands in the middle half of its frame (x 20-75%);
-     10% right at 0.96 leaves ~75px to the headline and ~120px to the
-     window edge at 1440 wide */
+  /* The ceramic render lands in the middle half of its frame (x 20-75%).
+     At scale 1.08, 14% right and level with the headline (Ryan moved it
+     from higher and further left, twice); its lower left curve clears
+     "system." at every width from 1280 to 1920. */
   /* Set with the individual translate / scale properties, not transform:
      the resting hover animates transform, and a transform here was
      replaced by it the moment the ring landed, so the ring jumped 240px
      left. The individual properties compose with the animation instead. */
-  [data-palette] .hero__stage { translate: 10% 2%; scale: 0.96; transform-origin: right center; }
+  [data-palette] .hero__stage { translate: 14% 1%; scale: 1.08; transform-origin: right center; }
 }
 /* on narrow laptops the larger ring would reach the headline's full stop */
 @media (min-width: 1081px) and (max-width: 1250px) {
@@ -1141,9 +1145,21 @@ a { color: inherit; text-decoration: none; }
     var(--pal-bg) 0,
     var(--sheet) var(--fade-in),
     var(--sheet) calc(100% - var(--fade-out)),
-    var(--pal-bg2) 100%);
+    var(--does-end, var(--pal-bg2)) 100%);
   color: var(--pal-ink);
 }
+/* Almond swaps two section colours: What it does takes the sage-green
+   (Dry Sage, the scheme's own tint) and Signals takes the blue from the
+   linen scheme (Pale Sky), so the page reads almond, green, blue. What it
+   does fades in from the almond hero and out into the blue. (Tried
+   before: blue What it does over sage Signals, and the blackberry rose.) */
+/* the blue is Pale Sky taken a third of the way to white, at Ryan's ask */
+[data-palette='almond'] { --almond-blue: #d0e1e7; }
+[data-palette='almond'] .does { --sheet: #cdc6a5; --does-end: var(--almond-blue); }
+[data-palette='almond'] #signals { background: var(--almond-blue); }
+/* the readout's backing panel follows its section: a lighter blue, not the
+   sand it had on the sage */
+[data-palette='almond'] #signals .stage { background: color-mix(in srgb, #fff 50%, var(--almond-blue)); }
 [data-palette] .does .display--light { color: var(--pal-ink); }
 [data-palette] .does .head--light .head__sub { color: var(--ink-2); }
 [data-palette] .does__trace-ink { stroke: var(--pal-accent); filter: none; }
