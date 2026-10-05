@@ -95,11 +95,21 @@ export default function Prototype() {
           <section className="proto__next" aria-labelledby="next-title">
             <h2 id="next-title" className="proto__h2">What happens next</h2>
             <ol className="stages">
-              {STAGES.map((st) => (
+              {STAGES.map((st, i) => (
                 <li key={st.when} className="stage-step">
                   <span className="stage-step__when">{st.when}</span>
                   <h3>{st.title}</h3>
                   <p>{st.body}</p>
+                  {/* an arrow on to the next stage: right when they sit in a
+                      row, down when they stack. The list order says the same
+                      thing to a screen reader. */}
+                  {i < STAGES.length - 1 && (
+                    <span className="stage-step__arrow" aria-hidden="true">
+                      <svg viewBox="0 0 44 12" fill="none">
+                        <path d="M0 6 H42 M36 1 L42 6 L36 11" />
+                      </svg>
+                    </span>
+                  )}
                 </li>
               ))}
             </ol>

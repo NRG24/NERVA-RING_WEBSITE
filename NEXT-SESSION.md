@@ -134,9 +134,11 @@ and from the footer index. `prototype.html` hardcodes `data-palette="almond"`.
 Top to bottom: headline left with the dated lede beside it; the two photos
 (`src/assets/proto-bench.webp` large on the left, `proto-hand.webp` beside it)
 with Ryan's caption **"NERVA Ring Bench Prototype with Black Ceramic
-Housing"** under the small one; "What happens next" as three stages, each
-under a plain hairline (Ryan had the green and gold status bars and the green
-stroke over the caption taken off, so keep this page free of colour strips);
+Housing"** under the small one; "What happens next" as three stages with a
+drawn arrow between each (right in a row, down when stacked). Ryan had the
+green and gold status bars, the hairlines that replaced them and the green
+stroke over the caption taken off, so keep this page free of strips and rules
+there;
 then the slate signup band asking for beta testers. Share card is
 `public/og-prototype.jpg` (JPEG, 1200x630, cropped from the bench photo).
 The facts on it are only what Ryan said: the bench prototype works, next is

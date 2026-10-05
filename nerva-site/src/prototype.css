@@ -72,14 +72,29 @@
   font-size: clamp(1.8rem, 1.3rem + 1.8vw, 2.7rem);
 }
 
-/* three columns, each under a plain hairline, the way the hero's fact
-   strip and the FAQ rows are ruled */
+/* Three columns with a drawn arrow in each gap, level with the stage
+   titles, so the row reads Now, then Next, then After that. No rules or
+   colour bars: Ryan had both taken off. */
 .stages {
+  --gap: clamp(48px, 5vw, 80px);
+  --row-gap: 32px;
   list-style: none; margin: 0; padding: 0;
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px clamp(24px, 3.4vw, 56px);
+  gap: var(--row-gap) var(--gap);
 }
-.stage-step { min-width: 0; padding-top: 18px; border-top: 1px solid var(--line-2); }
+.stage-step { position: relative; min-width: 0; }
+/* the box fills the column gap; the arrow sits in the middle of it, on
+   the line of the h3 under the 14px label */
+.stage-step__arrow {
+  position: absolute; left: 100%; top: 35px;
+  width: var(--gap); height: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-3);
+}
+.stage-step__arrow svg {
+  width: min(44px, calc(100% - 16px)); height: 12px; overflow: visible;
+  stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
 .stage-step__when { display: block; font-size: 14px; font-weight: 600; color: var(--ink-3); }
 .stage-step h3 {
   margin: 6px 0 0; font-weight: 650; letter-spacing: -0.022em; line-height: 1.2;
@@ -104,7 +119,11 @@
 @media (max-width: 1080px) {
   .proto__head { grid-template-columns: 1fr; align-items: start; }
   .proto__title { max-width: 14ch; }
-  .stages { grid-template-columns: 1fr; }
+  /* stacked: the arrow turns to point down into the gap below, at the
+     left edge where the text starts */
+  .stages { grid-template-columns: 1fr; --row-gap: 60px; }
+  .stage-step__arrow { left: 0; top: 100%; width: 12px; height: var(--row-gap); }
+  .stage-step__arrow svg { width: 32px; flex: none; transform: rotate(90deg); }
   .proto__beta-grid { grid-template-columns: 1fr; gap: 28px; }
 }
 
