@@ -14,7 +14,7 @@
 import type { ReactNode } from 'react'
 
 const CONTACT_EMAIL = 'nervaring@gmail.com'
-const UPDATED = '12 September 2026'
+const UPDATED = '5 October 2026'
 
 /* one hanging label, one block of document */
 function Clause({ label, children }: { label: string; children: ReactNode }) {
@@ -128,8 +128,10 @@ export default function Legal() {
               honest state of it.
             </p>
             <p>
-              Every ring image on this site is a render of the CAD model, not a
-              photograph of a finished unit. The app screens are a design demo
+              Every ring image on the main page is a render of the CAD model, not a
+              photograph of a finished unit. The photographs on the{' '}
+              <a href="/prototype">prototype page</a> show the bench prototype, a
+              test unit, not the finished product. The app screens are a design demo
               filled with sample numbers, not anyone's data, and the readout on the
               main page is modeled rather than recorded. Parts, specifications,
               finishes, and timelines describe work in progress and will change.
