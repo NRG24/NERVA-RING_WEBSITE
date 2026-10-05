@@ -1,6 +1,6 @@
 # NERVA Website: Session Handoff
 
-_Last updated: 2026-09-27. Read this, then `CLAUDEwebdesign copy.md` (design law)
+_Last updated: 2026-10-05. Read this, then `CLAUDEwebdesign copy.md` (design law)
 and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
@@ -11,13 +11,19 @@ the sole builder. Contact is **nervaring@gmail.com**.
 
 ## Stack & how to run
 - App lives in **`nerva-site/`**. React 19 + Vite + TypeScript. No router, no
-  backend. Three HTML entry points, all listed in `vite.config.ts`:
+  backend. Four HTML entry points, all listed in `vite.config.ts`:
   - `index.html` → `src/main.tsx` → `src/App.tsx` (the build site)
   - `buy.html` → `src/buy-main.tsx` → `src/Buy.tsx` (store preview, noindex)
   - `privacy.html` → `src/legal-main.tsx` → `src/Legal.tsx` (privacy + disclaimers)
+  - `prototype.html` → `src/prototype-main.tsx` → `src/Prototype.tsx` (bench
+    prototype photos, served at **`/prototype`**: Cloudflare's default
+    `html_handling` drops the `.html`, and Vite's dev server does the same)
+- The signup form lives in `src/Signup.tsx` (with `CONTACT_EMAIL`), shared by
+  the main page and the prototype page.
 - Styles: `src/index.css` holds the tokens and everything shared (buttons,
-  nav, `.titleblock`, `.shopfoot`). `buy.css` and `legal.css` hold only their
-  own page's furniture and are imported *after* index.css.
+  nav, `.titleblock`, `.shopfoot`, `.cta`). `buy.css`, `legal.css` and
+  `prototype.css` hold only their own page's furniture and are imported
+  *after* index.css.
 - Typecheck `npx tsc -b --pretty false`, lint `npx oxlint`, build `npm run build`.
   All three are currently clean; keep them that way.
 - Dev server: `.claude/launch.json` runs on port 5188.
@@ -119,6 +125,25 @@ under 1080px. Every light section opens with a **centered** `.head`.
 11. **Launch bar.** Fixed to the bottom where the reference pins price and
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
+
+## The prototype page (`/prototype`, added 5 Oct 2026)
+Linked from the hero by a line under the two CTAs, **"New: See real
+prototyping progress."** (Ryan's exact words, green LED dot before "New:"),
+and from the footer index. `prototype.html` hardcodes `data-palette="almond"`.
+Top to bottom: headline left with the dated lede beside it; the two photos
+(`src/assets/proto-bench.webp` large on the left, `proto-hand.webp` beside it)
+with Ryan's caption **"NERVA Ring Bench Prototype with Black Ceramic
+Housing"** under the small one; "What happens next" as three stages on one
+segmented rail (the build meter's colours: green now, gold next, grey after);
+then the slate signup band asking for beta testers. Share card is
+`public/og-prototype.jpg` (JPEG, 1200x630, cropped from the bench photo).
+The facts on it are only what Ryan said: the bench prototype works, next is
+Bluetooth testing on a VNA at UVM's lab, beta testers after that. It does
+**not** claim the ring reads live data; the main readout's "not a recording"
+caption and the build ledger were left as they were.
+**Photos carry EXIF, and Ryan's iPhone shots carry GPS.** Strip it on the
+way in (`convert in.jpg -auto-orient -strip ... out.webp`) and never commit
+the original JPEGs.
 
 ## Colour scheme: **almond is live as the default** (29 Sep 2026)
 `index.html` sets `data-palette="almond"` on `<html>`, so the first paint is
@@ -270,9 +295,10 @@ a re-encode waiting to happen.
 ## Facts that must agree across the site
 The battery is **22 mAh** and the target is **about a month of standby**, not
 "days" (`nerva-ring-overview.md` is the source of truth). App.tsx said 23 mAh
-and "days" until recently. The privacy page asserts that **every ring image is
-a CAD render, not a photograph**. If that ever stops being true, fix that page
-in the same commit.
+and "days" until recently. The privacy page and the main footer note say
+**every ring image on the main page is a CAD render, and the photographs are
+on the prototype page**. If a photo lands anywhere else, fix both in the same
+commit.
 
 ## Email signup (Buttondown)
 Set `VITE_BUTTONDOWN_USERNAME` to the account name only; the form builds the
@@ -309,12 +335,15 @@ the list. There is deliberately no success state in our UI.
     Twitter and sitemap URLs.
 
 ## Cloud-session gotchas
-- **Pasted images never reach the container.** A file attached so that it
-  produces an `@"/root/.claude/uploads/..."` path does; an image pasted into
-  the composer is rendered into the conversation only, with no bytes on disk.
-  To get art in, push it to the branch (GitHub's web uploader works) and pull.
-- **No ffmpeg or image tooling preinstalled**, but `npm i ffmpeg-static` pulls
-  a full static build with libx264 and works fine through the proxy.
+- **Pasted images sometimes never reach the container.** On 5 Oct the
+  attached photos did land on disk (under the session's `images/` folder);
+  in earlier sessions an image pasted into the composer was rendered into
+  the conversation only. If the bytes are missing, push the art to the
+  branch (GitHub's web uploader works) and pull.
+- **ImageMagick (`convert`, with WebP) is preinstalled**, and so is
+  `/usr/bin/ffmpeg`.
+- If ffmpeg is ever missing, `npm i ffmpeg-static` pulls a full static build
+  with libx264 and works fine through the proxy.
 - The bundled Playwright Chromium has **no H.264**, so video never decodes in
   a headless check. You can verify which code path runs and what gets fetched,
   but the scrub itself needs a real browser.
