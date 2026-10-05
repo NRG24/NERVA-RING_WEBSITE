@@ -16,17 +16,14 @@ import { CONTACT_EMAIL, Signup } from './Signup.tsx'
 
 const UPDATED = '5 October 2026'
 
-/* Where the build goes from here, in order. The rail over each stage is
-   the main page's build meter: green done, gold up next, grey ahead. */
+/* where the build goes from here, in order */
 const STAGES = [
   {
-    s: 'now',
     when: 'Now',
     title: 'Running on the bench',
-    body: <>The electronics are built, wrapped to the inside of the band, and switched on. The photos above are this unit.</>,
+    body: <>This is the unit in the photos above.</>,
   },
   {
-    s: 'next',
     when: 'Next',
     title: 'Bluetooth on the VNA',
     body: (
@@ -39,7 +36,6 @@ const STAGES = [
     ),
   },
   {
-    s: 'later',
     when: 'After that',
     title: 'Beta testers',
     body: <>Once the radio checks out, the ring needs to be worn every day by people who aren’t building it. That is where we’ll need beta testers.</>,
@@ -100,7 +96,7 @@ export default function Prototype() {
             <h2 id="next-title" className="proto__h2">What happens next</h2>
             <ol className="stages">
               {STAGES.map((st) => (
-                <li key={st.s} className={`stage-step stage-step--${st.s}`}>
+                <li key={st.when} className="stage-step">
                   <span className="stage-step__when">{st.when}</span>
                   <h3>{st.title}</h3>
                   <p>{st.body}</p>

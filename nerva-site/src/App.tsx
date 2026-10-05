@@ -393,7 +393,8 @@ function Hero() {
           <a className="btn btn--led btn--lg" href="#follow">Get launch updates</a>
           <a className="textlink textlink--onfilm" href="#inside">See what’s inside</a>
         </div>
-        {/* the one thing on the site that is a photograph, not a render */}
+        {/* points at the prototype page, the one page with photographs
+            instead of renders */}
         <p className="hero__news">
           <a href="/prototype"><b>New:</b> <span>See real prototyping progress.</span></a>
         </p>

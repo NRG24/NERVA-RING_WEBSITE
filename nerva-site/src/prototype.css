@@ -2,8 +2,8 @@
    THE BENCH PROTOTYPE (/prototype)
    A build update set like a page of a magazine: the headline left
    with its lede beside it, the bench photo large with the in-hand
-   shot and the caption next to it, then the three stages ahead on
-   one rail, and the signup band. Imported after index.css, and the
+   shot and the caption next to it, then the three stages ahead,
+   and the signup band. Imported after index.css, and the
    page is always on the almond scheme (prototype.html sets it).
    ============================================================ */
 
@@ -59,12 +59,6 @@
   color: var(--ink);
   text-wrap: balance;
 }
-/* the green of the LED in the photos, as the stroke the main page's
-   cards open with */
-.proto__cap::before {
-  content: ''; display: block; width: 32px; height: 3px; border-radius: 2px;
-  margin-bottom: 12px; background: var(--sensor);
-}
 
 /* ---------- what happens next ---------- */
 .proto__next {
@@ -78,25 +72,14 @@
   font-size: clamp(1.8rem, 1.3rem + 1.8vw, 2.7rem);
 }
 
-/* Three columns on one segmented rail, the build meter from the main
-   page: each stage's bar runs on across the column gap and stops 4px
-   short of the next, so the three read as one meter. */
+/* three columns, each under a plain hairline, the way the hero's fact
+   strip and the FAQ rows are ruled */
 .stages {
-  --gap: clamp(24px, 3.4vw, 56px);
   list-style: none; margin: 0; padding: 0;
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px var(--gap);
+  gap: 32px clamp(24px, 3.4vw, 56px);
 }
-.stage-step { min-width: 0; }
-.stage-step::before {
-  content: ''; display: block;
-  width: calc(100% + var(--gap) - 4px); height: 6px; border-radius: 3px;
-  margin-bottom: 18px;
-  background: color-mix(in srgb, var(--ink) 12%, transparent);
-}
-.stage-step:last-child::before { width: 100%; }
-.stage-step--now::before  { background: var(--sensor); }
-.stage-step--next::before { background: var(--gold); }
+.stage-step { min-width: 0; padding-top: 18px; border-top: 1px solid var(--line-2); }
 .stage-step__when { display: block; font-size: 14px; font-weight: 600; color: var(--ink-3); }
 .stage-step h3 {
   margin: 6px 0 0; font-weight: 650; letter-spacing: -0.022em; line-height: 1.2;
@@ -122,8 +105,6 @@
   .proto__head { grid-template-columns: 1fr; align-items: start; }
   .proto__title { max-width: 14ch; }
   .stages { grid-template-columns: 1fr; }
-  /* stacked, each stage gets its own full bar */
-  .stage-step::before, .stage-step:last-child::before { width: 100%; }
   .proto__beta-grid { grid-template-columns: 1fr; gap: 28px; }
 }
 

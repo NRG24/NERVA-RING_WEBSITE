@@ -128,13 +128,15 @@ under 1080px. Every light section opens with a **centered** `.head`.
 
 ## The prototype page (`/prototype`, added 5 Oct 2026)
 Linked from the hero by a line under the two CTAs, **"New: See real
-prototyping progress."** (Ryan's exact words, green LED dot before "New:"),
+prototyping progress."** (Ryan's exact words; he had the green dot before
+"New:" taken off),
 and from the footer index. `prototype.html` hardcodes `data-palette="almond"`.
 Top to bottom: headline left with the dated lede beside it; the two photos
 (`src/assets/proto-bench.webp` large on the left, `proto-hand.webp` beside it)
 with Ryan's caption **"NERVA Ring Bench Prototype with Black Ceramic
-Housing"** under the small one; "What happens next" as three stages on one
-segmented rail (the build meter's colours: green now, gold next, grey after);
+Housing"** under the small one; "What happens next" as three stages, each
+under a plain hairline (Ryan had the green and gold status bars and the green
+stroke over the caption taken off, so keep this page free of colour strips);
 then the slate signup band asking for beta testers. Share card is
 `public/og-prototype.jpg` (JPEG, 1200x630, cropped from the bench photo).
 The facts on it are only what Ryan said: the bench prototype works, next is
