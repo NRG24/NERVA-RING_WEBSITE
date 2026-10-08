@@ -733,6 +733,19 @@ function App() {
   const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('ceramic-black')
   const active = FINISHES.find((f) => f.id === finish)!
   const [barShown, setBarShown] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  /* The nav is a translucent layer the page scrolls under. Its hairline is
+     a scroll edge, so it only appears once there is content beneath it to
+     separate from; at the top of the page there is nothing to divide. */
+  useEffect(() => {
+    let raf = 0
+    const sync = () => { raf = 0; setScrolled(window.scrollY > 2) }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(sync) }
+    sync()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf) }
+  }, [])
 
   /* Escape closes the phone menu, and so does widening past the breakpoint,
      where the toggle disappears and would leave the panel stuck open */
@@ -772,7 +785,7 @@ function App() {
   return (
     <>
       {/* ---------------- NAV ---------------- */}
-      <header className="nav">
+      <header className={`nav ${scrolled || menuOpen ? 'is-scrolled' : ''}`}>
         <div className="nav__inner">
           <a className="brand" href="#top" aria-label="NERVA Ring home">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
@@ -804,7 +817,11 @@ function App() {
             </button>
           </div>
         </div>
-        <nav id="mobile-menu" className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-label="Menu">
+        {/* Always in the page so it can animate both ways and be caught
+            mid-flight: a second tap on the toggle reverses it from wherever
+            it is. inert while closed, so its links are never a hidden tab
+            stop. */}
+        <nav id="mobile-menu" className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-label="Menu" inert={!menuOpen}>
           {NAV.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
           ))}
@@ -813,6 +830,13 @@ function App() {
           </a>
         </nav>
       </header>
+      {/* the menu is a short task on top of the page: dim what is behind it,
+          and a tap anywhere on the dimmed page puts it away */}
+      <div
+        className={`menu-scrim ${menuOpen ? 'open' : ''}`}
+        aria-hidden="true"
+        onPointerDown={() => setMenuOpen(false)}
+      />
 
       <main id="top">
         <Hero />
@@ -952,15 +976,24 @@ function App() {
         <section className="section section--tint" id="finish">
           <div className="wrap config">
             <Reveal>
+              {/* All four renders sit stacked and loaded, and the chosen one
+                  cross-fades up. Nothing waits on a fetch after a tap, and
+                  tapping quickly through the swatches retargets each fade
+                  from where it is rather than restarting it. */}
               <figure className="stage config__stage">
-                <img
-                  key={active.id}
-                  src={active.img}
-                  width={1400}
-                  height={1270}
-                  loading="lazy"
-                  alt={`The NERVA Ring in ${active.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs.`}
-                />
+                {FINISHES.map((f) => (
+                  <img
+                    key={f.id}
+                    className={f.id === finish ? 'is-active' : ''}
+                    src={f.img}
+                    width={1400}
+                    height={1270}
+                    loading="lazy"
+                    alt={f.id === finish
+                      ? `The NERVA Ring in ${f.label.toLowerCase()}, showing the internal flex PCB and its green and red optical sensor LEDs.`
+                      : ''}
+                  />
+                ))}
               </figure>
             </Reveal>
 

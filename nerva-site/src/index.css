@@ -87,6 +87,16 @@ body {
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 
+/* Nothing on this page has a double-tap, so no control should wait to find
+   out whether one is coming. Every control draws its own press state, so
+   the grey tap flash goes too. */
+a, button, summary, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* Tracking is size-specific: the heads are set tight, and the smallest
+   labels open up a touch so they stay legible at 12 to 14px. */
+.lane__meta, .tb__k, .config__fine, .colophon__fine,
+.strip-chart__cap, .statusline__read { letter-spacing: 0.008em; }
+
 ::selection { background: var(--ink); color: #fff; }
 
 .sr-only {
@@ -153,7 +163,10 @@ a { color: inherit; text-decoration: none; }
   transition: transform 0.18s var(--ease), background 0.18s var(--ease),
               border-color 0.18s var(--ease), color 0.18s var(--ease);
 }
-.btn:active { transform: translateY(1px); }
+/* Feedback lives on the press, not the release: the button gives under
+   the finger the instant it goes down (the short duration here is the one
+   that applies on the way in), then eases back over the base 0.18s. */
+.btn:active { transform: scale(0.97); transition-duration: 0.06s; }
 .btn--lg { --pad-y: 16px; --pad-x: 32px; font-size: 16.5px; }
 .btn--block { width: 100%; }
 
@@ -181,6 +194,16 @@ a { color: inherit; text-decoration: none; }
   .textlink--onfilm:hover { text-decoration-color: #fff; }
 }
 
+/* press states for the controls that are not buttons: each one answers
+   on the way down, quickly, and lets go more slowly */
+.textlink, .hero__news a, .nav__links a, .tb__index a, .mobile-menu a:not(.btn), .faq__item summary {
+  transition: opacity 0.18s var(--ease), color 0.15s var(--ease), text-decoration-color 0.18s var(--ease);
+}
+.textlink:active, .hero__news a:active, .nav__links a:active, .tb__index a:active,
+.mobile-menu a:not(.btn):active, .faq__item summary:active { opacity: 0.55; transition-duration: 0.05s; }
+.nav__toggle { transition: transform 0.18s var(--ease); }
+.nav__toggle:active { transform: scale(0.88); transition-duration: 0.05s; }
+
 :focus-visible { outline: 2.5px solid var(--green-ink); outline-offset: 3px; border-radius: 6px; }
 .btn:focus-visible, .swatch:focus-visible { border-radius: 999px; }
 /* dark grounds: lift the ring off a white halo */
@@ -192,13 +215,18 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
    NAV
    ============================================================ */
+/* A translucent layer the page scrolls under, rather than an opaque strip.
+   Its hairline is a scroll edge: there is nothing to divide at the top of
+   the page, so it fades in only once content is beneath it (is-scrolled). */
 .nav {
   position: sticky; top: 0; z-index: 60;
-  background: rgba(255, 255, 255, 0.92);
-  -webkit-backdrop-filter: saturate(1.4) blur(14px);
-  backdrop-filter: saturate(1.4) blur(14px);
-  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s var(--ease), background-color 0.25s var(--ease);
 }
+.nav.is-scrolled { border-bottom-color: var(--line); }
 .nav__inner {
   max-width: var(--wrap); margin: 0 auto; height: var(--nav-h);
   padding: 0 32px;
@@ -217,14 +245,15 @@ a { color: inherit; text-decoration: none; }
   align-self: center;
   padding-left: 10px;
   border-left: 1px solid var(--line-2);
-  font-weight: 500; font-size: 13px; letter-spacing: 0;
+  font-weight: 500; font-size: 13px; letter-spacing: 0.008em;
   color: var(--ink-3);
 }
 .nav__links { display: flex; gap: 30px; }
 .nav__links a {
   display: inline-flex; align-items: center; min-height: 24px;
-  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
-  transition: color 0.15s var(--ease);
+  /* a little heavier than body weight: these sit on a translucent layer
+     with the page moving under them, and flat mid-grey text washes out */
+  font-size: 14.5px; font-weight: 550; color: var(--ink-2);
 }
 @media (hover: hover) { .nav__links a:hover { color: var(--ink); } }
 .nav__right { display: flex; align-items: center; gap: 12px; }
@@ -233,13 +262,50 @@ a { color: inherit; text-decoration: none; }
   width: 44px; height: 44px; align-items: center; justify-content: center; cursor: pointer;
 }
 
-.mobile-menu {
-  display: none; flex-direction: column; gap: 4px;
-  padding: 8px 24px 20px;
-  border-bottom: 1px solid var(--line);
-  background: var(--paper);
+/* The phone menu is a sheet that drops out of the nav, anchored at the
+   toggle's corner, and goes back up the way it came. It is always laid
+   out, so a second tap mid-animation reverses it from where it is. Open
+   eases out; close runs the mirrored curve, so the return path matches.
+   Near-solid rather than blurred: it sits inside the nav's own backdrop
+   filter, and a second translucent layer stacked on the first would only
+   lose legibility. */
+.mobile-menu { display: none; }
+@media (max-width: 1080px) {
+  .mobile-menu {
+    position: absolute; top: 100%; left: 0; right: 0;
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 8px 24px 20px;
+    background: color-mix(in srgb, var(--paper) 97%, transparent);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow-md);
+    transform-origin: top right;
+    opacity: 0; visibility: hidden;
+    transform: translateY(-10px) scale(0.985);
+    transition:
+      opacity 0.2s cubic-bezier(0.7, 0, 0.84, 0),
+      transform 0.24s cubic-bezier(0.7, 0, 0.84, 0),
+      visibility 0s linear 0.24s;
+  }
+  .mobile-menu.open {
+    opacity: 1; visibility: visible; transform: none;
+    transition:
+      opacity 0.22s var(--ease-out),
+      transform 0.4s var(--ease-out),
+      visibility 0s;
+  }
 }
-.mobile-menu.open { display: flex; }
+.menu-scrim {
+  position: fixed; inset: 0; z-index: 59;
+  background: rgba(11, 11, 13, 0.22);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.24s var(--ease);
+}
+.menu-scrim.open { opacity: 1; pointer-events: auto; }
+@media (min-width: 1081px) { .menu-scrim { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  /* a cross-fade, no travel */
+  .mobile-menu, .mobile-menu.open { transform: none; }
+}
 .mobile-menu a:not(.btn) {
   padding: 13px 4px; font-size: 18px; font-weight: 600;
   border-bottom: 1px solid var(--line);
@@ -712,9 +778,17 @@ a { color: inherit; text-decoration: none; }
   /* the studio ground the renders were shot against */
   background: radial-gradient(130% 110% at 50% 22%, #8f9398 0%, #7c8085 46%, #62666b 100%);
 }
-.config__stage img { object-position: center 40%; animation: ringIn 0.6s var(--ease); }
-@keyframes ringIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .config__stage img { animation: none; } }
+.config__stage { position: relative; }
+/* the four renders are stacked and the chosen one fades up over the last.
+   A transition, not a keyframe that replays on every tap: tap through the
+   swatches quickly and each fade turns round from wherever it has got to. */
+.config__stage img {
+  position: absolute; inset: 0;
+  object-position: center 40%;
+  opacity: 0;
+  transition: opacity 0.32s var(--ease-out);
+}
+.config__stage img.is-active { opacity: 1; }
 
 .config__name { margin: 0; font-size: 15px; font-weight: 600; color: var(--ink-3); }
 .config__title {
@@ -737,6 +811,8 @@ a { color: inherit; text-decoration: none; }
 }
 .swatch[aria-pressed='true'] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
 @media (hover: hover) { .swatch:hover { transform: scale(1.05); } }
+/* gives under the finger on the way down; the choice lands on release */
+.swatch:active { transform: scale(0.92); transition-duration: 0.05s; }
 
 .config__status { margin-top: clamp(32px, 4vw, 48px); padding-top: 26px; border-top: 1px solid var(--line); }
 .tally__bar { display: flex; gap: 4px; }
@@ -781,7 +857,25 @@ a { color: inherit; text-decoration: none; }
 .faq__item[open] summary::after { transform: rotate(45deg); }
 @media (prefers-reduced-motion: reduce) { .faq__item summary::after { transition: none; } }
 .faq__item summary:focus-visible { border-radius: 6px; }
-.faq__item p { margin: -6px 0 0; padding: 0 2px 24px; max-width: 62ch; color: var(--ink-2); line-height: 1.65; }
+.faq__item p { margin: 0; padding: 0 2px 24px; max-width: 62ch; color: var(--ink-2); line-height: 1.65; }
+/* Where the browser can animate a details element, the answer opens to its
+   height instead of appearing, and closes the same way. It is a transition,
+   so a second tap mid-open turns it round from where it is. Elsewhere the
+   accordion keeps working exactly as before, just without the motion. */
+@supports selector(::details-content) {
+  .faq__item { interpolate-size: allow-keywords; }
+  .faq__item::details-content {
+    block-size: 0; overflow: clip; opacity: 0;
+    transition:
+      block-size 0.36s var(--ease-out),
+      opacity 0.24s var(--ease),
+      content-visibility 0.36s allow-discrete;
+  }
+  .faq__item[open]::details-content { block-size: auto; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .faq__item::details-content { transition: opacity 0.2s var(--ease), content-visibility 0.2s allow-discrete; }
+  }
+}
 
 /* ============================================================
    SIGNUP
@@ -840,17 +934,21 @@ a { color: inherit; text-decoration: none; }
    and steps aside while the signup form or the footer is on screen,
    so it never covers the thing it points at.
    ============================================================ */
+/* A dark material the page scrolls under, with a bright top edge where
+   light catches it, in place of a near-opaque slab. It rises out of the
+   bottom edge and goes back down the same way, on mirrored curves. */
 .launchbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
-  background: rgba(11, 11, 13, 0.94);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  background: rgba(11, 11, 13, 0.86);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 -10px 30px rgba(10, 10, 12, 0.08);
   color: #fff;
   transform: translateY(110%);
-  transition: transform 0.45s var(--ease-out);
+  transition: transform 0.3s cubic-bezier(0.7, 0, 0.84, 0);
 }
-.launchbar.is-shown { transform: none; }
-@media (prefers-reduced-motion: reduce) { .launchbar { transition: none; } }
+.launchbar.is-shown { transform: none; transition: transform 0.5s var(--ease-out); }
+@media (prefers-reduced-motion: reduce) { .launchbar, .launchbar.is-shown { transition: none; } }
 .launchbar__inner {
   max-width: var(--wrap); margin: 0 auto;
   padding: 12px 32px;
@@ -858,7 +956,7 @@ a { color: inherit; text-decoration: none; }
 }
 .launchbar__txt { margin: 0; font-size: 15px; line-height: 1.35; }
 .launchbar__txt b { font-weight: 650; }
-.launchbar__txt span { color: rgba(255, 255, 255, 0.62); margin-left: 10px; }
+.launchbar__txt span { color: rgba(255, 255, 255, 0.74); font-weight: 500; margin-left: 10px; }
 
 /* ============================================================
    FOOTER — read as the title block of an engineering drawing, the
@@ -883,7 +981,7 @@ a { color: inherit; text-decoration: none; }
 .tb__v { display: block; margin-top: 7px; font-weight: 600; font-size: 15px; letter-spacing: -0.012em; color: var(--ink); }
 .tb__v a { border-bottom: 1px solid var(--line-2); transition: border-color 0.18s var(--ease); }
 .tb__index { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 8px; }
-.tb__index a { position: relative; font-size: 14.5px; font-weight: 500; color: var(--ink-2); padding: 3px 0; transition: color 0.15s var(--ease); }
+.tb__index a { position: relative; font-size: 14.5px; font-weight: 500; color: var(--ink-2); padding: 3px 0; transition: color 0.15s var(--ease), opacity 0.18s var(--ease); }
 .tb__index a::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
   background: var(--ink); transform: scaleX(0); transform-origin: left center;
@@ -1054,7 +1152,7 @@ a { color: inherit; text-decoration: none; }
 [data-palette] ::selection { background: var(--pal-band); color: var(--pal-bg); }
 [data-palette] :focus-visible { outline-color: var(--pal-band); }
 
-[data-palette] .nav { background: color-mix(in srgb, var(--pal-bg) 90%, transparent); }
+[data-palette] .nav { background: color-mix(in srgb, var(--pal-bg) 80%, transparent); }
 
 /* ---- hero: the ring on the palette ground ---- */
 [data-palette] .hero { background: var(--pal-bg); }
@@ -1255,7 +1353,7 @@ a { color: inherit; text-decoration: none; }
 [data-palette] .signup input::placeholder { color: rgba(255, 255, 255, 0.5); }
 [data-palette] .cta__fine { color: rgba(255, 255, 255, 0.74); }
 [data-palette] .cta__fine a { border-color: rgba(255, 255, 255, 0.4); }
-[data-palette] .launchbar { background: color-mix(in srgb, var(--pal-band) 95%, transparent); }
+[data-palette] .launchbar { background: color-mix(in srgb, var(--pal-band) 90%, transparent); }
 [data-palette] .inside :focus-visible, [data-palette] .cta :focus-visible, [data-palette] .launchbar :focus-visible {
   outline-color: #fff; box-shadow: none;
 }
@@ -1263,3 +1361,23 @@ a { color: inherit; text-decoration: none; }
 /* ---- the rest of the light sections ---- */
 [data-palette] .colophon { background: var(--pal-bg); }
 [data-palette] .tally__seg:not(.tally__seg--done):not(.tally__seg--wip) { background: color-mix(in srgb, var(--pal-ink) 12%, transparent); }
+
+/* ============================================================
+   READING PREFERENCES
+   Translucency and motion are a layer on top of the page, never the
+   only way to read it. Less transparency asked for: the materials go
+   solid. More contrast: solid grounds and a defined edge.
+   ============================================================ */
+@media (prefers-reduced-transparency: reduce) {
+  .nav { background: var(--paper); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  [data-palette] .nav { background: var(--pal-bg); }
+  .launchbar { background: #0b0b0d; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  [data-palette] .launchbar { background: var(--pal-band); }
+  .mobile-menu { background: var(--paper); }
+}
+@media (prefers-contrast: more) {
+  .nav, [data-palette] .nav { background: var(--paper); -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom-color: var(--ink); }
+  [data-palette] .nav { background: var(--pal-bg); }
+  .launchbar { background: #0b0b0d; box-shadow: inset 0 1px 0 #fff; }
+  [data-palette] .launchbar { background: var(--pal-band); }
+}

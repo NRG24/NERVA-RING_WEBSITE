@@ -267,6 +267,24 @@ Watch the weight. The old sensor film was 960x540 at **4271 kb/s**, four times
 the bitrate of the 1080p hero, for 12.4MB. Anything over ~1500 kb/s at 540p is
 a re-encode waiting to happen.
 
+## Interaction feel (8 Oct 2026, Apple fluid-interface pass)
+No visual identity changed; this is how things respond.
+- **Press feedback on the way down.** Buttons scale to 0.97, swatches to
+  0.92, links and FAQ rows dim, all in ~50ms; release eases back over
+  0.18s. `touch-action: manipulation` on every control (no tap delay).
+- **Materials.** Nav and launch bar are translucent layers
+  (`saturate(180%) blur(20-24px)`); the nav's hairline is a scroll edge,
+  shown only once content is under it (`.nav.is-scrolled`). Opacity was
+  tuned up after the first pass let headings bleed through: keep the nav at
+  80% and the launch bar at 86-90%. `prefers-reduced-transparency` and
+  `prefers-contrast: more` make both solid (end of `index.css`).
+- **Interruptible, symmetric motion.** The phone menu is always laid out
+  (`inert` when closed) and drops from the toggle's corner, returning on
+  the mirrored curve, over a dimming scrim that closes it on tap. The
+  finish swap stacks all four renders and cross-fades the chosen one, so a
+  quick run of taps retargets instead of restarting. FAQ answers open to
+  their height via `::details-content` where supported, plain elsewhere.
+
 ## HARD user directives (do not regress)
 - **Zero em dashes** anywhere in copy. Rewrite the sentence, don't swap the
   punctuation. Currently 0 in the .tsx and .html files. Keep it that way.
