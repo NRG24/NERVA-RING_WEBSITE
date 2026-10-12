@@ -129,7 +129,7 @@ export default function Prototype() {
               <Signup />
               <p className="cta__fine">
                 Written by the person building it, no spam. Your address goes to
-                Buttondown and nowhere else.{' '}
+                Kit and nowhere else.{' '}
                 <a href="/privacy.html">What this site collects</a>.
               </p>
             </div>
