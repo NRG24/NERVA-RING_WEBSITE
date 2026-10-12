@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 
 /* ---------- email capture ----------
    Shared by the build site and the prototype page. Posts to a Kit form.
@@ -8,8 +8,8 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
    error; an XHR swallows that response, so those people would look subscribed
    here and never land on the list.
 
-   Kit sends people back to /?subscribed=1#follow (set as the form's redirect
-   in Kit's settings), and that's the only success state we show. */
+   Kit then sends people to /subscribed (set as the form's redirect in Kit's
+   settings), and that page is the only success state we show. */
 const KIT_FORM_ID = '10036721' // public by design: it's in the form's own URL
 const SIGNUP_ACTION = `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`
 export const CONTACT_EMAIL = 'nervaring@gmail.com'
@@ -22,25 +22,11 @@ function signupSource() {
   return utm ? utm.slice(0, 40) : 'nervaring.com'
 }
 
-function cameBackSubscribed() {
-  return new URLSearchParams(window.location.search).get('subscribed') === '1'
-}
-
 export function Signup() {
   const [email, setEmail] = useState('')
   const [err, setErr] = useState('')
-  const [done] = useState(cameBackSubscribed)
   const [source] = useState(signupSource)
   const trapRef = useRef<HTMLInputElement>(null)
-
-  /* drop the flag from the address bar, so a refresh or a shared link
-     doesn't tell the next person they've subscribed */
-  useEffect(() => {
-    if (!done) return
-    const url = new URL(window.location.href)
-    url.searchParams.delete('subscribed')
-    history.replaceState(null, '', url)
-  }, [done])
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     if (trapRef.current?.value) { e.preventDefault(); return } // bot fell in the honeypot
@@ -49,14 +35,6 @@ export function Signup() {
       e.preventDefault()
       setErr('That email address doesn’t look right.')
     }
-  }
-
-  if (done) {
-    return (
-      <p className="signup-wrap signup__done" role="status">
-        You’re on the list. If an email asks you to confirm, click it, or you won’t hear from me.
-      </p>
-    )
   }
 
   return (

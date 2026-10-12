@@ -11,13 +11,15 @@ the sole builder. Contact is **nervaring@gmail.com**.
 
 ## Stack & how to run
 - App lives in **`nerva-site/`**. React 19 + Vite + TypeScript. No router, no
-  backend. Four HTML entry points, all listed in `vite.config.ts`:
+  backend. Five HTML entry points, all listed in `vite.config.ts`:
   - `index.html` → `src/main.tsx` → `src/App.tsx` (the build site)
   - `buy.html` → `src/buy-main.tsx` → `src/Buy.tsx` (store preview, noindex)
   - `privacy.html` → `src/legal-main.tsx` → `src/Legal.tsx` (privacy + disclaimers)
   - `prototype.html` → `src/prototype-main.tsx` → `src/Prototype.tsx` (bench
     prototype photos, served at **`/prototype`**: Cloudflare's default
     `html_handling` drops the `.html`, and Vite's dev server does the same)
+  - `subscribed.html` → `src/subscribed-main.tsx` → `src/Subscribed.tsx`
+    (where Kit sends people after signup, served at **`/subscribed`**)
 - The signup form lives in `src/Signup.tsx` (with `CONTACT_EMAIL`), shared by
   the main page and the prototype page.
 - Styles: `src/index.css` holds the tokens and everything shared (buttons,
@@ -313,9 +315,10 @@ Kit's free plan holds 10,000. The form posts to Kit form **10036721**
 subscriber sometimes has to follow the response to clear a CAPTCHA, and an XHR
 swallows that, so they look subscribed and never land on the list.
 - Kit's form setting "redirect after subscribe" must be
-  `https://nervaring.com/?subscribed=1#follow`. That query flag is the only
-  success state: the form swaps to a "you're on the list" line and the flag is
-  stripped from the address bar.
+  `https://nervaring.com/subscribed`. That page (`subscribed.html` →
+  `src/Subscribed.tsx`, noindex, not in the sitemap) is the only success
+  state: the signup band carried on, with what to expect and links to
+  /prototype and Instagram (@nerva_ring).
 - `fields[source]` carries `utm_source` (or `nervaring.com` when there isn't
   one) into a Kit custom field named `source`, so signups can be counted by
   channel. Tag every posted link, e.g. `?utm_source=instagram`.
