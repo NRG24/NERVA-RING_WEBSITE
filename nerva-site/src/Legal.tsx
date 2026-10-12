@@ -4,7 +4,7 @@
    Written from what the site actually does, not from a template. Every
    factual claim here is checkable against the source: there is no
    analytics, no cookie, and no storage call anywhere in src/, the only
-   form posts to Buttondown, and the only other third-party origin the
+   form posts to Kit, and the only other third-party origin the
    pages touch is Cloudflare (the host). The fonts are bundled with the
    site, so nothing is fetched from Google.
 
@@ -14,7 +14,7 @@
 import type { ReactNode } from 'react'
 
 const CONTACT_EMAIL = 'nervaring@gmail.com'
-const UPDATED = '5 October 2026'
+const UPDATED = '12 October 2026'
 
 /* one hanging label, one block of document */
 function Clause({ label, children }: { label: string; children: ReactNode }) {
@@ -70,9 +70,9 @@ export default function Legal() {
 
           <Clause label="If you join the update list">
             <p>
-              Your address is posted to <b>Buttondown</b>, the service that runs the
-              mailing list, tagged so I know the signup came from this site. Buttondown
-              stores it. I keep no second copy anywhere else.
+              Your address is posted to <b>Kit</b>, the service that runs the
+              mailing list, along with a note of where you found the site (for
+              example, Instagram). Kit stores it. I keep no second copy anywhere else.
             </p>
             <p>
               It is used for one thing: emails about NERVA Ring, meaning build progress,

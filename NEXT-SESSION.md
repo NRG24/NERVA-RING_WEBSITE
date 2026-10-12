@@ -119,7 +119,7 @@ under 1080px. Every light section opens with a **centered** `.head`.
    and contact email left, questions right. Every answer must be backed by
    `nerva-ring-overview.md` or the site's disclaimers; nothing about price,
    subscription or phone compatibility until those are decided.
-9. **`#follow`.** Buttondown email capture on a deep green ground.
+9. **`#follow`.** Kit email capture on a deep green ground.
 10. Footer as an engineering **title block**. Cell spans must tile each row of
    the 6-column grid exactly or the leftover gap prints as a solid hairline.
 11. **Launch bar.** Fixed to the bottom where the reference pins price and
@@ -304,13 +304,21 @@ and "days" until recently. The privacy page and the main footer note say
 on the prototype page**. If a photo lands anywhere else, fix both in the same
 commit.
 
-## Email signup (Buttondown)
-Set `VITE_BUTTONDOWN_USERNAME` to the account name only; the form builds the
-endpoint itself. Unset, it refuses to submit and says so rather than posting
-into the void. **It is a native form POST on purpose. Do not "fix" it into a
-fetch()**. A subscriber sometimes has to follow the response to clear a
-CAPTCHA, and an XHR swallows that, so they look subscribed and never land on
-the list. There is deliberately no success state in our UI.
+## Email signup (Kit)
+Moved off Buttondown on 12 Oct 2026: its free plan stops at 100 subscribers,
+Kit's free plan holds 10,000. The form posts to Kit form **10036721**
+(`KIT_FORM_ID` in `src/Signup.tsx`) at
+`https://app.kit.com/forms/<id>/subscriptions`, email field `email_address`.
+**It is a native form POST on purpose. Do not "fix" it into a fetch()**. A
+subscriber sometimes has to follow the response to clear a CAPTCHA, and an XHR
+swallows that, so they look subscribed and never land on the list.
+- Kit's form setting "redirect after subscribe" must be
+  `https://nervaring.com/?subscribed=1#follow`. That query flag is the only
+  success state: the form swaps to a "you're on the list" line and the flag is
+  stripped from the address bar.
+- `fields[source]` carries `utm_source` (or `nervaring.com` when there isn't
+  one) into a Kit custom field named `source`, so signups can be counted by
+  channel. Tag every posted link, e.g. `?utm_source=instagram`.
 
 ## Known open items
 1. ~~Self-host the fonts~~ done via `@fontsource` packages, imported once in
