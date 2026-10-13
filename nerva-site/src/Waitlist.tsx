@@ -28,9 +28,9 @@ export default function Waitlist() {
           <div>
             <h1 className="display display--light">Join the waitlist.</h1>
             <p className="cta__lede">
-              NERVA is a smart ring that reads heart rate, blood oxygen, and stress
-              through your skin. Get on the list to hear first when beta testing opens
-              and when it launches.
+              NERVA Ring is a smart ring that helps you manage your stress and avoid
+              burnout. Get on the list to hear first when beta testing opens and when
+              it launches.
             </p>
             <Signup autoFocus />
             <p className="cta__fine">
