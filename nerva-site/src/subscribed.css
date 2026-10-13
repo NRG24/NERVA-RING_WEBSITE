@@ -1,24 +1,11 @@
 /* ============================================================
    SUBSCRIBED
    Only this page's furniture. The band itself is .cta from
-   index.css; this makes it fill the screen and adds the short
-   "what happens next" list and the two buttons.
+   index.css; this makes it fill the screen and sets the two buttons.
    ============================================================ */
 
 .subd { min-height: calc(100svh - var(--nav-h)); display: flex; align-items: center; }
 .subd .cta__grid { width: 100%; }
-
-.subd__next {
-  margin: 30px 0 0; padding: 0; list-style: none; max-width: 46ch;
-  border-top: 1px solid rgba(214, 245, 226, 0.18);
-}
-.subd__next li {
-  display: grid; gap: 4px;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(214, 245, 226, 0.18);
-}
-.subd__next b { font-weight: 600; letter-spacing: -0.015em; color: #fff; }
-.subd__next span { color: rgba(255, 255, 255, 0.72); line-height: 1.5; }
 
 .subd__actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 0; }
 
