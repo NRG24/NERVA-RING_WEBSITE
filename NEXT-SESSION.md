@@ -320,8 +320,8 @@ swallows that, so they look subscribed and never land on the list.
 - Kit's form setting "redirect after subscribe" must be
   `https://nervaring.com/subscribed`. That page (`subscribed.html` →
   `src/Subscribed.tsx`, noindex, not in the sitemap) is the only success
-  state: the signup band carried on, with what to expect and links to
-  /prototype and Instagram (@nerva_ring).
+  state: the signup band carried on, just "You're on the list." and links
+  to /prototype and Instagram (@nerva_ring).
 - `fields[source]` carries `utm_source` (or `nervaring.com` when there isn't
   one) into a Kit custom field named `source`, so signups can be counted by
   channel. Tag every posted link, e.g. `?utm_source=instagram`.

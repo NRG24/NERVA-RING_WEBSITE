@@ -7,7 +7,6 @@
    ------------------------------------------------------------------ */
 
 import blueprint from './assets/blueprint.webp'
-import { CONTACT_EMAIL } from './Signup.tsx'
 
 const INSTAGRAM = 'https://www.instagram.com/nerva_ring/'
 
@@ -28,33 +27,12 @@ export default function Subscribed() {
         <div className="wrap cta__grid">
           <div>
             <h1 className="display display--light">You’re on the list.</h1>
-            <p className="cta__lede">
-              If an email asks you to confirm your address, click the link in it.
-              Until you do, nothing else reaches you.
-            </p>
-
-            <ol className="subd__next">
-              <li>
-                <b>About once a month</b>
-                <span>A short build update: what got made, what broke, what’s next.</span>
-              </li>
-              <li>
-                <b>First to know</b>
-                <span>When beta testing opens, and when the ring launches.</span>
-              </li>
-            </ol>
-
             <div className="subd__actions">
               <a className="btn btn--led btn--lg" href="/prototype">See the bench prototype</a>
               <a className="btn btn--lg subd__ig" href={INSTAGRAM} rel="noopener">
                 Follow @nerva_ring
               </a>
             </div>
-
-            <p className="cta__fine">
-              Changed your mind? Every email has an unsubscribe link, or write to{' '}
-              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-            </p>
           </div>
 
           <div className="cta__sheet">
