@@ -22,7 +22,7 @@ function signupSource() {
   return utm ? utm.slice(0, 40) : 'nervaring.com'
 }
 
-export function Signup() {
+export function Signup({ autoFocus = false }: { autoFocus?: boolean }) {
   const [email, setEmail] = useState('')
   const [err, setErr] = useState('')
   const [source] = useState(signupSource)
@@ -46,6 +46,7 @@ export function Signup() {
           type="email"
           name="email_address"
           autoComplete="email"
+          autoFocus={autoFocus}
           placeholder="you@domain.com"
           value={email}
           aria-invalid={err ? true : undefined}

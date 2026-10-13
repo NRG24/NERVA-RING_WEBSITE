@@ -11,13 +11,16 @@ the sole builder. Contact is **nervaring@gmail.com**.
 
 ## Stack & how to run
 - App lives in **`nerva-site/`**. React 19 + Vite + TypeScript. No router, no
-  backend. Five HTML entry points, all listed in `vite.config.ts`:
+  backend. Six HTML entry points, all listed in `vite.config.ts`:
   - `index.html` → `src/main.tsx` → `src/App.tsx` (the build site)
   - `buy.html` → `src/buy-main.tsx` → `src/Buy.tsx` (store preview, noindex)
   - `privacy.html` → `src/legal-main.tsx` → `src/Legal.tsx` (privacy + disclaimers)
   - `prototype.html` → `src/prototype-main.tsx` → `src/Prototype.tsx` (bench
     prototype photos, served at **`/prototype`**: Cloudflare's default
     `html_handling` drops the `.html`, and Vite's dev server does the same)
+  - `waitlist.html` → `src/waitlist-main.tsx` → `src/Waitlist.tsx` (just the
+    signup form and a prototype photo, served at **`/waitlist`**; the link for
+    the Instagram bio, as `/waitlist?utm_source=instagram`)
   - `subscribed.html` → `src/subscribed-main.tsx` → `src/Subscribed.tsx`
     (where Kit sends people after signup, served at **`/subscribed`**)
 - The signup form lives in `src/Signup.tsx` (with `CONTACT_EMAIL`), shared by
@@ -303,7 +306,7 @@ The battery is **22 mAh** and the target is **about a month of standby**, not
 "days" (`nerva-ring-overview.md` is the source of truth). App.tsx said 23 mAh
 and "days" until recently. The privacy page and the main footer note say
 **every ring image on the main page is a CAD render, and the photographs are
-on the prototype page**. If a photo lands anywhere else, fix both in the same
+on the prototype page** (and the waitlist page). If a photo lands anywhere else, fix both in the same
 commit.
 
 ## Email signup (Kit)
