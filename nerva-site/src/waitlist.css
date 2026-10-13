@@ -1,0 +1,26 @@
+/* ============================================================
+   WAITLIST
+   Only this page's furniture. The band is .cta from index.css,
+   filling the screen; the photo sits where the main page's
+   signup band puts the drawing.
+   ============================================================ */
+
+.wait { min-height: calc(100svh - var(--nav-h)); display: flex; align-items: center; }
+.wait .cta__grid { width: 100%; }
+
+.wait__photo { margin: 0; justify-self: center; width: 100%; max-width: 440px; }
+.wait__photo img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius-lg);
+}
+.wait__photo figcaption {
+  margin: 12px 0 0; text-align: center;
+  font-size: 13px; color: rgba(214, 245, 226, 0.72);
+}
+
+/* on a phone the form has to be on screen without scrolling,
+   so the photo shrinks to a strip below it */
+@media (max-width: 1080px) {
+  .wait { align-items: flex-start; }
+  .wait__photo { max-width: 320px; }
+}
