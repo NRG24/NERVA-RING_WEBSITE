@@ -13,6 +13,7 @@
 import benchPhoto from './assets/proto-bench.webp'
 import handPhoto from './assets/proto-hand.webp'
 import { CONTACT_EMAIL, Signup } from './Signup.tsx'
+import { SkipLink } from './Chrome.tsx'
 
 const UPDATED = '5 October 2026'
 
@@ -45,6 +46,7 @@ const STAGES = [
 export default function Prototype() {
   return (
     <>
+      <SkipLink />
       <header className="nav">
         <div className="nav__inner">
           <a className="brand" href="/" aria-label="NERVA Ring home">
@@ -55,7 +57,7 @@ export default function Prototype() {
         </div>
       </header>
 
-      <main className="proto">
+      <main id="main" className="proto">
         <div className="wrap">
           <header className="proto__head">
             <h1 className="proto__title">The bench prototype is working.</h1>
@@ -130,7 +132,7 @@ export default function Prototype() {
               <p className="cta__fine">
                 Written by the person building it, no spam. Your address goes to
                 Kit and nowhere else.{' '}
-                <a href="/privacy.html">What this site collects</a>.
+                <a href="/privacy">What this site collects</a>.
               </p>
             </div>
           </div>
@@ -148,7 +150,7 @@ export default function Prototype() {
             for sale.{' '}
             <a className="shopfoot__link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             {' - '}
-            <a className="shopfoot__link" href="/privacy.html">Privacy and disclaimers</a>
+            <a className="shopfoot__link" href="/privacy">Privacy and disclaimers</a>
           </p>
         </div>
       </footer>

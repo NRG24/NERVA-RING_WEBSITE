@@ -9,10 +9,12 @@
 
 import handPhoto from './assets/proto-hand.webp'
 import { Signup } from './Signup.tsx'
+import { SkipLink } from './Chrome.tsx'
 
 export default function Waitlist() {
   return (
     <>
+      <SkipLink />
       <header className="nav">
         <div className="nav__inner">
           <a className="brand" href="/" aria-label="NERVA Ring home">
@@ -23,7 +25,7 @@ export default function Waitlist() {
         </div>
       </header>
 
-      <main className="cta wait">
+      <main id="main" className="cta wait">
         <div className="wrap cta__grid">
           <div>
             <h1 className="display display--light">Join the waitlist.</h1>
@@ -36,7 +38,7 @@ export default function Waitlist() {
             <p className="cta__fine">
               Written by the person building it, about once a month. No spam. Your
               address goes to Kit and nowhere else.{' '}
-              <a href="/privacy.html">What this site collects</a>.
+              <a href="/privacy">What this site collects</a>.
             </p>
           </div>
 

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { lightHero } from './palette.ts'
 import { CONTACT_EMAIL, Signup } from './Signup.tsx'
+import { FAQ } from './faq.ts'
+import { SkipLink } from './Chrome.tsx'
 import ringBlue from './assets/ring-blue.webp'
 import ringCoffee from './assets/ring-coffee.webp'
 import ringPink from './assets/ring-pink.webp'
@@ -606,36 +608,6 @@ const DOES = [
   },
 ] as const
 
-/* Every answer here is checkable against nerva-ring-overview.md or the
-   site's own disclaimers. Keep it that way: no claim goes in this list that
-   the build cannot back yet. */
-const FAQ = [
-  {
-    q: 'Can I buy one yet?',
-    a: 'Not yet. NERVA Ring is an early prototype built by one person, and nothing on this site is for sale. The plan is a crowdfunding campaign once the prototype has been tested, and the update list hears about it first.',
-  },
-  {
-    q: 'What is EDA?',
-    a: 'Electrodermal activity: how easily your skin conducts a tiny current. When your sympathetic nervous system fires, your sweat glands respond and skin conductance rises within seconds. It is the arousal signal clinical stress research relies on.',
-  },
-  {
-    q: 'How is it different from other smart rings?',
-    a: 'Most rings estimate stress from heart rate and heart rate variability, through a model. NERVA adds two dry gold electrodes on the inner band that read skin conductance directly, alongside heart rate and blood oxygen.',
-  },
-  {
-    q: 'How long will the battery last?',
-    a: 'The ring carries a 22 mAh cell and sleeps between readings, targeting about a month of standby. Battery life in everyday wear will be measured during prototype testing and published in the update notes.',
-  },
-  {
-    q: 'Can I wear it in the shower?',
-    a: 'The electronics are fully potted in resin inside the band, so the ring is sealed with no seams, and it is designed for hand-washing and showering. It has not been through formal water-rating tests yet.',
-  },
-  {
-    q: 'Is it a medical device?',
-    a: 'No. NERVA Ring is a wellness product. It is not intended to diagnose, treat, cure, or prevent any disease.',
-  },
-] as const
-
 const NAV = [
   { href: '#does', label: 'What it does' },
   { href: '#signals', label: 'Signals' },
@@ -771,6 +743,7 @@ function App() {
 
   return (
     <>
+      <SkipLink to="#top" />
       {/* ---------------- NAV ---------------- */}
       <header className="nav">
         <div className="nav__inner">
@@ -1045,7 +1018,7 @@ function App() {
               <p className="cta__fine">
                 Written by the person building it, no spam. Your address goes to
                 Kit and nowhere else.{' '}
-                <a href="/privacy.html">What this site collects</a>.
+                <a href="/privacy">What this site collects</a>.
               </p>
             </Reveal>
 
@@ -1086,8 +1059,11 @@ function App() {
                 ))}
                 <a href="#faq">Questions</a>
                 <a href="#follow">Updates</a>
+                <a href="/science">Science</a>
+                <a href="/updates">Build log</a>
                 <a href="/prototype">Prototype</a>
-                <a href="/privacy.html">Privacy</a>
+                <a href="/press">Press</a>
+                <a href="/privacy">Privacy</a>
               </nav>
             </div>
             {/* the cell spans are load-bearing: every row of the 6-column
@@ -1101,7 +1077,7 @@ function App() {
                 on this site is for sale. Every ring image on this page is a render
                 of the CAD model; the prototype page shows photographs of the bench
                 prototype. The app screens are a design demo, not live data.{' '}
-                <a href="/privacy.html">Privacy and disclaimers</a>.
+                <a href="/privacy">Privacy and disclaimers</a>.
               </p>
             </div>
           </div>
