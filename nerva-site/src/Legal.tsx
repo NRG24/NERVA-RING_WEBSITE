@@ -12,6 +12,7 @@
    ------------------------------------------------------------------ */
 
 import type { ReactNode } from 'react'
+import { SkipLink } from './Chrome.tsx'
 
 const CONTACT_EMAIL = 'nervaring@gmail.com'
 const UPDATED = '13 October 2026'
@@ -29,6 +30,7 @@ function Clause({ label, children }: { label: string; children: ReactNode }) {
 export default function Legal() {
   return (
     <>
+      <SkipLink />
       <header className="nav">
         <div className="nav__inner">
           <a className="brand" href="/" aria-label="NERVA Ring home">
@@ -39,7 +41,7 @@ export default function Legal() {
         </div>
       </header>
 
-      <main className="sheet">
+      <main id="main" className="sheet">
         <div className="wrap">
           <h1 className="sheet__title">Privacy and disclaimers</h1>
 

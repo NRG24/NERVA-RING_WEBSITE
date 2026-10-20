@@ -1,6 +1,6 @@
 # NERVA Website: Session Handoff
 
-_Last updated: 2026-10-05. Read this, then `CLAUDEwebdesign copy.md` (design law)
+_Last updated: 2026-10-16. Read this, then `CLAUDEwebdesign copy.md` (design law)
 and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
@@ -11,7 +11,7 @@ the sole builder. Contact is **nervaring@gmail.com**.
 
 ## Stack & how to run
 - App lives in **`nerva-site/`**. React 19 + Vite + TypeScript. No router, no
-  backend. Six HTML entry points, all listed in `vite.config.ts`:
+  backend. Ten HTML entry points, all listed in `vite.config.ts` (every page mounts through `src/mount.tsx`, which wraps it in an error boundary):
   - `index.html` → `src/main.tsx` → `src/App.tsx` (the build site)
   - `buy.html` → `src/buy-main.tsx` → `src/Buy.tsx` (store preview, noindex)
   - `privacy.html` → `src/legal-main.tsx` → `src/Legal.tsx` (privacy + disclaimers)
@@ -23,6 +23,18 @@ the sole builder. Contact is **nervaring@gmail.com**.
     the Instagram bio, as `/waitlist?utm_source=instagram`)
   - `subscribed.html` → `src/subscribed-main.tsx` → `src/Subscribed.tsx`
     (where Kit sends people after signup, served at **`/subscribed`**)
+  - **Added 16 Oct 2026** (almond palette, shared `Chrome.tsx` header/footer/skip
+    link, styles in `pages.css`): `science.html` at **/science** (how EDA
+    works, with a drawn skin-conductance response; textbook physiology only,
+    hedged, cites Boucsein), `updates.html` at **/updates** (build log, entries
+    in `src/updates.ts`, also written out as the Atom feed `/updates.xml` by
+    the `siteData` plugin in `vite.config.ts`), `press.html` at **/press**
+    (facts, labelled render/photo downloads, how to describe it) and
+    `404.html` (served by Cloudflare for unknown paths via `not_found_handling`).
+    To post an update: add an entry at the top of `updates.ts` and bump the
+    `/updates` lastmod in `public/sitemap.xml`.
+  - The FAQ lives in `src/faq.ts`; the plugin also writes it into
+    `index.html` as FAQPage JSON-LD at build time.
 - The signup form lives in `src/Signup.tsx` (with `CONTACT_EMAIL`), shared by
   the main page and the prototype page.
 - Styles: `src/index.css` holds the tokens and everything shared (buttons,
@@ -334,13 +346,16 @@ swallows that, so they look subscribed and never land on the list.
    are WebP now (4.9MB of JPEG/PNG down to 1.3MB). Renders were encoded at
    q86, the blueprint at q90 to keep its hairlines. `og-image.jpg` stays JPEG
    on purpose: some link-preview scrapers still refuse WebP.
-3. ~~`<noscript>`~~ done. Still no React error boundary: one throw blanks
-   the site.
-4. No security headers. A Cloudflare `_headers` file would add CSP,
-   X-Content-Type-Options, Referrer-Policy, HSTS.
-5. `wrangler.jsonc` has no `not_found_handling`, so unknown paths get a bare
-   Cloudflare 404 rather than a branded one.
-6. No CI. Nothing runs typecheck/lint/build on push.
+3. ~~`<noscript>`~~ and ~~error boundary~~ done (`ErrorBoundary.tsx`).
+4. ~~Security headers~~ done: `public/_headers` (CSP, nosniff, referrer,
+   HSTS, frame-ancestors, immutable cache on `/assets/*`). **No `form-action`
+   in the CSP on purpose**: Kit can redirect the signup POST through other
+   hosts and a block would silently kill signups. If you add a script, font
+   or media origin, add it to the CSP in the same commit.
+5. ~~Branded 404~~ done.
+6. ~~CI~~ done: `.github/workflows/check.yml` runs oxlint, tsc + build and
+   an em-dash grep. (If the push of a workflow file was refused for lack of
+   the `workflow` scope, add it from a laptop.)
 7. No analytics, so a launch cannot be measured. Deliberate so far; the privacy
    page currently promises none, so adding any means editing that page too.
 8. `src/shopify.ts` defaults to Storefront API `2026-07`. Check Shopify's

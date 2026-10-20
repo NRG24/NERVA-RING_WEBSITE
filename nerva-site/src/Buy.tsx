@@ -3,6 +3,7 @@ import ringGraphite from './assets/ring-graphite.webp'
 import ringGold from './assets/ring-gold2.webp'
 import ringChrome from './assets/ring-chrome.webp'
 import blueprint from './assets/blueprint.webp'
+import { SkipLink } from './Chrome.tsx'
 import {
   PLACEHOLDER_PRODUCT,
   fetchProduct,
@@ -104,6 +105,7 @@ export default function Buy() {
 
   return (
     <>
+      <SkipLink />
       <div className="shopbar">
         <span className="shopbar__dot" aria-hidden="true" />
         Store preview · checkout is not connected · nothing here can be bought
@@ -119,7 +121,7 @@ export default function Buy() {
         </div>
       </header>
 
-      <main className="shop">
+      <main id="main" className="shop">
         <div className="wrap buy">
           {/* ---------------- gallery ---------------- */}
           <div className="buy__art">
@@ -306,7 +308,7 @@ export default function Buy() {
           </a>
           <p>
             © 2026 NERVA Ring. Store layout preview, not a live shop.{' '}
-            <a className="shopfoot__link" href="/privacy.html">Privacy and disclaimers</a>
+            <a className="shopfoot__link" href="/privacy">Privacy and disclaimers</a>
           </p>
         </div>
       </footer>

@@ -7,12 +7,14 @@
    ------------------------------------------------------------------ */
 
 import blueprint from './assets/blueprint.webp'
+import { SkipLink } from './Chrome.tsx'
 
 const INSTAGRAM = 'https://www.instagram.com/nerva_ring/'
 
 export default function Subscribed() {
   return (
     <>
+      <SkipLink />
       <header className="nav">
         <div className="nav__inner">
           <a className="brand" href="/" aria-label="NERVA Ring home">
@@ -23,7 +25,7 @@ export default function Subscribed() {
         </div>
       </header>
 
-      <main className="cta subd">
+      <main id="main" className="cta subd">
         <div className="wrap cta__grid">
           <div>
             <h1 className="display display--light">You’re on the list.</h1>

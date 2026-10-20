@@ -2,6 +2,9 @@
   "name": "nerva-ring-website",
   "compatibility_date": "2026-08-29",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // an address the site does not have gets dist/404.html, with a 404
+    // status, instead of Cloudflare's bare error page
+    "not_found_handling": "404-page"
   }
 }

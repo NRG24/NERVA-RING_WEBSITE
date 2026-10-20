@@ -1,0 +1,28 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: nerva-site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: nerva-site/package-lock.json
+      - run: npm ci
+      - run: npx oxlint
+      - run: npm run build   # runs tsc -b first
+      - name: No em dashes in copy
+        run: |
+          if grep -rn "—" src/*.tsx src/*.ts *.html; then
+            echo "Em dash found. The house rule is to rewrite the sentence."; exit 1
+          fi
