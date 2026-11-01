@@ -1,19 +1,28 @@
 import { useRef, useState, type FormEvent } from 'react'
 
 /* ---------- email capture ----------
-   Shared by the build site and the prototype page. Posts to a Kit form.
+   Shared by every page with a signup band.
 
-   This posts as a NATIVE form, deliberately, not with fetch(). A subscriber
-   sometimes has to follow the response to clear a CAPTCHA or fix a validation
-   error; an XHR swallows that response, so those people would look subscribed
-   here and never land on the list.
+   It posts as a NATIVE form, deliberately, not with fetch(). It goes to
+   /api/join (worker/index.ts), which records the address and a referral
+   code in D1 and answers 307, so the browser re-posts these same fields
+   to Kit itself. Kit sometimes makes a subscriber clear a CAPTCHA or fix
+   a validation error on its own page; an XHR would swallow that, and
+   those people would look subscribed and never land on the list.
 
-   Kit then sends people to /subscribed (set as the form's redirect in Kit's
-   settings), and that page is the only success state we show. */
-const KIT_FORM_ID = '10036721' // public by design: it's in the form's own URL
-const SIGNUP_ACTION = `https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`
+   Kit then sends people to /subscribed (the form's redirect in Kit's
+   settings), which shows their place on the list and their share link.
+
+   Two hidden fields ride along for the referral loop. Both are Kit
+   custom fields too, so Kit's welcome email can print the share link
+   with {{ subscriber.ref_code }}:
+     fields[ref_code]     this person's code, made here so Kit and D1 agree
+     fields[referred_by]  the ?ref= code of whoever sent them, if any */
 export const CONTACT_EMAIL = 'nervaring@gmail.com'
+const SIGNUP_ACTION = '/api/join'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+const CODE_ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789' // the Worker accepts only these
+const CODE_RE = /^[a-hjkmnp-z2-9]{8}$/
 
 /* where the visitor came from, for Kit's "source" custom field:
    ?utm_source=instagram on the bio link lands as "instagram" */
@@ -22,10 +31,29 @@ function signupSource() {
   return utm ? utm.slice(0, 40) : 'nervaring.com'
 }
 
+function referredBy() {
+  const ref = (new URLSearchParams(window.location.search).get('ref') ?? '').toLowerCase()
+  return CODE_RE.test(ref) ? ref : ''
+}
+
+function newCode() {
+  const bytes = crypto.getRandomValues(new Uint8Array(8))
+  return Array.from(bytes, (b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join('')
+}
+
+/* /api/join sends a script or a no-JS post back with ?err=email */
+function initialError() {
+  return new URLSearchParams(window.location.search).get('err') === 'email'
+    ? 'That email address doesn’t look right.'
+    : ''
+}
+
 export function Signup({ autoFocus = false }: { autoFocus?: boolean }) {
   const [email, setEmail] = useState('')
-  const [err, setErr] = useState('')
+  const [err, setErr] = useState(initialError)
   const [source] = useState(signupSource)
+  const [ref] = useState(referredBy)
+  const [code] = useState(newCode)
   const trapRef = useRef<HTMLInputElement>(null)
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -63,6 +91,8 @@ export function Signup({ autoFocus = false }: { autoFocus?: boolean }) {
           className="signup__trap"
         />
         <input type="hidden" name="fields[source]" value={source} />
+        <input type="hidden" name="fields[ref_code]" value={code} />
+        {ref && <input type="hidden" name="fields[referred_by]" value={ref} />}
         <button className="btn btn--led btn--lg" type="submit">Notify me</button>
       </div>
       {err && <p className="signup__err" role="alert">{err}</p>}

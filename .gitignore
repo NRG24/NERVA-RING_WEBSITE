@@ -19,3 +19,6 @@ Pictures of NERVA Ring/
 # Vite dep cache
 .vite/
 **/.vite/
+
+# wrangler local state (local D1, dev logs)
+.wrangler

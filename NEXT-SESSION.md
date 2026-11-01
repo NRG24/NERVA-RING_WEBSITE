@@ -1,6 +1,6 @@
 # NERVA Website: Session Handoff
 
-_Last updated: 2026-10-16. Read this, then `CLAUDEwebdesign copy.md` (design law)
+_Last updated: 2026-11-01. Read this, then `CLAUDEwebdesign copy.md` (design law)
 and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
@@ -10,8 +10,8 @@ smart ring pairing heart rate and SpO₂ with **continuous GSR/EDA
 the sole builder. Contact is **nervaring@gmail.com**.
 
 ## Stack & how to run
-- App lives in **`nerva-site/`**. React 19 + Vite + TypeScript. No router, no
-  backend. Ten HTML entry points, all listed in `vite.config.ts` (every page mounts through `src/mount.tsx`, which wraps it in an error boundary):
+- App lives in **`nerva-site/`**. React 19 + Vite + TypeScript. No router. The only
+  backend is the waitlist Worker under `worker/` (see "Waitlist and email signup" below). Ten HTML entry points, all listed in `vite.config.ts` (every page mounts through `src/mount.tsx`, which wraps it in an error boundary):
   - `index.html` → `src/main.tsx` → `src/App.tsx` (the build site)
   - `buy.html` → `src/buy-main.tsx` → `src/Buy.tsx` (store preview, noindex)
   - `privacy.html` → `src/legal-main.tsx` → `src/Legal.tsx` (privacy + disclaimers)
@@ -321,22 +321,53 @@ and "days" until recently. The privacy page and the main footer note say
 on the prototype page** (and the waitlist page). If a photo lands anywhere else, fix both in the same
 commit.
 
-## Email signup (Kit)
-Moved off Buttondown on 12 Oct 2026: its free plan stops at 100 subscribers,
-Kit's free plan holds 10,000. The form posts to Kit form **10036721**
-(`KIT_FORM_ID` in `src/Signup.tsx`) at
-`https://app.kit.com/forms/<id>/subscriptions`, email field `email_address`.
-**It is a native form POST on purpose. Do not "fix" it into a fetch()**. A
-subscriber sometimes has to follow the response to clear a CAPTCHA, and an XHR
-swallows that, so they look subscribed and never land on the list.
-- Kit's form setting "redirect after subscribe" must be
-  `https://nervaring.com/subscribed`. That page (`subscribed.html` →
-  `src/Subscribed.tsx`, noindex, not in the sitemap) is the only success
-  state: the signup band carried on, just "You're on the list." and links
-  to /prototype and Instagram (@nerva_ring).
-- `fields[source]` carries `utm_source` (or `nervaring.com` when there isn't
-  one) into a Kit custom field named `source`, so signups can be counted by
-  channel. Tag every posted link, e.g. `?utm_source=instagram`.
+## Waitlist and email signup (Worker + D1 + Kit)
+_Added 1 Nov 2026 on `claude/vigilant-goodall-6zcqsx`._ The plan and Ryan's
+sign-in steps are in `launch/PLAN.md`.
+
+- **Worker:** `nerva-site/worker/index.ts`, wired in `wrangler.jsonc`
+  (`main`, `assets.binding: ASSETS`, `run_worker_first: ["/api/*"]`). Only
+  `/api/*` runs it; every other path is a static file as before.
+  `tsc -b` typechecks it (`worker/tsconfig.json`).
+- **D1** database `nerva-waitlist`, binding `DB`. `wrangler.jsonc` has no
+  `database_id` yet: the first deploy provisions it. **Pin the id it
+  prints afterwards.** The table creates itself on first use;
+  `worker/0001_signups.sql` is the same schema plus handy queries.
+- **The form posts natively to `/api/join`.** The Worker stores the
+  address and answers **307** to `https://app.kit.com/forms/10036721/subscriptions`,
+  so the browser re-posts the identical body to Kit itself. That keeps the
+  old reason for the native POST: Kit's CAPTCHA and redirect still happen
+  in the browser. **Do not "fix" either hop into a fetch().** If D1 is
+  missing or throws, the 307 still happens; a signup is never lost.
+  An address already in D1 skips Kit and goes straight to `/subscribed`
+  (so its `ref_code` in Kit isn't overwritten).
+- Kit's form setting "redirect after subscribe" must stay
+  `https://nervaring.com/subscribed`.
+- **Fields posted** (and Kit custom fields Ryan has to create):
+  `fields[source]` (utm_source or `nervaring.com`), `fields[ref_code]`
+  (made in the page so Kit and D1 agree; the welcome email prints the
+  share link with `{{ subscriber.ref_code }}`), `fields[referred_by]`
+  (from `?ref=`). Honeypot `company`.
+- **Referrals:** each credited friend moves you up `REF_BOOST` = 10 places
+  (position = rank of `id - 10*referrals`). No credit when the friend is on
+  the referrer's network (same salted IP hash) or that network already
+  made 3 signups in a day.
+- **`/subscribed`** reads `GET /api/me` off the HttpOnly cookie `nerva_wl`
+  (random token, not the email) and shows "You're number N of M", the
+  share link (Web Share on phones, copy elsewhere) and the Kickstarter
+  button once `KICKSTARTER_URL` in `src/siteLinks.ts` is set. With no
+  cookie it falls back to the plain confirmation.
+- **`/waitlist`** shows the promise (Kickstarter early 2027, hear first,
+  first pick of a limited early-bird tier, front of the list gets beta
+  spots), "A friend saved you a spot." on a `?ref=` link, and the list
+  size from `GET /api/stats` once it reaches `SHOW_COUNT_FROM` (50).
+- **Privacy:** the page now lists the D1 copy, the hashed IP and the
+  cookie. Every band's fine print says "Kit and the waitlist's own
+  database, nowhere else." Change all of these together.
+- **Local test:** `npm run build && npx wrangler dev --port 8788` gives a
+  local D1. To follow the 307 in Playwright, map `app.kit.com` to a local
+  HTTPS stub with `--host-resolver-rules` and clear the proxy env vars;
+  `page.route` does not see requests that come from a redirect.
 
 ## Known open items
 1. ~~Self-host the fonts~~ done via `@fontsource` packages, imported once in
@@ -358,6 +389,7 @@ swallows that, so they look subscribed and never land on the list.
    the `workflow` scope, add it from a laptop.)
 7. No analytics, so a launch cannot be measured. Deliberate so far; the privacy
    page currently promises none, so adding any means editing that page too.
+   Signups by source and referral are countable from D1 instead.
 8. `src/shopify.ts` defaults to Storefront API `2026-07`. Check Shopify's
    release calendar before switching the store on; a version older than a year
    stops being served.

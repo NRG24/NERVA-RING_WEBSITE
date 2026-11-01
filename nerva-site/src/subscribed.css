@@ -16,3 +16,11 @@
 @media (max-width: 760px) {
   .subd__actions .btn { width: 100%; }
 }
+
+/* place on the list + the share link (shown only when /api/me answers) */
+.subd__num { color: #fff; font-weight: 700; }
+.subd__h { margin: 34px 0 0; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; color: #fff; }
+.subd__p { margin: 8px 0 0; max-width: 46ch; font-size: 1rem; line-height: 1.5; color: rgba(255, 255, 255, 0.72); }
+.subd__share { margin: 18px 0 0; }
+.subd__share input { font-size: 14px; }
+.subd__status { min-height: 1.2em; margin: 8px 0 0; font-size: 13px; color: rgba(214, 245, 226, 0.72); }

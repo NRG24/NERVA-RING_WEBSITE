@@ -11,9 +11,14 @@ Paste into Kit once sending works (see `PLAN.md`).
 Sent the moment someone joins. If you keep double opt-in, the confirm button
 goes where the bracket is; with auto-confirm on, delete that line.
 
+The share link uses Kit's custom field `ref_code`, which the site fills on
+every signup. Create the field in Kit first (Subscribers → any subscriber
+→ Add a field → `ref_code`, and one called `referred_by`), or the link
+prints with an empty code.
+
 **Subject:** You're on the NERVA list
 
-**Preview text:** What I'm building, and when you'll hear from me
+**Preview text:** Your spot, your share link, and what happens next
 
 > Hi,
 >
@@ -24,12 +29,20 @@ goes where the bracket is; with auto-confirm on, delete that line.
 >
 > [Confirm your email: button]
 >
+> NERVA Ring launches on Kickstarter in early 2027. Being on this list means
+> you hear about it before it goes public, and you get first pick of the
+> limited early-bird tier.
+>
+> If you know someone who'd want one, send them your link:
+> https://nervaring.com/waitlist?ref={{ subscriber.ref_code }}&utm_source=referral
+> Every friend who joins through it moves you up 10 places, and the front of
+> the list gets first pick of beta-tester spots.
+>
 > Right now there's one working prototype, running on my bench in a black
 > ceramic band. Photos here: nervaring.com/prototype
 >
 > You'll hear from me about once a month, with what got built, what broke,
-> and what's next. You'll also be the first to know when beta testing opens
-> and when the ring launches.
+> and what's next.
 >
 > One question, if you have ten seconds: what would you want a ring to tell
 > you about your stress? Just hit reply. I read every one.
@@ -71,7 +84,8 @@ have nothing real for; a short honest update beats a padded one.
 > [Photo: one real photo from this month. Bench, lab, or the ring on a hand.]
 >
 > The full build log is at nervaring.com/updates. If someone you know would
-> want this, the waitlist is nervaring.com/waitlist.
+> want this, your link moves you up the list:
+> https://nervaring.com/waitlist?ref={{ subscriber.ref_code }}&utm_source=referral
 >
 > Ryan
 
@@ -87,3 +101,26 @@ have nothing real for; a short honest update beats a padded one.
 
 Replies like this turn early signups into beta testers and, later, day-one
 backers. Keep a simple list of everyone who says yes.
+
+---
+
+## 4. Privacy notice (send once, before or with the November update)
+
+The privacy page promises that any change affecting what happens to an
+address "goes out to the list rather than landing here quietly". The
+waitlist backend is that kind of change, so this goes out.
+
+**Subject:** A small change to how the NERVA list works
+
+> Hi,
+>
+> One housekeeping note. The waitlist now keeps your place in line, so your
+> address is stored in two places instead of one: Kit, which sends these
+> emails, and the waitlist's own database on Cloudflare. It also sets one
+> cookie when you join, so the confirmation page can show your spot.
+> Nothing is sold or shared. The full details are at nervaring.com/privacy.
+>
+> If you'd rather be off both, reply and I'll delete you from each.
+>
+> Ryan
+
