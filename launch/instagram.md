@@ -14,6 +14,44 @@
 - **Highlights:** The build · Prototype · FAQ
 - **Pin:** Reel 1, Reel 3, and the "who's building this" post (Reel 6).
 
+## Ready to post now (no filming)
+
+Finished files in `launch/creative/`. Post these while the filmed Reels
+below get made; they give the profile something to land on.
+
+1. **Feed post: the prototype.** `feed-prototype.jpg`
+   Caption:
+   > The first NERVA Ring that works. Black ceramic band, flex circuit
+   > inside, green LED for heart rate, two gold contacts that read your
+   > skin's electrical response. That skin signal is what stress research
+   > measures. Kickstarter in early 2027; the waitlist hears first and
+   > gets first pick of the early-bird tier. Link in bio.
+2. **Feed post: why skin.** `feed-skin.jpg`
+   Caption:
+   > Your skin's conductance shifts within seconds of a sudden noise or a
+   > stressful email. Most rings estimate stress from heart rate alone.
+   > NERVA reads the skin signal directly, alongside heart rate. (The
+   > curve is an illustration, and the ring is a render; the real trace
+   > comes when the prototype streams to a phone.)
+3. **Reel: the finishes** (this is Reel 7, done). `reel-finishes-9x16.mp4`,
+   cover `feed-finishes.jpg`. Add a quiet trending track in the Instagram
+   app. Caption:
+   > Four finishes on the CAD model. Which would you wear? The working
+   > prototype is black ceramic. Waitlist in bio.
+4. **Story with link sticker.** `story-prototype.jpg` or
+   `ad-levitate-9x16.mp4`. Add a **Link** sticker in the empty band at
+   the bottom: `nervaring.com/waitlist?utm_source=ig-story`, sticker text
+   "Join the waitlist". Save it to a "Waitlist" highlight so it stays.
+
+Every link carries its own `utm_source`, so D1 can say which one brought
+people in.
+
+**To have Claude post these for you:** connect Instagram in Zapier
+(zapier.com → Apps → Instagram for Business; needs the Professional
+account and Facebook Page from `ads.md` setup step 1). Once it's
+connected, Claude can publish and schedule feed posts with captions from
+this file.
+
 ## How every Reel works
 
 - 10 to 25 seconds. Vertical, filmed on your phone, no intro.
