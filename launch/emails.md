@@ -6,46 +6,40 @@ Paste into Kit once sending works (see `PLAN.md`).
 
 ---
 
-## 1. Welcome email (Kit: the form's automation / incentive email)
+## 1. Welcome email = the form's confirmation (incentive) email
 
-Sent the moment someone joins. If you keep double opt-in, the confirm button
-goes where the bracket is; with auto-confirm on, delete that line.
+Kit's free plan has no sequences or automations, so the welcome goes in the
+one email Kit sends every new signup for free: the double opt-in
+confirmation. Kit → Grow → Landing Pages & Forms → the site's form
+(10036721) → Settings → Incentive → "Send incentive email" ticked → Edit
+email contents. Kit adds the confirm button itself.
 
 The share link uses Kit's custom field `ref_code`, which the site fills on
-every signup. Create the field in Kit first (Subscribers → any subscriber
-→ Add a field → `ref_code`, and one called `referred_by`), or the link
-prints with an empty code.
+every signup. Create the fields first (Subscribers → open any subscriber →
+Add a new field → `ref_code`, and one called `referred_by`). If a test shows
+the code raw or empty in this email, drop those three lines: the share link
+is already on /subscribed and in every broadcast.
 
-**Subject:** You're on the NERVA list
-
-**Preview text:** Your spot, your share link, and what happens next
+**Subject:** Confirm your spot on the NERVA list
 
 > Hi,
 >
-> Thanks for joining. I'm Ryan, and I'm building NERVA Ring on my own: a smart
-> ring that reads your skin's electrical response (the same signal behind
-> stress research) alongside heart rate, so you can see stress building
-> before it turns into burnout.
+> Thanks for joining. One click below confirms your spot. Until you click
+> it, I can't email you, including the Kickstarter launch notice.
 >
-> [Confirm your email: button]
+> I'm Ryan, and I'm building NERVA Ring on my own: a smart ring that reads
+> your skin's electrical response (the same signal behind stress research)
+> alongside heart rate, so you can see stress building before it turns into
+> burnout.
 >
 > NERVA Ring launches on Kickstarter in early 2027. Being on this list means
 > you hear about it before it goes public, and you get first pick of the
 > limited early-bird tier.
 >
-> If you know someone who'd want one, send them your link:
+> Your share link:
 > https://nervaring.com/waitlist?ref={{ subscriber.ref_code }}&utm_source=referral
 > Every friend who joins through it moves you up 10 places, and the front of
 > the list gets first pick of beta-tester spots.
->
-> Right now there's one working prototype, running on my bench in a black
-> ceramic band. Photos here: nervaring.com/prototype
->
-> You'll hear from me about once a month, with what got built, what broke,
-> and what's next.
->
-> One question, if you have ten seconds: what would you want a ring to tell
-> you about your stress? Just hit reply. I read every one.
 >
 > Ryan
 > NERVA Ring

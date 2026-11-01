@@ -15,7 +15,7 @@ backup date Tuesday 23 February if the ring isn't working on a finger by
 | Kit email | **Broken.** Nothing Kit sends reaches anyone. Likely cause found 1 Nov (below). Kit's API is paid-only, so Claude can't see or fix the account. |
 | Kickstarter | No project yet. Pre-launch copy and steps in `kickstarter-prelaunch.md`. |
 | Instagram | @nerva_ring exists. Bio and first month of posts drafted in `instagram.md`. |
-| Emails | Welcome (now with share link), November update, privacy notice: `emails.md`. |
+| Emails | Welcome (as the free confirmation email, with share link), November update, privacy notice: `emails.md`. |
 
 ## Ryan's sign-in list (everything else is done or Claude's)
 
@@ -37,7 +37,8 @@ In order. Each is a few minutes.
    > account restricted or under review, and is my sending address verified?
 2. **Kit custom fields.** Add `ref_code` and `referred_by` (Subscribers →
    open any subscriber → Add a new field). Paste the welcome email from
-   `emails.md` into the form's automation.
+   `emails.md` into the form's confirmation (incentive) email. Sequences
+   and automations are paid on Kit, so the welcome lives there.
 3. **Authorize the Cloudflare connector** in claude.ai → Settings →
    Connectors → Cloudflare Developer Platform. Then tell Claude "deploy
    the waitlist": Claude merges the branch, confirms the D1 database
