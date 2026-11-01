@@ -8,49 +8,60 @@ backup date Tuesday 23 February if the ring isn't working on a finger by
 
 | Piece | State |
 |---|---|
-| Website | Live. `/waitlist` (form only), `/subscribed` (after signup), `/updates` (build log + feed), `/prototype`, `/science`, `/press`. |
-| Signup form | Posts to Kit form 10036721 and redirects to `/subscribed`. Each signup carries `source` from `?utm_source=`. |
-| Kit email | **Broken.** Nothing Kit sends reaches anyone: no broadcast, no "confirm your subscription" email. Checked Ryan's inbox, spam included, 13 Oct to 1 Nov. Cause is inside the Kit account (see "Fix Kit" below). |
+| Website | Live. `/waitlist`, `/subscribed`, `/updates`, `/prototype`, `/science`, `/press`. |
+| Waitlist backend | **Built, waiting on Cloudflare** (branch `claude/vigilant-goodall-6zcqsx`). A Worker at `/api/*` stores each signup in D1 with a referral code, then hands the same post on to Kit. `/subscribed` shows "You're number N of M" and a share link; each friend who joins through it moves you up 10 places. Tested end to end locally. Not merged yet. If the site deploys from `main` (Cloudflare's Git integration), merging deploys it, and that first deploy creates the D1 database. |
+| Waitlist promise | Kickstarter in early 2027; the list hears first and gets first pick of a limited early-bird tier; the front of the list gets first pick of beta-tester spots. No price anywhere. |
+| Signup form | Posts to `/api/join` → Kit form 10036721 → `/subscribed`. Carries `source`, `ref_code`, `referred_by`. |
+| Kit email | **Broken.** Nothing Kit sends reaches anyone. Likely cause found 1 Nov (below). Kit's API is paid-only, so Claude can't see or fix the account. |
+| Kickstarter | No project yet. Pre-launch copy and steps in `kickstarter-prelaunch.md`. |
 | Instagram | @nerva_ring exists. Bio and first month of posts drafted in `instagram.md`. |
-| Emails | Welcome email and November build update drafted in `emails.md`. |
+| Emails | Welcome (as the free confirmation email, with share link), November update, privacy notice: `emails.md`. |
 
-## Fix Kit (Ryan, about 20 minutes)
+## Ryan's sign-in list (everything else is done or Claude's)
 
-Kit's AI connection needs a paid plan, so these have to be done by hand in Kit.
-In order, stopping when a test send arrives:
+In order. Each is a few minutes.
 
-1. **Verify the sending address.** Kit → Settings → Email → Sending addresses.
-   If `nervaring@gmail.com` (or whatever is listed) says *unverified*, click
-   resend and click the link in the email Kit sends **to that address**.
-   Your Kit login moved from schreiber.rn24@ to nervaring@ on 12 Oct; the
-   sending address may still be waiting on a confirm click in the
-   nervaring@gmail.com inbox.
-2. **Send a test.** Open the broadcast → "Send test email" to schreiber.rn24@gmail.com.
-   - Arrives: the account works; the real send skipped people because they
-     were unconfirmed. Tick **Auto-confirm new subscribers** in the form's
-     Incentive settings and resend.
-   - Doesn't arrive: go to step 3.
-3. **Ask Kit support** (chat bubble, bottom right). Paste:
-   > Nothing from my account is being delivered: test emails, broadcasts, and
-   > form confirmation emails all fail to arrive (checked spam). Is my account
-   > restricted or under review, and is my sending address verified?
-4. **If Kit can't fix it within a week, leave Kit.** Export subscribers (CSV)
-   and move to beehiiv (free to 2,500). Tell Claude and the site form gets
-   switched in one change.
+1. **Fix Kit (likely one click).** On 12 Oct Kit sent "Confirm your Kit
+   email address" to schreiber.rn24@gmail.com at 19:06, then the login was
+   moved to **nervaring@gmail.com** at 19:50. The new address will have
+   had its own confirm email, and nothing shows it was clicked. An
+   unconfirmed login or sending address is the most likely reason Kit
+   sends nothing. Open the
+   **nervaring@gmail.com** inbox, search `from:kit.com OR from:convertkit.com`,
+   click the newest confirm link. Then in Kit → Settings → Email →
+   Sending addresses, make sure nervaring@gmail.com says *verified*
+   (resend if not). Send a test broadcast to schreiber.rn24@gmail.com.
+   If it still doesn't arrive, paste this to Kit support (chat bubble):
+   > Nothing from my account is being delivered: test emails, broadcasts,
+   > and form confirmation emails all fail to arrive (checked spam). Is my
+   > account restricted or under review, and is my sending address verified?
+2. **Kit custom fields.** Add `ref_code` and `referred_by` (Subscribers →
+   open any subscriber → Add a new field). Paste the welcome email from
+   `emails.md` into the form's confirmation (incentive) email. Sequences
+   and automations are paid on Kit, so the welcome lives there.
+3. **Authorize the Cloudflare connector** in claude.ai → Settings →
+   Connectors → Cloudflare Developer Platform. Then tell Claude "deploy
+   the waitlist": Claude merges the branch, confirms the D1 database
+   came up, pins its id in `wrangler.jsonc`, and checks a live signup.
+   (Without the connector you can merge the PR yourself; the deploy
+   creates the database on its own.)
+4. **Kickstarter pre-launch page**, from `kickstarter-prelaunch.md`
+   (about 15 minutes). Send Claude the URL.
+5. **Send the privacy notice** in `emails.md` once Kit sends.
 
 Longer term: send from `hello@nervaring.com` instead of a gmail.com address.
 Mail claiming to be from gmail.com but sent by Kit's servers is exactly what
-spam filters look for. This needs the domain's DNS (in Cloudflare) plus
-Cloudflare Email Routing (free) to forward hello@ to Gmail.
+spam filters look for. With the Cloudflare connector authorized, Claude can
+set up the DNS records and Email Routing (free) to forward hello@ to Gmail.
 
 ## November (week by week)
 
 | Week of | Ryan | Claude |
 |---|---|---|
-| 2 Nov | Fix Kit (above). Update Instagram bio. Post Reels 1-3. | Done: plan, emails, Instagram drafts. |
+| 2 Nov | Sign-in list items 1-4 (above). Update Instagram bio. Post Reels 1-3. | Done: plan, emails, Instagram drafts, waitlist backend, Kickstarter copy. Deploy the waitlist once Cloudflare is authorized. |
 | 9 Nov | Reels 4-6. Comment on 10 smart-ring / maker posts. | Post an /updates entry when there's news. |
 | 16 Nov | Reels 7-9. One build post in r/PrintedCircuitBoard. | Draft the Kickstarter page outline. |
-| 23 Nov | Reels 10-12. Send the November build update (in `emails.md`). | Checkpoint: count signups by source. |
+| 23 Nov | Reels 10-12. Send the November build update (in `emails.md`). | Checkpoint: count signups by source and referrals, straight from D1. |
 
 **Checkpoint 22 Nov:** ~400 emails, ~600 Instagram followers. Below half
 of that, post more often before spending anything on ads.

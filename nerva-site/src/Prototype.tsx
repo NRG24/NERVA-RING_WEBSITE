@@ -131,7 +131,7 @@ export default function Prototype() {
               <Signup />
               <p className="cta__fine">
                 Written by the person building it, no spam. Your address goes to
-                Kit and nowhere else.{' '}
+                Kit and the waitlist’s own database, nowhere else.{' '}
                 <a href="/privacy">What this site collects</a>.
               </p>
             </div>

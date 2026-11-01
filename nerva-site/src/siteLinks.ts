@@ -5,3 +5,10 @@ export const SITE_LINKS = [
   { href: '/prototype', label: 'Prototype' },
   { href: '/press', label: 'Press' },
 ] as const
+
+/* The Kickstarter pre-launch page ("Notify me on launch"). Empty until
+   Ryan creates it; /subscribed shows a follow button once it's set. */
+export const KICKSTARTER_URL = ''
+
+/* the waitlist only starts printing its size once the number helps */
+export const SHOW_COUNT_FROM = 50

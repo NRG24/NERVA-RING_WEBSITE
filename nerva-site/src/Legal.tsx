@@ -3,9 +3,11 @@
 
    Written from what the site actually does, not from a template. Every
    factual claim here is checkable against the source: there is no
-   analytics, no cookie, and no storage call anywhere in src/, the only
-   form posts to Kit, and the only other third-party origin the
-   pages touch is Cloudflare (the host). The fonts are bundled with the
+   analytics and no storage call anywhere in src/; the only cookie is
+   nerva_wl, set by worker/index.ts when someone joins; the signup form
+   posts to the site's own /api/join, which keeps a copy in Cloudflare
+   D1 and hands the same post on to Kit; and the only other third-party
+   origin the pages touch is Cloudflare (the host). The fonts are bundled with the
    site, so nothing is fetched from Google.
 
    If any of that changes, this page changes in the same commit.
@@ -15,7 +17,7 @@ import type { ReactNode } from 'react'
 import { SkipLink } from './Chrome.tsx'
 
 const CONTACT_EMAIL = 'nervaring@gmail.com'
-const UPDATED = '13 October 2026'
+const UPDATED = '1 November 2026'
 
 /* one hanging label, one block of document */
 function Clause({ label, children }: { label: string; children: ReactNode }) {
@@ -65,16 +67,31 @@ export default function Legal() {
           </div>
 
           <p className="sheet__lede">
-            This site runs no analytics, sets no cookies, and stores nothing in your
-            browser. The only personal thing it can collect is an email address, and
-            only if you type one into the update form.
+            This site runs no analytics. The only personal thing it can collect is an
+            email address, and only if you type one into the waitlist form. The only
+            cookie it sets is the one described below, and only once you join.
           </p>
 
-          <Clause label="If you join the update list">
+          <Clause label="If you join the waitlist">
             <p>
               Your address is posted to <b>Kit</b>, the service that runs the
               mailing list, along with a note of where you found the site (for
-              example, Instagram). Kit stores it. I keep no second copy anywhere else.
+              example, Instagram) and your referral code. Kit stores it and sends the
+              emails.
+            </p>
+            <p>
+              A second copy is kept in the waitlist’s own database, on Cloudflare,
+              so the site can hold your place in line. Next to your address it keeps
+              your referral code, whose link you joined through, how many friends
+              joined through yours, and a one-way hash of your IP address. The hash
+              is there only to stop one person crediting their own link over and
+              over. Those two copies are the only ones.
+            </p>
+            <p>
+              Joining sets one cookie, <code>nerva_wl</code>, so the page you land on
+              afterwards can show your place on the list. It holds a random number,
+              not your address, lasts a year, and is never sent anywhere but this
+              site.
             </p>
             <p>
               It is used for one thing: emails about NERVA Ring, meaning build progress,
@@ -84,7 +101,7 @@ export default function Legal() {
             <p>
               Every email carries an unsubscribe link. You can also write to{' '}
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and ask me to delete
-              the record. No reason needed.
+              both records. No reason needed.
             </p>
           </Clause>
 
@@ -93,7 +110,8 @@ export default function Legal() {
               <dt>Cloudflare</dt>
               <dd>
                 Hosts the site, and sees what any web host sees: your IP address, your
-                browser's user agent, and which file you asked for.
+                browser's user agent, and which file you asked for. It also stores the
+                waitlist database described above.
               </dd>
 
               <dt>Shopify</dt>

@@ -4,14 +4,41 @@
    email field: one band, the form, and a real photo of the prototype.
 
    Link it with a source so Kit can count it, e.g.
-   /waitlist?utm_source=instagram
+   /waitlist?utm_source=instagram. Share links from /subscribed land
+   here too, as /waitlist?ref=<code>&utm_source=referral.
+
+   What the list is promised (Ryan, 1 Nov 2026): early notice of the
+   Kickstarter and first pick of a limited early-bird tier. No price.
+   Referrals move people up; the front of the list gets first pick of
+   beta-tester spots. Keep the page to those promises.
    ------------------------------------------------------------------ */
 
+import { useEffect, useState } from 'react'
 import handPhoto from './assets/proto-hand.webp'
 import { Signup } from './Signup.tsx'
 import { SkipLink } from './Chrome.tsx'
+import { SHOW_COUNT_FROM } from './siteLinks.ts'
+
+/* how many are on the list, once that's worth saying */
+function useListSize() {
+  const [total, setTotal] = useState<number | null>(null)
+  useEffect(() => {
+    const ctl = new AbortController()
+    fetch('/api/stats', { signal: ctl.signal })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { total: number | null } | null) => {
+        if (d && typeof d.total === 'number') setTotal(d.total)
+      })
+      .catch(() => {})
+    return () => ctl.abort()
+  }, [])
+  return total !== null && total >= SHOW_COUNT_FROM ? total : null
+}
 
 export default function Waitlist() {
+  const total = useListSize()
+  const invited = new URLSearchParams(window.location.search).has('ref')
+
   return (
     <>
       <SkipLink />
@@ -28,16 +55,32 @@ export default function Waitlist() {
       <main id="main" className="cta wait">
         <div className="wrap cta__grid">
           <div>
-            <h1 className="display display--light">Join the waitlist.</h1>
+            <h1 className="display display--light">
+              {invited ? 'A friend saved you a spot.' : 'Join the waitlist.'}
+            </h1>
             <p className="cta__lede">
-              NERVA Ring is a smart ring that helps you manage your stress and avoid
-              burnout. Get on the list to hear first when beta testing opens and when
-              it launches.
+              NERVA Ring is a smart ring that reads your skin’s response to stress
+              alongside your heart rate, so you can see stress building before it turns
+              into burnout. It launches on Kickstarter in early 2027.
             </p>
+
+            <ul className="wait__perks">
+              <li>Hear about the launch before it goes public.</li>
+              <li>First pick of the limited early-bird tier.</li>
+              <li>
+                Share your link to move up the list. The front of the list gets first
+                pick of beta-tester spots.
+              </li>
+            </ul>
+
             <Signup autoFocus />
+            {total !== null && (
+              <p className="wait__count">{total.toLocaleString('en-US')} people are on the list.</p>
+            )}
             <p className="cta__fine">
               Written by the person building it, about once a month. No spam. Your
-              address goes to Kit and nowhere else.{' '}
+              address goes to Kit, which sends the emails, and to the waitlist’s own
+              database, which keeps your place in line. Nowhere else.{' '}
               <a href="/privacy">What this site collects</a>.
             </p>
           </div>

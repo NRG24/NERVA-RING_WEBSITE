@@ -48,7 +48,8 @@ export default function Updates() {
             <div>
               <Signup />
               <p className="cta__fine">
-                No spam. Your address goes to Kit and nowhere else.{' '}
+                No spam. Your address goes to Kit and the waitlist’s own database,
+                nowhere else.{' '}
                 <a href="/privacy">What this site collects</a>.
               </p>
             </div>
