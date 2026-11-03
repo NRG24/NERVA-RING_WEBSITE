@@ -274,13 +274,6 @@ const WEBKIT_ONLY = (() => {
 })()
 const USE_ANIM = LIGHT && WEBKIT_ONLY
 
-const HERO_FACTS = [
-  { k: 'Heart rate', v: 'Green and red light, read at the finger' },
-  { k: 'Skin conductance', v: 'Two gold electrodes on the inner band' },
-  { k: 'Blood oxygen', v: 'SpO₂ from the same optical sensor' },
-  { k: 'Stress management', v: 'Breathing exercises that train your nervous system' },
-] as const
-
 function Hero() {
   /* Reduced motion skips the film outright: decided before first paint,
      so the still never swaps in after the fact and the film is never
@@ -402,16 +395,6 @@ function Hero() {
         </p>
       </div>
 
-      {/* what the ring does, one line each; the first three are in
-          nerva-ring-overview.md, the last is Ryan's What it does copy */}
-      <ul className="hero__facts" aria-label="What it reads">
-        {HERO_FACTS.map((f) => (
-          <li key={f.k}>
-            <span className="hero__fact-k">{f.k}</span>
-            <span className="hero__fact-v">{f.v}</span>
-          </li>
-        ))}
-      </ul>
     </section>
   )
 }

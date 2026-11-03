@@ -9,12 +9,13 @@ backup date Tuesday 23 February if the ring isn't working on a finger by
 | Piece | State |
 |---|---|
 | Website | Live. `/waitlist`, `/subscribed`, `/updates`, `/prototype`, `/science`, `/press`. |
-| Waitlist backend | **Built, waiting on Cloudflare** (branch `claude/vigilant-goodall-6zcqsx`). A Worker at `/api/*` stores each signup in D1 with a referral code, then hands the same post on to Kit. `/subscribed` shows "You're number N of M" and a share link; each friend who joins through it moves you up 10 places. Tested end to end locally. Not merged yet. If the site deploys from `main` (Cloudflare's Git integration), merging deploys it, and that first deploy creates the D1 database. |
+| Waitlist backend | **Merged 1 Nov (PR #36), deployed by Cloudflare Workers Builds from `main`.** A Worker at `/api/*` stores each signup in D1 (`nerva-waitlist`) with a referral code, then hands the same post on to Kit. `/subscribed` shows "You're number N of M" and a share link. Still to do: pin the D1 `database_id` in `wrangler.jsonc` (from the Cloudflare dashboard, Storage & Databases → D1). |
 | Waitlist promise | Kickstarter in early 2027; the list hears first and gets first pick of a limited early-bird tier; the front of the list gets first pick of beta-tester spots. No price anywhere. |
 | Signup form | Posts to `/api/join` → Kit form 10036721 → `/subscribed`. Carries `source`, `ref_code`, `referred_by`. |
 | Kit email | **Broken.** Nothing Kit sends reaches anyone. Likely cause found 1 Nov (below). Kit's API is paid-only, so Claude can't see or fix the account. |
 | Kickstarter | No project yet. Pre-launch copy and steps in `kickstarter-prelaunch.md`. |
-| Instagram | @nerva_ring exists. Bio and first month of posts drafted in `instagram.md`. |
+| Instagram | @nerva_ring exists. Bio and first month of posts drafted in `instagram.md`; four posts ready to go now in `creative/`. |
+| Ads | A $105, 7-day Meta test with four ads, ready to build: `ads.md`. Start only after Kit sends and Reels 1-3 are up. |
 | Emails | Welcome (as the free confirmation email, with share link), November update, privacy notice: `emails.md`. |
 
 ## Ryan's sign-in list (everything else is done or Claude's)

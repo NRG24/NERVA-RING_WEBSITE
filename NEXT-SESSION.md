@@ -177,14 +177,14 @@ mock with a sage circle behind the ring): the headline in the site's own
 Hanken Grotesk at 500 with "nervous system." at 750 on one line (Ryan tried
 and dropped a serif Newsreader headline and a kicker line above it), the
 lede, a dark pill and
-an underlined link, then a ruled strip of four facts (`HERO_FACTS` in
-`App.tsx`: heart rate, skin conductance and blood oxygen from
-`nerva-ring-overview.md`, and stress management, which replaced a battery
-line at Ryan's ask). Behind the ring is a flat sage disc (`.hero__backdrop`,
+an underlined link. The ruled strip of four facts that sat under it
+(heart rate, skin conductance, blood oxygen, stress management) was
+**removed on 3 Nov 2026 at Ryan's ask**; `--strip` is now 0px, so the
+ring centres in the full hero height. Don't bring it back. Behind the ring is a flat sage disc (`.hero__backdrop`,
 `--pal-bg2`, 87% of the film frame) on its own layer, so it holds still while
 the ring hovers. On desktop the film frame and disc are **placed directly
 with left/top/width** (`--box`, the ring centre at 69% across and halfway
-down the space above the strip), not with translate/transform: the resting
+down the hero; the strip is gone), not with translate/transform: the resting
 hover animates transform on the stage. At 1080px and below the ring and disc
 take a square of their own at the top and the words start below it. The dark
 design hides the strip and keeps its own headline. The earlier translate /
