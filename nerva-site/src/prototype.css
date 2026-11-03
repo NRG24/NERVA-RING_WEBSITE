@@ -33,6 +33,48 @@
   text-wrap: pretty;
 }
 
+/* ---------- the pitch ----------
+   Loom's 1228x720 frame. Until play is pressed it is the bench photo,
+   dimmed, with a play button: no request goes to Loom before that. */
+.proto__pitch { margin-bottom: clamp(40px, 5vw, 72px); }
+.proto__pitch .proto__h2 { margin-bottom: clamp(16px, 2vw, 24px); }
+.pitch {
+  position: relative; aspect-ratio: 1228 / 720;
+  border-radius: var(--radius-lg); overflow: hidden;
+  background: #000;
+}
+.pitch__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.pitch__play {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  margin: 0; padding: 0; border: 0; background: #000; cursor: pointer;
+  display: grid; place-items: center; color: #fff; font: inherit;
+}
+.pitch__play img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 58%;
+  opacity: 0.6;
+  transition: opacity 0.4s var(--ease);
+}
+.pitch__badge { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.pitch__btn {
+  display: grid; place-items: center;
+  width: 84px; height: 84px; border-radius: 50%;
+  background: #fff; color: var(--pal-ink, #111);
+  margin-bottom: 6px;
+  transition: scale 0.3s var(--ease);
+}
+.pitch__btn svg { margin-left: 3px; }
+.pitch__label { font-weight: 600; font-size: clamp(1.1rem, 1rem + 0.5vw, 1.4rem); letter-spacing: -0.01em; }
+.pitch__note { font-size: 13.5px; color: rgba(255, 255, 255, 0.82); }
+.pitch__play:focus-visible { outline: 3px solid #fff; outline-offset: -6px; }
+@media (hover: hover) {
+  .pitch__play:hover img { opacity: 0.72; }
+  .pitch__play:hover .pitch__btn { scale: 1.06; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pitch__play img, .pitch__btn { transition: none; }
+}
+
 /* ---------- photos ----------
    The bench shot spans both rows on the left; the in-hand shot takes the
    top of the right column and the caption sits straight under it, with
