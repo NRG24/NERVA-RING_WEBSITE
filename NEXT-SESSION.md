@@ -92,11 +92,19 @@ under 1080px. Every light section opens with a **centered** `.head`.
    `does-today` (Today screen) and `does-ring` (silver ring) are cut from
    Ryan's app-and-ring render (`ring-app.webp`, now only in git history);
    the breathing card is a **looping film**, `public/nerva-breathe.mp4`
-   (165KB, 10s at 25fps, faststart), made from Ryan's animated mockup
-   `nerva_breathe_phone.webp` (repo root, 2.6MB, 250 frames with alpha):
-   each frame set on a dark radial backdrop at 746x932 with the phone at
-   ~76% width so the breath wave stays in frame. First and last frames
-   match, so the loop has no seam. `CardFilm` fetches it only when the card
+   (89KB, 10s at 25fps, faststart). Since 3 Nov 2026 it is made from Ryan's
+   night-theme mockup `nerva_breathe_night.webp` (repo root, 1.7MB, 250
+   frames with alpha; the older purple one, `nerva_breathe_phone.webp`, is
+   still beside it): each frame set on a dark radial backdrop at 746x932,
+   the phone at native size (566 wide) placed at +90+42, so the blue bpm
+   panel starts at the card's bottom edge and the breath line, which dips
+   to y 889 of the phone, stays in frame. The film starts at the mockup's
+   frame 10, where the word is a clean "In" (frame 0 catches the In/Out
+   crossfade), and the poster is that frame. The mockup's countdown jumps
+   1:39 to 1:49 at the loop point; that is in Ryan's file.
+   The Today card (`src/assets/does-today.webp`, 746x932) is Ryan's
+   night-theme Today mockup framed exactly the same way (phone scaled to
+   566 wide, at +90+42 on the same backdrop), so the two phones match. `CardFilm` fetches it only when the card
    is on screen, pauses it off screen, and never loads it under reduced
    motion, where `nerva-breathe-poster.webp` (frame 0) stands in. An earlier version put the whole render full
    width with a spotlight driven by tabs; Ryan preferred cards. **Better
