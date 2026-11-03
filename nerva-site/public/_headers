@@ -10,10 +10,8 @@
   # redirect through other Kit hosts (a CAPTCHA page, then back here), and
   # browsers apply form-action to every hop. Blocking one would silently break
   # the only conversion on the site. Style stays 'unsafe-inline' because the
-  # pages set style attributes (swatch colours, scrub progress). frame-src
-  # allows Loom's player only, for the pitch video on /prototype, which
-  # loads nothing from Loom until play is pressed.
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://*.myshopify.com; frame-src https://www.loom.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+  # pages set style attributes (swatch colours, scrub progress).
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://*.myshopify.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
 
 # built files carry a content hash in their name, so they never change
 /assets/*

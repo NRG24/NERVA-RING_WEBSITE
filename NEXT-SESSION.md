@@ -152,14 +152,12 @@ under 1080px. Every light section opens with a **centered** `.head`.
     footer is on screen; `inert` while hidden. It must never show a price.
 
 ## The prototype page (`/prototype`, added 5 Oct 2026)
-**Pitch video (3 Nov 2026):** "The pitch" sits right under the headline:
-Ryan's Loom video (`LOOM_ID` in `Prototype.tsx`), click to load. Until play
-is pressed it is the bench photo with a play button and nothing is fetched
-from Loom; then Loom's player takes the same 1228x720 box. The CSP allows
-`frame-src https://www.loom.com` and the privacy page names Loom: change
-all three together. The hero's "New:" line is now a pill with a play mark,
-"See real prototyping progress and watch the pitch.", linking to
-`/prototype#pitch`.
+**Pitch video: taken down (3 Nov 2026).** A click-to-load Loom pitch sat
+under the headline for an afternoon (commit 9d9a35e); Ryan pulled it to
+record a new one. To bring one back, restore that commit's pitch block in
+`Prototype.tsx` / `prototype.css` and, together, the CSP `frame-src` for
+the host and its entry on the privacy page. The hero's "New:" line stays
+a pill with an arrow mark, linking to `/prototype`.
 Linked from the hero by a line under the two CTAs, **"New: See real
 prototyping progress."** (Ryan's exact words; he had the green dot before
 "New:" taken off),

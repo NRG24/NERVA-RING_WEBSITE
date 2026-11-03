@@ -6,9 +6,8 @@
    analytics and no storage call anywhere in src/; the only cookie is
    nerva_wl, set by worker/index.ts when someone joins; the signup form
    posts to the site's own /api/join, which keeps a copy in Cloudflare
-   D1 and hands the same post on to Kit; the other third-party origins
-   are Cloudflare (the host) and Loom, whose player loads on /prototype
-   only when someone presses play on the pitch video. The fonts are bundled with the
+   D1 and hands the same post on to Kit; and the only other third-party
+   origin the pages touch is Cloudflare (the host). The fonts are bundled with the
    site, so nothing is fetched from Google.
 
    If any of that changes, this page changes in the same commit.
@@ -18,7 +17,7 @@ import type { ReactNode } from 'react'
 import { SkipLink } from './Chrome.tsx'
 
 const CONTACT_EMAIL = 'nervaring@gmail.com'
-const UPDATED = '3 November 2026'
+const UPDATED = '1 November 2026'
 
 /* one hanging label, one block of document */
 function Clause({ label, children }: { label: string; children: ReactNode }) {
@@ -70,9 +69,7 @@ export default function Legal() {
           <p className="sheet__lede">
             This site runs no analytics. The only personal thing it can collect is an
             email address, and only if you type one into the waitlist form. The only
-            cookie it sets is the one described below, and only once you join. The
-            pitch video on the prototype page is the one thing hosted elsewhere, and
-            it loads only if you press play.
+            cookie it sets is the one described below, and only once you join.
           </p>
 
           <Clause label="If you join the waitlist">
@@ -115,14 +112,6 @@ export default function Legal() {
                 Hosts the site, and sees what any web host sees: your IP address, your
                 browser's user agent, and which file you asked for. It also stores the
                 waitlist database described above.
-              </dd>
-
-              <dt>Loom</dt>
-              <dd>
-                Hosts the pitch video on the <a href="/prototype">prototype page</a>.
-                Nothing is fetched from Loom until you press play. After that, Loom’s
-                own player runs in that box, sees your visit the way any video host
-                does, and may set its own cookies, under Loom’s privacy policy.
               </dd>
 
               <dt>Shopify</dt>
