@@ -394,14 +394,15 @@ function Hero() {
           <a className="textlink textlink--onfilm" href="#inside">See what’s inside</a>
         </div>
         {/* points at the prototype page, the one page with photographs
-            instead of renders, and now Ryan's pitch video. Set as a pill
-            with a play mark (3 Nov 2026) so it reads as more than a footnote. */}
+            instead of renders. Set as a pill (3 Nov 2026) so it reads as more
+            than a footnote; the pitch video it also pointed to is down until
+            Ryan records a new one. */}
         <p className="hero__news">
-          <a className="hero__proto" href="/prototype#pitch">
+          <a className="hero__proto" href="/prototype">
             <span className="hero__proto-play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" /></svg>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
             </span>
-            <span className="hero__proto-txt"><b>New:</b> See real prototyping progress and watch the pitch.</span>
+            <span className="hero__proto-txt"><b>New:</b> See real prototyping progress.</span>
           </a>
         </p>
       </div>

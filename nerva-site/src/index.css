@@ -365,8 +365,8 @@ a { color: inherit; text-decoration: none; }
   transition: text-decoration-color 0.18s var(--ease);
 }
 @media (hover: hover) { .hero__news a:hover span { text-decoration-color: currentColor; } }
-/* the prototype + pitch link as a pill, so it reads as a second way in
-   rather than a footnote: a filled play mark, then the line */
+/* the prototype link as a pill, so it reads as a second way in rather
+   than a footnote: a filled arrow mark, then the line */
 .hero__news { margin-top: 26px; }
 .hero__proto {
   display: inline-flex; align-items: center; gap: 12px;
@@ -382,7 +382,6 @@ a { color: inherit; text-decoration: none; }
   width: 40px; height: 40px; border-radius: 50%;
   background: var(--sensor); color: #04231a;
 }
-.hero__proto-play svg { margin-left: 2px; }
 .hero__proto-txt { line-height: 1.35; }
 @media (hover: hover) {
   .hero__proto:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.32); }
