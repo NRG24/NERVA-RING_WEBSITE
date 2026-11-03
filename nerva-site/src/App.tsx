@@ -565,16 +565,17 @@ function FilmScroll() {
    The color marks the rule over each row; there are no icons, because three
    stock glyphs beside three headings is the feature grid this avoids. */
 /* Each feature is a card with its own picture, the way Oura, Ultrahuman
-   and RingConn lay theirs out. The Today screen and the ring are cut from
-   Ryan's app-and-ring render (ring-app.webp, in git history); the breathing
-   card is Ryan's animated mockup, set on the same dark backdrop and cut to
-   a 165KB looping film. */
+   and RingConn lay theirs out. The Today screen is Ryan's night-theme
+   mockup (3 Nov 2026), cut to the top of the phone on black like the
+   others; the ring is cut from his app-and-ring render (ring-app.webp, in
+   git history); the breathing card is Ryan's animated mockup, set on the
+   same dark backdrop and cut to a small looping film. */
 const DOES = [
   {
     k: 'Gas pedal and brake',
     channel: 'gold',
-    img: doesToday, w: 578, h: 722,
-    alt: 'The NERVA app on a phone, the Today screen: 68 percent of the day inside your range, a graph of the day, and minutes above your line against minutes restoring.',
+    img: doesToday, w: 760, h: 950,
+    alt: 'The NERVA app on a phone, the Today screen in its night theme, with demo data: back down in 9 minutes, a reserve of 39, today at 1.4 times the usual load, a week that has been running down, and two spikes in the day so far.',
     body: (
       <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and avoid burnout.</>
     ),
