@@ -331,6 +331,11 @@ function Hero() {
       {/* a flat disc behind where the ring comes to rest, on its own layer so
           it holds still while the ring hovers in front of it (light schemes
           only; CSS hides it on the dark design) */}
+      {/* three rings spreading out from the disc in steps from sage toward the
+          ground, swelling with the LED at 72 bpm once the ring lands (Ryan
+          picked this, direction D, 3 Nov 2026). Their own layer, under the
+          disc, clipped to the hero and faded out before its bottom edge. */}
+      <div className="hero__ripples" aria-hidden="true"><i /><i /><i /></div>
       <div className="hero__backdrop" aria-hidden="true"><span /></div>
       <div className="hero__stage">
         {showFilm && USE_ANIM ? (

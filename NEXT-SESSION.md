@@ -180,7 +180,13 @@ lede, a dark pill and
 an underlined link. The ruled strip of four facts that sat under it
 (heart rate, skin conductance, blood oxygen, stress management) was
 **removed on 3 Nov 2026 at Ryan's ask**; `--strip` is now 0px, so the
-ring centres in the full hero height. Don't bring it back. Behind the ring is a flat sage disc (`.hero__backdrop`,
+ring centres in the full hero height. Don't bring it back. Ryan then asked for more colour and picked **direction D, pulse rings**
+(3 Nov 2026): `.hero__ripples`, three rings behind the disc stepping from
+`--pal-bg2` toward `--pal-bg`, centred on the ring's rest point with the
+backdrop's geometry (`--cx`, `--cy`, `--rb` per breakpoint), masked out
+before the hero's bottom edge, swelling at 72 bpm with the LED glow once
+the ring lands (paused off screen, still under reduced motion). If the
+film or the backdrop geometry changes, change `--cx`/`--cy`/`--rb` too. Behind the ring is a flat sage disc (`.hero__backdrop`,
 `--pal-bg2`, 87% of the film frame) on its own layer, so it holds still while
 the ring hovers. On desktop the film frame and disc are **placed directly
 with left/top/width** (`--box`, the ring centre at 69% across and halfway

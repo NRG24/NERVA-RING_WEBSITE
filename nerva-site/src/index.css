@@ -1098,6 +1098,50 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   [data-palette] .hero__backdrop > span { transition: none; opacity: 1; scale: 1; }
 }
+/* ---- ripples: three rings around the disc (direction D, 3 Nov 2026) ----
+   Their own hero-sized layer under the disc, so they can be centred on the
+   ring with the same geometry as the backdrop box and still be clipped to
+   the hero. --cx / --cy are the ring's resting centre and --rb the film
+   box's width; each breakpoint below sets them to match the backdrop.
+   Colours step from the disc's sage toward the ground. The mask fades
+   them out before the hero's bottom edge, so no ring is cut flat where
+   the hero eases into the next section. */
+.hero__ripples { display: none; }
+[data-palette] .hero__ripples {
+  display: block;
+  position: absolute; inset: 0;
+  overflow: hidden; pointer-events: none;
+  --cx: 69%; --cy: 50%; --rb: min(78vw, 460px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 160px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 160px), transparent);
+}
+[data-palette] .hero__ripples i {
+  position: absolute; left: var(--cx); top: var(--cy);
+  aspect-ratio: 1 / 1; border-radius: 50%;
+  translate: -50% -50%;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out) 0.25s;
+}
+[data-palette] .hero__ripples i:nth-child(1) { width: calc(var(--rb) * 1.65); background: color-mix(in srgb, var(--pal-bg2) 25%, var(--pal-bg)); }
+[data-palette] .hero__ripples i:nth-child(2) { width: calc(var(--rb) * 1.45); background: color-mix(in srgb, var(--pal-bg2) 50%, var(--pal-bg)); }
+[data-palette] .hero__ripples i:nth-child(3) { width: calc(var(--rb) * 1.25); background: color-mix(in srgb, var(--pal-bg2) 75%, var(--pal-bg)); }
+[data-palette] .hero.is-ready .hero__ripples i { opacity: 1; }
+/* in time with the LED glow: a swell on each beat, inner ring first */
+[data-palette] .hero.is-resting .hero__ripples i { animation: ripple 0.833s ease-out infinite; }
+[data-palette] .hero.is-resting .hero__ripples i:nth-child(2) { animation-delay: 0.04s; }
+[data-palette] .hero.is-resting .hero__ripples i:nth-child(1) { animation-delay: 0.08s; }
+@keyframes ripple {
+  0%   { scale: 1; }
+  12%  { scale: 1.022; }
+  40%  { scale: 1.005; }
+  100% { scale: 1; }
+}
+[data-palette] .hero.is-offscreen .hero__ripples i { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  [data-palette] .hero__ripples i { transition: none; opacity: 1; }
+  [data-palette] .hero.is-resting .hero__ripples i { animation: none; }
+}
+
 /* ---- the light-scheme hero, laid out after Ryan's reference ----
    The headline in the site's own sans with its last phrase bold, the
    lede, a dark pill and an underlined link, all centred in the hero. On wide screens the ring sits right of the words
@@ -1142,6 +1186,7 @@ a { color: inherit; text-decoration: none; }
     top: calc((100% - var(--strip)) / 2 - var(--box) * 0.495);
   }
   [data-palette] .hero__backdrop > span { left: 47.3%; width: 87%; }
+  [data-palette] .hero__ripples { --cx: 69%; --cy: calc((100% - var(--strip)) / 2); --rb: var(--box); }
 }
 @media (max-width: 1080px) {
   [data-palette] .hero__title { font-size: clamp(2.3rem, 10.6vw, 3.6rem); }
@@ -1156,6 +1201,13 @@ a { color: inherit; text-decoration: none; }
     -webkit-mask-image: none; mask-image: none;
   }
   [data-palette] .hero__backdrop > span { left: 47.3%; width: 87%; }
+  /* the box is min(78vw, 460px) wide, centred, 8px down; the ring rests
+     at 47.3% / 49.5% of it */
+  [data-palette] .hero__ripples {
+    --rb: min(78vw, 460px);
+    --cx: calc(50% - 0.027 * min(78vw, 460px));
+    --cy: calc(8px + 0.495 * min(78vw, 460px));
+  }
   [data-palette] .hero__copy { margin-top: 0; padding-top: 12px; }
 }
 
