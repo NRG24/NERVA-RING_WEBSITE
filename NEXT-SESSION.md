@@ -1,6 +1,6 @@
 # NERVA Website: Session Handoff
 
-_Last updated: 2026-11-01. Read this, then `CLAUDEwebdesign copy.md` (design law)
+_Last updated: 2026-11-03. Read this, then `CLAUDEwebdesign copy.md` (design law)
 and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
@@ -184,8 +184,11 @@ ring centres in the full hero height. Don't bring it back. Ryan then asked for m
 (3 Nov 2026): `.hero__ripples`, three rings behind the disc stepping from
 `--pal-bg2` toward `--pal-bg`, centred on the ring's rest point with the
 backdrop's geometry (`--cx`, `--cy`, `--rb` per breakpoint), masked out
-before the hero's bottom edge, swelling at 72 bpm with the LED glow once
-the ring lands (paused off screen, still under reduced motion). If the
+before the hero's bottom edge, breathing in one slow 10 s swell once the
+ring lands (paused off screen, still under reduced motion). They beat at
+72 bpm for an hour and Ryan found the hero too quick and stark, so the
+rings, LED glow, hover and disc rise were all softened the same day: keep
+hero motion slow and small. If the
 film or the backdrop geometry changes, change `--cx`/`--cy`/`--rb` too. Behind the ring is a flat sage disc (`.hero__backdrop`,
 `--pal-bg2`, 87% of the film frame) on its own layer, so it holds still while
 the ring hovers. On desktop the film frame and disc are **placed directly
