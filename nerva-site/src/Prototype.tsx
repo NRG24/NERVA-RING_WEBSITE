@@ -8,14 +8,53 @@
 
    Both photos had their EXIF stripped on the way in (one carried GPS).
    Keep it that way for any photo added here.
+
+   Ryan's pitch video sits under the headline (added 3 Nov 2026). It is
+   hosted on Loom, and nothing loads from Loom until someone presses play:
+   until then it is the bench photo and a play button. The CSP allows
+   www.loom.com in frame-src for it, and the privacy page names Loom.
+   Change all three together.
    ------------------------------------------------------------------ */
 
+import { useState } from 'react'
 import benchPhoto from './assets/proto-bench.webp'
 import handPhoto from './assets/proto-hand.webp'
 import { CONTACT_EMAIL, Signup } from './Signup.tsx'
 import { SkipLink } from './Chrome.tsx'
 
 const UPDATED = '5 October 2026'
+
+const LOOM_ID = '565bea9565a94eccaeb3920fdef911cd'
+
+/* click to load: a photo and a play button until pressed, then Loom's
+   player in the same box */
+function PitchVideo() {
+  const [playing, setPlaying] = useState(false)
+  return (
+    <div className="pitch">
+      {playing ? (
+        <iframe
+          className="pitch__frame"
+          src={`https://www.loom.com/embed/${LOOM_ID}?autoplay=1`}
+          title="NERVA Ring pitch video"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        <button type="button" className="pitch__play" onClick={() => setPlaying(true)}>
+          <img src={benchPhoto} width={1200} height={1600} alt="" loading="lazy" />
+          <span className="pitch__badge">
+            <span className="pitch__btn" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" /></svg>
+            </span>
+            <span className="pitch__label">Watch the pitch</span>
+            <span className="pitch__note">Plays on Loom</span>
+          </span>
+        </button>
+      )}
+    </div>
+  )
+}
 
 /* where the build goes from here, in order */
 const STAGES = [
@@ -70,6 +109,11 @@ export default function Prototype() {
               </p>
             </div>
           </header>
+
+          <section className="proto__pitch" id="pitch" aria-labelledby="pitch-title">
+            <h2 id="pitch-title" className="proto__h2">The pitch</h2>
+            <PitchVideo />
+          </section>
 
           {/* the big shot on the left, the in-hand one beside it with the
               caption under it, so the caption sits against both */}

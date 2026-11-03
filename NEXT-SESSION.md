@@ -152,6 +152,14 @@ under 1080px. Every light section opens with a **centered** `.head`.
     footer is on screen; `inert` while hidden. It must never show a price.
 
 ## The prototype page (`/prototype`, added 5 Oct 2026)
+**Pitch video (3 Nov 2026):** "The pitch" sits right under the headline:
+Ryan's Loom video (`LOOM_ID` in `Prototype.tsx`), click to load. Until play
+is pressed it is the bench photo with a play button and nothing is fetched
+from Loom; then Loom's player takes the same 1228x720 box. The CSP allows
+`frame-src https://www.loom.com` and the privacy page names Loom: change
+all three together. The hero's "New:" line is now a pill with a play mark,
+"See real prototyping progress and watch the pitch.", linking to
+`/prototype#pitch`.
 Linked from the hero by a line under the two CTAs, **"New: See real
 prototyping progress."** (Ryan's exact words; he had the green dot before
 "New:" taken off),
@@ -323,8 +331,9 @@ a re-encode waiting to happen.
   Grotesk semibold (600) for heads, tight tracking; Plex Mono only for part
   numbers and tick labels. An earlier pass tried square corners and a journal
   serif (Newsreader); Ryan read that as B2B. Do not bring either back.
-- **No stock icons.** Features carry a short stroke in their channel color;
-  the signal notes carry a swatch of their own trace as a legend key.
+- **No stock icons.** The signal notes carry a swatch of their own trace as
+  a legend key. (The feature cards used to carry a short coloured rule over
+  each heading; Ryan had it taken off on 3 Nov 2026. Don't bring it back.)
 - The readout carries a caption saying it is modeled, not recorded. Remove it
   only when it is a real capture off the ring.
 - Ryan changed `·` to ` - ` in the footer and part-number strings himself.

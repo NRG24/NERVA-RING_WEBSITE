@@ -365,6 +365,28 @@ a { color: inherit; text-decoration: none; }
   transition: text-decoration-color 0.18s var(--ease);
 }
 @media (hover: hover) { .hero__news a:hover span { text-decoration-color: currentColor; } }
+/* the prototype + pitch link as a pill, so it reads as a second way in
+   rather than a footnote: a filled play mark, then the line */
+.hero__news { margin-top: 26px; }
+.hero__proto {
+  display: inline-flex; align-items: center; gap: 12px;
+  min-height: 52px; padding: 6px 20px 6px 6px;
+  border-radius: 999px; text-decoration: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.hero__news .hero__proto span { text-decoration: none; }
+.hero__proto-play {
+  flex: none; display: grid; place-items: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--sensor); color: #04231a;
+}
+.hero__proto-play svg { margin-left: 2px; }
+.hero__proto-txt { line-height: 1.35; }
+@media (hover: hover) {
+  .hero__proto:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.32); }
+}
 .hero__title em { font-style: inherit; }
 
 /* ============================================================
@@ -497,13 +519,6 @@ a { color: inherit; text-decoration: none; }
 @media (hover: hover) { .card__in:hover .card__img :is(img, video) { transform: scale(1.03); } }
 @media (prefers-reduced-motion: reduce) { .card__img :is(img, video) { transition: none; } }
 .card__txt { padding: clamp(20px, 2vw, 28px) clamp(20px, 2vw, 28px) clamp(24px, 2.4vw, 32px); }
-.card__txt::before {
-  content: ''; display: block; width: 32px; height: 3px; border-radius: 2px;
-  margin-bottom: 16px; background: rgba(255, 255, 255, 0.3);
-}
-.card--gold .card__txt::before   { background: var(--gold); }
-.card--sensor .card__txt::before { background: var(--sensor); }
-.card--pulse .card__txt::before  { background: var(--pulse); }
 .card__txt h3 {
   margin: 0; font-weight: 650; letter-spacing: -0.022em; color: #fff;
   font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.4rem); line-height: 1.2;
@@ -1224,6 +1239,18 @@ a { color: inherit; text-decoration: none; }
 [data-palette] .hero__news { color: var(--ink-2); }
 [data-palette] .hero__news b { color: var(--pal-ink); }
 [data-palette] .hero__news span { text-decoration-color: color-mix(in srgb, var(--pal-ink) 40%, transparent); }
+[data-palette] .hero__proto {
+  background: color-mix(in srgb, var(--pal-bg2) 55%, var(--pal-bg));
+  border-color: color-mix(in srgb, var(--pal-ink) 14%, transparent);
+  color: var(--pal-ink);
+}
+[data-palette] .hero__proto-play { background: var(--pal-band); color: var(--pal-bg); }
+@media (hover: hover) {
+  [data-palette] .hero__proto:hover {
+    background: var(--pal-bg2);
+    border-color: color-mix(in srgb, var(--pal-ink) 26%, transparent);
+  }
+}
 [data-palette] .hero :focus-visible { outline-color: var(--pal-band); box-shadow: none; }
 /* a screen-blended glow disappears on a light ground; lay it on instead */
 [data-palette] .hero__pulse > span { mix-blend-mode: normal; opacity: 0.8; }
@@ -1275,9 +1302,6 @@ a { color: inherit; text-decoration: none; }
 [data-palette] .card__in { background: var(--paper); border-color: var(--line); }
 [data-palette] .card__txt h3 { color: var(--pal-ink); }
 [data-palette] .card__txt p { color: var(--ink-2); }
-[data-palette] .card--gold .card__txt::before { background: var(--gold-ink); }
-[data-palette] .card--sensor .card__txt::before { background: var(--green-ink); }
-[data-palette] .card--pulse .card__txt::before { background: var(--pulse-ink); }
 [data-palette] .does .abbr { color: var(--pal-ink); }
 
 /* ---- the deep bands ---- */

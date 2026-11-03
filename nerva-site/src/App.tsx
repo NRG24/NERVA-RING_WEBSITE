@@ -394,9 +394,15 @@ function Hero() {
           <a className="textlink textlink--onfilm" href="#inside">See what’s inside</a>
         </div>
         {/* points at the prototype page, the one page with photographs
-            instead of renders */}
+            instead of renders, and now Ryan's pitch video. Set as a pill
+            with a play mark (3 Nov 2026) so it reads as more than a footnote. */}
         <p className="hero__news">
-          <a href="/prototype"><b>New:</b> <span>See real prototyping progress.</span></a>
+          <a className="hero__proto" href="/prototype#pitch">
+            <span className="hero__proto-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" /></svg>
+            </span>
+            <span className="hero__proto-txt"><b>New:</b> See real prototyping progress and watch the pitch.</span>
+          </a>
         </p>
       </div>
 
@@ -559,11 +565,11 @@ function FilmScroll() {
 }
 
 /* Ryan's copy, cut down and reordered, never rewritten: each label and body
-   below is a literal run from the brief. The channel colors keep the meanings
-   set at the top of index.css: gold is the electrode channel that times the
-   two branches, green is the ring's own sensing, red is the pulse channel.
-   The color marks the rule over each row; there are no icons, because three
-   stock glyphs beside three headings is the feature grid this avoids. */
+   below is a literal run from the brief. Each card still carries a channel
+   (card--gold / --sensor / --pulse) but nothing draws it: the short
+   coloured rule over each heading was taken off at Ryan's ask (3 Nov
+   2026). There are no icons either, because three stock glyphs beside
+   three headings is the feature grid this avoids. */
 /* Each feature is a card with its own picture, the way Oura, Ultrahuman
    and RingConn lay theirs out. The Today screen is Ryan's night-theme
    mockup (3 Nov 2026), framed exactly like the breathing film (phone 566
