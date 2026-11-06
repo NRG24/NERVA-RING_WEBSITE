@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 
 /* ---------- email capture ----------
    Shared by every page with a signup band.
@@ -55,6 +55,19 @@ export function Signup({ autoFocus = false }: { autoFocus?: boolean }) {
   const [ref] = useState(referredBy)
   const [code] = useState(newCode)
   const trapRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
+
+  /* The waitlist page puts the cursor in the field, but only where that
+     costs nothing: on a screen with a mouse, and only if the field is
+     already in view. Plain autoFocus scrolled a short phone straight past
+     the headline and the promise, and could raise the keyboard over them. */
+  useEffect(() => {
+    const el = emailRef.current
+    if (!autoFocus || !el) return
+    if (!window.matchMedia('(pointer: fine)').matches) return
+    if (el.getBoundingClientRect().bottom > window.innerHeight) return
+    el.focus({ preventScroll: true })
+  }, [autoFocus])
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     if (trapRef.current?.value) { e.preventDefault(); return } // bot fell in the honeypot
@@ -70,11 +83,11 @@ export function Signup({ autoFocus = false }: { autoFocus?: boolean }) {
       <div className="signup">
         <label htmlFor="email" className="sr-only">Email address</label>
         <input
+          ref={emailRef}
           id="email"
           type="email"
           name="email_address"
           autoComplete="email"
-          autoFocus={autoFocus}
           placeholder="you@domain.com"
           value={email}
           aria-invalid={err ? true : undefined}

@@ -971,6 +971,13 @@ a { color: inherit; text-decoration: none; }
   .tb__v { overflow-wrap: anywhere; }
 }
 
+/* the smallest phones (320px): the wordmark and a sub-page's back button
+   only fit side by side once the button and the gap tighten up */
+@media (max-width: 360px) {
+  .nav__inner { gap: 12px; }
+  .nav__inner > .btn--ghost { --pad-x: 14px; font-size: 14px; }
+}
+
 /* narrower than a tablet: the render goes on top and the words under it */
 @media (max-width: 760px) {
   .inside__grid { grid-template-columns: 1fr; gap: 44px; }
@@ -1240,6 +1247,27 @@ a { color: inherit; text-decoration: none; }
     --cy: calc(8px + 0.495 * min(78vw, 460px));
   }
   [data-palette] .hero__copy { margin-top: 0; padding-top: 12px; }
+}
+/* Landscape phones are wide and short: the stacked layout above gave the
+   whole first screen to the ring's square and left the headline below
+   the fold. They take the wide-screen arrangement instead, words on the
+   left and the ring on the right, placed with the same --box geometry. */
+@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px) {
+  [data-palette] .hero {
+    --box: min(44vw, calc((100svh - var(--nav-h)) * 1.02));
+    min-height: calc(100svh - var(--nav-h));
+    padding-top: 0;
+  }
+  [data-palette] .hero__copy { margin: auto; padding-top: 24px; padding-bottom: 24px; }
+  [data-palette] .hero__title { font-size: clamp(2rem, 5vw, 2.9rem); }
+  [data-palette] .hero__lede { margin-top: 18px; max-width: 22em; font-size: 1.02rem; }
+  [data-palette] .hero__cta { margin-top: 22px; }
+  [data-palette] .hero__stage, [data-palette] .hero__backdrop {
+    width: var(--box); height: var(--box); translate: none;
+    left: calc(74% - var(--box) * 0.473);
+    top: calc(50% - var(--box) * 0.495);
+  }
+  [data-palette] .hero__ripples { --cx: 74%; --cy: 50%; --rb: var(--box); }
 }
 
 [data-palette] .hero__title { color: var(--pal-ink); }
