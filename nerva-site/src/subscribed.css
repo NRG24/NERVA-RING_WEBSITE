@@ -24,3 +24,7 @@
 .subd__share { margin: 18px 0 0; }
 .subd__share input { font-size: 14px; }
 .subd__status { min-height: 1.2em; margin: 8px 0 0; font-size: 13px; color: rgba(214, 245, 226, 0.72); }
+
+/* on the almond scheme the band is slate, not green: drop the green tint */
+[data-palette] .subd__ig { border-color: rgba(255, 255, 255, 0.4); }
+[data-palette] .subd__status { color: rgba(255, 255, 255, 0.74); }

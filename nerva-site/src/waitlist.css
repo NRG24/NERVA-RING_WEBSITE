@@ -39,3 +39,6 @@
 [data-palette] .wait__perks li::before { background: var(--pal-bg); }
 
 .wait__count { margin: 14px 0 0; font-size: 14.5px; color: #fff; }
+
+/* on the almond scheme the band is slate, not green: drop the green tint */
+[data-palette] .wait__photo figcaption { color: rgba(255, 255, 255, 0.74); }
