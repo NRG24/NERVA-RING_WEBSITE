@@ -718,17 +718,34 @@ function App() {
   const active = FINISHES.find((f) => f.id === finish)!
   const [barShown, setBarShown] = useState(false)
 
-  /* Escape closes the phone menu, and so does widening past the breakpoint,
-     where the toggle disappears and would leave the panel stuck open */
+  const headerRef = useRef<HTMLElement | null>(null)
+  const toggleRef = useRef<HTMLButtonElement | null>(null)
+
+  /* Escape closes the phone menu and hands focus back to its button, and
+     widening past the breakpoint closes it too, where the toggle
+     disappears and would leave the panel stuck open. Tabbing out of the
+     header closes it as well: the panel is not a dialog, but left open it
+     would sit over whatever the keyboard moved on to. */
   useEffect(() => {
     if (!menuOpen) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    const header = headerRef.current
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setMenuOpen(false)
+      if (header?.contains(document.activeElement)) toggleRef.current?.focus()
+    }
+    const onFocusOut = (e: FocusEvent) => {
+      const to = e.relatedTarget as Node | null
+      if (to && !header?.contains(to)) setMenuOpen(false)
+    }
     const wide = window.matchMedia('(min-width: 1081px)')
     const onWide = () => { if (wide.matches) setMenuOpen(false) }
     window.addEventListener('keydown', onKey)
+    header?.addEventListener('focusout', onFocusOut)
     wide.addEventListener('change', onWide)
     return () => {
       window.removeEventListener('keydown', onKey)
+      header?.removeEventListener('focusout', onFocusOut)
       wide.removeEventListener('change', onWide)
     }
   }, [menuOpen])
@@ -757,7 +774,7 @@ function App() {
     <>
       <SkipLink to="#top" />
       {/* ---------------- NAV ---------------- */}
-      <header className="nav">
+      <header className="nav" ref={headerRef}>
         <div className="nav__inner">
           <a className="brand" href="#top" aria-label="NERVA Ring home">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
@@ -772,6 +789,7 @@ function App() {
           <div className="nav__right">
             <a className="btn btn--accent" href="#follow">Get updates</a>
             <button
+              ref={toggleRef}
               className="nav__toggle"
               type="button"
               aria-label="Menu"

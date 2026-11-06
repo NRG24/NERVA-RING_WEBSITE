@@ -96,8 +96,12 @@ a { color: inherit; text-decoration: none; }
 
 .wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 32px; }
 
-/* the sticky nav must not sit on top of whatever you jumped to */
-[id] { scroll-margin-top: calc(var(--nav-h) + 20px); }
+/* The sticky nav must not sit on top of whatever you jumped to, nor the
+   launch bar pinned to the bottom on whatever the keyboard tabbed to.
+   Set on the page's scroller rather than as scroll-margin on each [id],
+   so focus moves (Tab and Shift+Tab) get the same clearance as anchor
+   jumps; an anchor lands exactly where the old [id] rule put it. */
+html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
 /* ---------- reveal ---------- */
 /* kept small on purpose: a long rise on every block makes a page feel
