@@ -696,23 +696,56 @@ function CardFilm({ src, poster, label }: { src: string; poster: string; label: 
   return <video ref={ref} poster={poster} muted loop playsInline preload="none" aria-label={label} />
 }
 
+/* true while a media query matches, and kept current as the window resizes */
+function useMedia(query: string) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    const on = () => setMatches(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [query])
+  return matches
+}
+
 function App() {
+  /* at and below 1080px the feature cards are a row you swipe; it holds
+     nothing focusable, so it takes focus itself and the arrow keys scroll it */
+  const cardsSwipe = useMedia('(max-width: 1080px)')
   const [menuOpen, setMenuOpen] = useState(false)
   const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('ceramic-black')
   const active = FINISHES.find((f) => f.id === finish)!
   const [barShown, setBarShown] = useState(false)
 
-  /* Escape closes the phone menu, and so does widening past the breakpoint,
-     where the toggle disappears and would leave the panel stuck open */
+  const headerRef = useRef<HTMLElement | null>(null)
+  const toggleRef = useRef<HTMLButtonElement | null>(null)
+
+  /* Escape closes the phone menu and hands focus back to its button, and
+     widening past the breakpoint closes it too, where the toggle
+     disappears and would leave the panel stuck open. Tabbing out of the
+     header closes it as well: the panel is not a dialog, but left open it
+     would sit over whatever the keyboard moved on to. */
   useEffect(() => {
     if (!menuOpen) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    const header = headerRef.current
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setMenuOpen(false)
+      if (header?.contains(document.activeElement)) toggleRef.current?.focus()
+    }
+    const onFocusOut = (e: FocusEvent) => {
+      const to = e.relatedTarget as Node | null
+      if (to && !header?.contains(to)) setMenuOpen(false)
+    }
     const wide = window.matchMedia('(min-width: 1081px)')
     const onWide = () => { if (wide.matches) setMenuOpen(false) }
     window.addEventListener('keydown', onKey)
+    header?.addEventListener('focusout', onFocusOut)
     wide.addEventListener('change', onWide)
     return () => {
       window.removeEventListener('keydown', onKey)
+      header?.removeEventListener('focusout', onFocusOut)
       wide.removeEventListener('change', onWide)
     }
   }, [menuOpen])
@@ -741,11 +774,11 @@ function App() {
     <>
       <SkipLink to="#top" />
       {/* ---------------- NAV ---------------- */}
-      <header className="nav">
+      <header className="nav" ref={headerRef}>
         <div className="nav__inner">
-          <a className="brand" href="#top" aria-label="NERVA Ring home">
+          <a className="brand" href="#top" aria-label="NERVA Ring Prototype, top of page">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA Ring
+            NERVA Ring{' '}
             <span className="brand__tag">Prototype</span>
           </a>
           <nav className="nav__links" aria-label="Primary">
@@ -756,6 +789,7 @@ function App() {
           <div className="nav__right">
             <a className="btn btn--accent" href="#follow">Get updates</a>
             <button
+              ref={toggleRef}
               className="nav__toggle"
               type="button"
               aria-label="Menu"
@@ -820,7 +854,7 @@ function App() {
               of the same dark the ring landed in */}
           <div className="wrap">
             {/* a swipeable row on a phone, three across on a desktop */}
-            <ul className="cards" aria-label="What it does">
+            <ul className="cards" aria-label="What it does" tabIndex={cardsSwipe ? 0 : undefined}>
               {DOES.map((d, i) => (
                 <li key={d.k} className={`card card--${d.channel}`}>
                   <Reveal className="card__in" delay={i * 80}>

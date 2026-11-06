@@ -26,7 +26,7 @@
   --stage:      #ececee;   /* the grey the renders sit on */
   --ink:        #0b0b0d;
   --ink-2:      #56575c;
-  --ink-3:      #6b6c72;   /* clears 4.5:1 on white and on the tint */
+  --ink-3:      #67686e;   /* clears 4.5:1 on white, the tint and the grey stage */
   --void:       #000000;
   --forest:     #06251a;   /* the signup ground */
   --forest-2:   #0a2e20;
@@ -96,8 +96,12 @@ a { color: inherit; text-decoration: none; }
 
 .wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 32px; }
 
-/* the sticky nav must not sit on top of whatever you jumped to */
-[id] { scroll-margin-top: calc(var(--nav-h) + 20px); }
+/* The sticky nav must not sit on top of whatever you jumped to, nor the
+   launch bar pinned to the bottom on whatever the keyboard tabbed to.
+   Set on the page's scroller rather than as scroll-margin on each [id],
+   so focus moves (Tab and Shift+Tab) get the same clearance as anchor
+   jumps; an anchor lands exactly where the old [id] rule put it. */
+html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
 /* ---------- reveal ---------- */
 /* kept small on purpose: a long rise on every block makes a page feel
@@ -951,9 +955,35 @@ a { color: inherit; text-decoration: none; }
   }
   .cards::-webkit-scrollbar { display: none; }
   .card { scroll-snap-align: start; }
+  /* the row runs edge to edge, so its focus ring is drawn inside it */
+  .cards:focus-visible { outline-offset: -3px; border-radius: var(--radius-lg); }
 
-  .sig-notes { grid-template-columns: 1fr; gap: 32px; }
+  /* a tablet still has room for the render beside its words, as on
+     desktop. Finishes splits evenly so the panel keeps space for the
+     title and the four swatches. */
+  .config { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 
+  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
+  .faq__grid { grid-template-columns: 1fr; gap: 28px; }
+
+  /* every partial row of the title block (footer and sheet headers) is
+     three cells, so three equal columns tile each one. Two columns left
+     the third cell alone and printed the empty slot as a solid block. */
+  .titleblock { grid-template-columns: repeat(3, 1fr); }
+  .tb--w1, .tb--w2, .tb--w3 { grid-column: span 1; }
+  .tb--w6 { grid-column: span 3; }
+  .tb__v { overflow-wrap: anywhere; }
+}
+
+/* the smallest phones (320px): the wordmark and a sub-page's back button
+   only fit side by side once the button and the gap tighten up */
+@media (max-width: 360px) {
+  .nav__inner { gap: 12px; }
+  .nav__inner > .btn--ghost { --pad-x: 14px; font-size: 14px; }
+}
+
+/* narrower than a tablet: the render goes on top and the words under it */
+@media (max-width: 760px) {
   .inside__grid { grid-template-columns: 1fr; gap: 44px; }
   .inside__aside { position: static; }
   .inside__stage { max-width: 560px; }
@@ -961,14 +991,6 @@ a { color: inherit; text-decoration: none; }
 
   .config { grid-template-columns: 1fr; gap: 36px; }
   .config__panel { max-width: 560px; }
-
-  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
-  .faq__grid { grid-template-columns: 1fr; gap: 28px; }
-
-  /* two-up title block: 6 columns become 2 half-width cells per row */
-  .titleblock { grid-template-columns: repeat(2, 1fr); }
-  .tb--w1, .tb--w2, .tb--w3 { grid-column: span 1; }
-  .tb--w6 { grid-column: span 2; }
 }
 
 @media (max-width: 620px) {
@@ -993,6 +1015,8 @@ a { color: inherit; text-decoration: none; }
   .hero__cta .btn { flex: 1; }
 
   :root { --radius-lg: 22px; }
+
+  .sig-notes { grid-template-columns: 1fr; gap: 32px; }
 
   /* the readout keeps its lanes, but the key sits above the trace and the
      reading moves up beside the channel name */
@@ -1228,6 +1252,27 @@ a { color: inherit; text-decoration: none; }
   }
   [data-palette] .hero__copy { margin-top: 0; padding-top: 12px; }
 }
+/* Landscape phones are wide and short: the stacked layout above gave the
+   whole first screen to the ring's square and left the headline below
+   the fold. They take the wide-screen arrangement instead, words on the
+   left and the ring on the right, placed with the same --box geometry. */
+@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px) {
+  [data-palette] .hero {
+    --box: min(44vw, calc((100svh - var(--nav-h)) * 1.02));
+    min-height: calc(100svh - var(--nav-h));
+    padding-top: 0;
+  }
+  [data-palette] .hero__copy { margin: auto; padding-top: 24px; padding-bottom: 24px; }
+  [data-palette] .hero__title { font-size: clamp(2rem, 5vw, 2.9rem); }
+  [data-palette] .hero__lede { margin-top: 18px; max-width: 22em; font-size: 1.02rem; }
+  [data-palette] .hero__cta { margin-top: 22px; }
+  [data-palette] .hero__stage, [data-palette] .hero__backdrop {
+    width: var(--box); height: var(--box); translate: none;
+    left: calc(74% - var(--box) * 0.473);
+    top: calc(50% - var(--box) * 0.495);
+  }
+  [data-palette] .hero__ripples { --cx: 74%; --cy: 50%; --rb: var(--box); }
+}
 
 [data-palette] .hero__title { color: var(--pal-ink); }
 [data-palette] .hero__lede { color: var(--ink-2); }
@@ -1319,6 +1364,26 @@ a { color: inherit; text-decoration: none; }
 [data-palette] .inside :focus-visible, [data-palette] .cta :focus-visible, [data-palette] .launchbar :focus-visible {
   outline-color: #fff; box-shadow: none;
 }
+
+/* Finishes sits on the scheme's tint, which is darker than the page
+   ground --ink-3 was mixed for: the grey labels fell to 3.6:1 there, and
+   the green and gold of "5 done · 2 in progress" to about 3.2:1. Mixed
+   toward the tint instead, and the channel inks taken darker, they clear
+   4.5:1 on all four schemes' tints. */
+[data-palette] #finish {
+  --ink-3: color-mix(in srgb, var(--pal-ink) 82%, var(--pal-bg2));
+  --green-ink: #125a30;
+  --gold-ink: #68470d;
+}
+/* The part numbers in Inside the band keep their channel colours, but
+   almond's slate band is lighter than the black they were picked for:
+   red read 3.3:1, gold and grey 4.3:1. Each is lifted just far enough to
+   clear 4.5:1 (green already does). */
+[data-palette='almond'] .inside {
+  --pulse: #ff8f8b;
+  --gold: #dba62e;
+}
+[data-palette='almond'] .spec__part--neutral { color: rgba(255, 255, 255, 0.62); }
 
 /* ---- the rest of the light sections ---- */
 [data-palette] .colophon { background: var(--pal-bg); }

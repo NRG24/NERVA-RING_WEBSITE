@@ -140,13 +140,22 @@ under 1080px. Every light section opens with a **centered** `.head`.
 7. **`#finish`.** A product configurator like the reference: render big on the
    left; name, circular swatches (`aria-pressed`), "Finish. {name}", the build
    meter (counted off `LEDGER`, so it cannot drift) and a black pill CTA.
+   Inside and Finishes keep their two columns down to 761px (Finishes
+   splits 1:1 there) and stack at 760 and below. The Signals notes stay
+   side by side until the 620px phone breakpoint. Stacking them at 1080
+   (6 Nov 2026 fix) left half of each band empty on an iPad.
 8. **`#faq`.** "Questions": native `details`/`summary` accordion, heading
    and contact email left, questions right. Every answer must be backed by
    `nerva-ring-overview.md` or the site's disclaimers; nothing about price,
    subscription or phone compatibility until those are decided.
-9. **`#follow`.** Kit email capture on a deep green ground.
+9. **`#follow`.** Kit email capture on the scheme's deep band (slate on
+   almond; the green ground is the `?palette=dark` design).
 10. Footer as an engineering **title block**. Cell spans must tile each row of
    the 6-column grid exactly or the leftover gap prints as a solid hairline.
+   From 621 to 1080px it is three equal columns, because every partial row
+   (here and in the /science, /press and /privacy headers) is three cells.
+   Two columns there printed a grey block beside the third cell. A new
+   row that isn't three cells needs its own tablet span.
 11. **Launch bar.** Fixed to the bottom where the reference pins price and
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
@@ -261,6 +270,24 @@ jumped 240px left. The LED glow sits at
 threshold over the whole frame caught reflections and put it 3% right). The white-ground film tried first is gone. **To pick one**: set
 `data-palette="<name>"` on `<html>` in `index.html` (or make it the default in
 `palette.ts`) and delete the other three blocks.
+
+## Layout and keyboard rules added 6 Nov 2026
+- **Landscape phones** (`max-width: 1080px and orientation: landscape and
+  max-height: 560px`) get the wide-screen hero, words left and ring right,
+  placed with the same `--box` geometry (ring centre at 74%). The stacked
+  layout put the headline below the fold there. If the hero geometry
+  changes, change this block too.
+- **Scroll clearance** lives on the page, `html { scroll-padding: nav+20px
+  0 96px }`, not as `scroll-margin` on each `[id]`. Anchors land where they
+  did (84px down), and Tab / Shift+Tab never leave the focused control
+  under the sticky nav or the launch bar.
+- **Phone menu**: Escape hands focus back to the toggle; tabbing out of the
+  header closes the panel.
+- **Contrast on almond**: Finishes (the tint) has its own `--ink-3`,
+  `--green-ink` and `--gold-ink`; the part numbers on the slate band use
+  lifted `--pulse` / `--gold`. All clear 4.5:1. axe-core reports no
+  violations on any page; keep it that way.
+- **320px**: sub-page headers tighten the back button below 361px.
 
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
@@ -385,6 +412,11 @@ sign-in steps are in `launch/PLAN.md`.
   first pick of a limited early-bird tier, front of the list gets beta
   spots), "A friend saved you a spot." on a `?ref=` link, and the list
   size from `GET /api/stats` once it reaches `SHOW_COUNT_FROM` (50).
+  Since 6 Nov 2026 it and `/subscribed` set `data-palette="almond"` like
+  every other page (they had been left on the dark-green design, which
+  did not match the almond Instagram posts). The field takes focus only
+  with a mouse and only if already in view: plain `autoFocus` scrolled an
+  iPhone SE past the headline on load.
 - **Privacy:** the page now lists the D1 copy, the hashed IP and the
   cookie. Every band's fine print says "Kit and the waitlist's own
   database, nowhere else." Change all of these together.
