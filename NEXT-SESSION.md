@@ -140,6 +140,10 @@ under 1080px. Every light section opens with a **centered** `.head`.
 7. **`#finish`.** A product configurator like the reference: render big on the
    left; name, circular swatches (`aria-pressed`), "Finish. {name}", the build
    meter (counted off `LEDGER`, so it cannot drift) and a black pill CTA.
+   Inside and Finishes keep their two columns down to 761px (Finishes
+   splits 1:1 there) and stack at 760 and below. The Signals notes stay
+   side by side until the 620px phone breakpoint. Stacking them at 1080
+   (6 Nov 2026 fix) left half of each band empty on an iPad.
 8. **`#faq`.** "Questions": native `details`/`summary` accordion, heading
    and contact email left, questions right. Every answer must be backed by
    `nerva-ring-overview.md` or the site's disclaimers; nothing about price,
@@ -147,6 +151,10 @@ under 1080px. Every light section opens with a **centered** `.head`.
 9. **`#follow`.** Kit email capture on a deep green ground.
 10. Footer as an engineering **title block**. Cell spans must tile each row of
    the 6-column grid exactly or the leftover gap prints as a solid hairline.
+   From 621 to 1080px it is three equal columns, because every partial row
+   (here and in the /science, /press and /privacy headers) is three cells.
+   Two columns there printed a grey block beside the third cell. A new
+   row that isn't three cells needs its own tablet span.
 11. **Launch bar.** Fixed to the bottom where the reference pins price and
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.

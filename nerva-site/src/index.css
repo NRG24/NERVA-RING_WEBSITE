@@ -952,8 +952,25 @@ a { color: inherit; text-decoration: none; }
   .cards::-webkit-scrollbar { display: none; }
   .card { scroll-snap-align: start; }
 
-  .sig-notes { grid-template-columns: 1fr; gap: 32px; }
+  /* a tablet still has room for the render beside its words, as on
+     desktop. Finishes splits evenly so the panel keeps space for the
+     title and the four swatches. */
+  .config { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 
+  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
+  .faq__grid { grid-template-columns: 1fr; gap: 28px; }
+
+  /* every partial row of the title block (footer and sheet headers) is
+     three cells, so three equal columns tile each one. Two columns left
+     the third cell alone and printed the empty slot as a solid block. */
+  .titleblock { grid-template-columns: repeat(3, 1fr); }
+  .tb--w1, .tb--w2, .tb--w3 { grid-column: span 1; }
+  .tb--w6 { grid-column: span 3; }
+  .tb__v { overflow-wrap: anywhere; }
+}
+
+/* narrower than a tablet: the render goes on top and the words under it */
+@media (max-width: 760px) {
   .inside__grid { grid-template-columns: 1fr; gap: 44px; }
   .inside__aside { position: static; }
   .inside__stage { max-width: 560px; }
@@ -961,14 +978,6 @@ a { color: inherit; text-decoration: none; }
 
   .config { grid-template-columns: 1fr; gap: 36px; }
   .config__panel { max-width: 560px; }
-
-  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
-  .faq__grid { grid-template-columns: 1fr; gap: 28px; }
-
-  /* two-up title block: 6 columns become 2 half-width cells per row */
-  .titleblock { grid-template-columns: repeat(2, 1fr); }
-  .tb--w1, .tb--w2, .tb--w3 { grid-column: span 1; }
-  .tb--w6 { grid-column: span 2; }
 }
 
 @media (max-width: 620px) {
@@ -993,6 +1002,8 @@ a { color: inherit; text-decoration: none; }
   .hero__cta .btn { flex: 1; }
 
   :root { --radius-lg: 22px; }
+
+  .sig-notes { grid-template-columns: 1fr; gap: 32px; }
 
   /* the readout keeps its lanes, but the key sits above the trace and the
      reading moves up beside the channel name */
