@@ -26,7 +26,7 @@
   --stage:      #ececee;   /* the grey the renders sit on */
   --ink:        #0b0b0d;
   --ink-2:      #56575c;
-  --ink-3:      #6b6c72;   /* clears 4.5:1 on white and on the tint */
+  --ink-3:      #67686e;   /* clears 4.5:1 on white, the tint and the grey stage */
   --void:       #000000;
   --forest:     #06251a;   /* the signup ground */
   --forest-2:   #0a2e20;
@@ -951,6 +951,8 @@ a { color: inherit; text-decoration: none; }
   }
   .cards::-webkit-scrollbar { display: none; }
   .card { scroll-snap-align: start; }
+  /* the row runs edge to edge, so its focus ring is drawn inside it */
+  .cards:focus-visible { outline-offset: -3px; border-radius: var(--radius-lg); }
 
   /* a tablet still has room for the render beside its words, as on
      desktop. Finishes splits evenly so the panel keeps space for the
@@ -1330,6 +1332,26 @@ a { color: inherit; text-decoration: none; }
 [data-palette] .inside :focus-visible, [data-palette] .cta :focus-visible, [data-palette] .launchbar :focus-visible {
   outline-color: #fff; box-shadow: none;
 }
+
+/* Finishes sits on the scheme's tint, which is darker than the page
+   ground --ink-3 was mixed for: the grey labels fell to 3.6:1 there, and
+   the green and gold of "5 done · 2 in progress" to about 3.2:1. Mixed
+   toward the tint instead, and the channel inks taken darker, they clear
+   4.5:1 on all four schemes' tints. */
+[data-palette] #finish {
+  --ink-3: color-mix(in srgb, var(--pal-ink) 82%, var(--pal-bg2));
+  --green-ink: #125a30;
+  --gold-ink: #68470d;
+}
+/* The part numbers in Inside the band keep their channel colours, but
+   almond's slate band is lighter than the black they were picked for:
+   red read 3.3:1, gold and grey 4.3:1. Each is lifted just far enough to
+   clear 4.5:1 (green already does). */
+[data-palette='almond'] .inside {
+  --pulse: #ff8f8b;
+  --gold: #dba62e;
+}
+[data-palette='almond'] .spec__part--neutral { color: rgba(255, 255, 255, 0.62); }
 
 /* ---- the rest of the light sections ---- */
 [data-palette] .colophon { background: var(--pal-bg); }

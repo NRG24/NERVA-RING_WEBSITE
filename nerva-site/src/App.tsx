@@ -696,7 +696,23 @@ function CardFilm({ src, poster, label }: { src: string; poster: string; label: 
   return <video ref={ref} poster={poster} muted loop playsInline preload="none" aria-label={label} />
 }
 
+/* true while a media query matches, and kept current as the window resizes */
+function useMedia(query: string) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches)
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    const on = () => setMatches(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [query])
+  return matches
+}
+
 function App() {
+  /* at and below 1080px the feature cards are a row you swipe; it holds
+     nothing focusable, so it takes focus itself and the arrow keys scroll it */
+  const cardsSwipe = useMedia('(max-width: 1080px)')
   const [menuOpen, setMenuOpen] = useState(false)
   const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('ceramic-black')
   const active = FINISHES.find((f) => f.id === finish)!
@@ -820,7 +836,7 @@ function App() {
               of the same dark the ring landed in */}
           <div className="wrap">
             {/* a swipeable row on a phone, three across on a desktop */}
-            <ul className="cards" aria-label="What it does">
+            <ul className="cards" aria-label="What it does" tabIndex={cardsSwipe ? 0 : undefined}>
               {DOES.map((d, i) => (
                 <li key={d.k} className={`card card--${d.channel}`}>
                   <Reveal className="card__in" delay={i * 80}>

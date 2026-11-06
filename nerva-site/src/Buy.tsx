@@ -106,10 +106,10 @@ export default function Buy() {
   return (
     <>
       <SkipLink />
-      <div className="shopbar">
+      <aside className="shopbar" aria-label="Preview notice">
         <span className="shopbar__dot" aria-hidden="true" />
         Store preview · checkout is not connected · nothing here can be bought
-      </div>
+      </aside>
 
       <header className="nav">
         <div className="nav__inner">
