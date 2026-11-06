@@ -776,9 +776,9 @@ function App() {
       {/* ---------------- NAV ---------------- */}
       <header className="nav" ref={headerRef}>
         <div className="nav__inner">
-          <a className="brand" href="#top" aria-label="NERVA Ring home">
+          <a className="brand" href="#top" aria-label="NERVA Ring Prototype, top of page">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA Ring
+            NERVA Ring{' '}
             <span className="brand__tag">Prototype</span>
           </a>
           <nav className="nav__links" aria-label="Primary">
