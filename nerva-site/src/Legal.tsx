@@ -68,7 +68,8 @@ export default function Legal() {
             <p>
               Your address is posted to <b>Kit</b>, the service that runs the
               mailing list, along with a note of where you found the site (for
-              example, Instagram) and your referral code. Kit stores it and sends the
+              example, Instagram), your referral code, and the ring finish you
+              picked on the main page, if you picked one. Kit stores it and sends the
               emails.
             </p>
             <p>
@@ -141,9 +142,10 @@ export default function Legal() {
             </p>
             <p>
               Every ring image on the main page is a render of the CAD model, not a
-              photograph of a finished unit. The photographs on the{' '}
+              photograph of a finished unit, except the one labelled as a photograph
+              of the bench prototype. That photograph, and the ones on the{' '}
               <a href="/prototype">prototype page</a> and the{' '}
-              <a href="/waitlist">waitlist page</a> show the bench prototype, a
+              <a href="/waitlist">waitlist page</a>, show the bench prototype, a
               test unit, not the finished product. The app screens are a design demo
               filled with sample numbers, not anyone's data, and the readout on the
               main page is modeled rather than recorded. Parts, specifications,

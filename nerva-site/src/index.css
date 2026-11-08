@@ -693,6 +693,49 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   50% { transform: rotate(45deg) translate(2px, 2px); }
 }
 @media (prefers-reduced-motion: reduce) { .film__hint::after { animation: none; } }
+/* ---- the labelled film (desktop scrub, 1200px and up) ----
+   The film carries Inside the band: its head beside the assembled ring,
+   then, while the ring holds apart, a callout on each part in a column at
+   the right with a leader back to it. Positions come from App.tsx. */
+.film__head {
+  position: absolute; top: 50%; translate: 0 -50%;
+  left: max(32px, calc((100% - var(--wrap)) / 2 + 32px));
+  max-width: 30ch; pointer-events: none;
+}
+.film__head .display { font-size: clamp(2.6rem, 1.6rem + 2.4vw, 4rem); }
+.film__head p {
+  margin: 16px 0 0; max-width: 34ch;
+  font-size: 1.12rem; line-height: 1.55; color: rgba(255, 255, 255, 0.72);
+}
+.film__labels { position: absolute; inset: 0; pointer-events: none; }
+/* a dark wash behind the label column, so a label never reads off the
+   bright edge of the resin ring behind it */
+.film__labels::before {
+  content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 330px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.62) 34%, rgba(0, 0, 0, 0.74));
+}
+.film__leaders { position: absolute; left: 0; top: 0; overflow: visible; }
+.film__leaders polyline { fill: none; stroke: rgba(255, 255, 255, 0.55); stroke-width: 1; }
+.film__leaders circle { fill: #fff; stroke: rgba(0, 0, 0, 0.55); stroke-width: 2; }
+.film__parts { list-style: none; margin: 0; padding: 0; }
+/* one line each, the part then what it does, in the page's own face and
+   in white only: the coloured mono part numbers read as code here */
+.film__parts li {
+  position: absolute; translate: 0 -50%; white-space: nowrap;
+  font-size: 16px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3;
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.85);
+}
+.film__parts b { font-weight: 650; color: #fff; }
+/* With the film carrying Inside the band, the next section follows the
+   film's black directly, so it eases out of black the way Signals eases
+   into it (smoothstep at quarters), in extra padding with nothing on it. */
+.film--labeled + .section { position: relative; padding-top: calc(clamp(64px, 7vw, 108px) + 70px); }
+.film--labeled + .section::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 160px; pointer-events: none;
+  background: linear-gradient(to bottom,
+    #000 0, rgba(0, 0, 0, 0.84) 25%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.16) 75%, transparent 100%);
+}
 .film__progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.14); }
 .film__progress span { display: block; height: 100%; width: 100%; background: var(--sensor); transform-origin: left center; }
 
@@ -770,6 +813,9 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 }
 .swatch[aria-pressed='true'] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
 @media (hover: hover) { .swatch:hover { transform: scale(1.05); } }
+/* the swatches double as a vote: whichever one is picked goes in with
+   the signup as fields[finish] */
+.config__vote { margin: 14px 0 0; max-width: 40ch; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
 
 .config__status { margin-top: clamp(32px, 4vw, 48px); padding-top: 26px; border-top: 1px solid var(--line); }
 .tally__bar { display: flex; gap: 4px; }
@@ -782,6 +828,34 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
 .config__cta { margin-top: 26px; }
 .config__fine { margin: 12px 0 0; font-size: 13.5px; color: var(--ink-3); text-align: center; }
+
+/* ============================================================
+   PROGRESS
+   The bench prototype as photographed, set the way the prototype page
+   sets it: the headline, the dated lede, the photo with Ryan's caption.
+   Deliberately plain. No meter, no status colours, no rules: Ryan had
+   those taken off the prototype page, and they stay off here too.
+   ============================================================ */
+.build__grid {
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(28px, 5vw, 96px); align-items: center;
+}
+.build__title { font-size: clamp(2.2rem, 1.5rem + 2.4vw, 3.4rem); max-width: 11ch; }
+.build__date { margin: 18px 0 10px; font-size: 14.5px; font-weight: 600; color: var(--ink-3); }
+.build__lede { margin: 0 0 14px; max-width: 44ch; color: var(--ink-2); font-size: 1.08rem; line-height: 1.6; text-wrap: pretty; }
+.build__lede abbr { text-decoration: none; }
+.build__more { margin: 10px 0 0; }
+.build__fig { margin: 0; }
+.build__photo {
+  width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover;
+  border-radius: var(--radius-lg);
+  /* the table's own grey, so nothing flashes almond while it decodes */
+  background: #3a3a3c;
+}
+.build__fig figcaption {
+  margin: 12px 0 0; font-size: 15px; font-weight: 600; line-height: 1.45;
+  letter-spacing: -0.012em; color: var(--ink);
+}
 
 /* ============================================================
    FAQ
@@ -829,7 +903,29 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 }
 .cta__lede { margin: 22px 0 0; color: rgba(255, 255, 255, 0.72); font-size: 1.12rem; max-width: 48ch; }
 
+/* what joining gets you, on the main page's band and on /waitlist: three
+   short plain lines with air between them. No markers: the short stroke
+   that keyed each line read as an em dash at a glance. */
+.perks { list-style: none; margin: 24px 0 0; padding: 0; max-width: 46ch; }
+.perks li { margin: 0 0 12px; font-size: 1rem; line-height: 1.45; color: rgba(255, 255, 255, 0.86); }
+.perks li:last-child { margin-bottom: 0; }
+
 .signup-wrap { margin: 34px 0 0; }
+/* the finish picked in Finishes, said back above the form it rides with */
+.cta__pick {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
+  margin: 26px 0 -14px; font-size: 15px; color: rgba(255, 255, 255, 0.86);
+}
+.cta__pick b { color: #fff; font-weight: 650; }
+.cta__pick-swatch {
+  width: 20px; height: 20px; border-radius: 50%; flex: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+}
+.cta__pick a {
+  display: inline-flex; align-items: center; min-height: 44px; margin: -12px 0;
+  color: #fff; text-decoration: underline; text-underline-offset: 4px;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+}
 .signup { display: flex; gap: 10px; max-width: 500px; }
 .signup__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .signup input {
@@ -1026,6 +1122,10 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
   .config { grid-template-columns: 1fr; gap: 36px; }
   .config__panel { max-width: 560px; }
+
+  .build__grid { grid-template-columns: 1fr; gap: 32px; }
+  .build__fig { max-width: 560px; }
+  .build__photo { aspect-ratio: 4 / 5; }
 
   .cta__grid { grid-template-columns: 1fr; gap: 44px; }
 }

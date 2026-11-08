@@ -11,6 +11,7 @@ import ringMacro from './assets/ring-macro.webp'
 import doesToday from './assets/does-today.webp'
 import doesRing from './assets/does-ring.webp'
 import blueprint from './assets/blueprint.webp'
+import benchPhoto from './assets/proto-bench.webp'
 
 /* ---------- scroll reveal ---------- */
 function Reveal({ children, className = '', delay = 0, margin = '0px 0px -6% 0px' }: {
@@ -415,12 +416,61 @@ function Hero() {
    time 0, so the still the browser paints before the file lands is the same
    frame the scrub starts on and nothing jumps when it loads. */
 const FILM_SRC = '/nerva-exploded.mp4'
+const FILM_DUR = 12.5
 
-function FilmScroll() {
+/* Where each part of the stack sits in the film while the ring holds apart,
+   in the film's own 1280x720 frame, as [seconds, x, y]; between those
+   moments the point moves in a straight line. Read off the frames by hand
+   at 6.5 s and 8.5 s, with 5 s taken between the 4.5 s frame and the 6.5 s
+   one (before 5 s the radio is still behind the shell). Re-measure if the
+   film is re-rendered. The silver cylinder is not the battery (Ryan, 8 Nov
+   2026): the battery stays inside the housing in this film, so it has no
+   callout.
+
+   Each callout is the part and what it does, in plain words (Ryan, 8 Nov
+   2026: "list the parts and add a dash next to it and say power or brain").
+   One face, one colour: the coloured mono part numbers read as code. */
+const FILM_W = 1280
+const FILM_H = 720
+type Key = [number, number, number]
+const FILM_PARTS: { name: string; does: string; at: Key[] }[] = [
+  { name: 'Resin', does: 'waterproofing', at: [[5, 705, 136], [6.5, 720, 125], [8.5, 735, 120]] },
+  { name: 'Bluetooth module', does: 'connection', at: [[5, 527, 276], [6.5, 547, 280], [8.5, 580, 287]] },
+  { name: 'Gold electrodes', does: 'stress', at: [[5, 583, 495], [6.5, 573, 500], [8.5, 607, 493]] },
+  { name: 'Optical sensor', does: 'heart rate', at: [[5, 605, 589], [6.5, 620, 593], [8.5, 627, 593]] },
+]
+const HEAD_OUT: [number, number] = [2.4, 3.2]     // seconds of film the head fades over
+const LABELS_IN: [number, number] = [5, 5.5]
+const LABELS_OUT: [number, number] = [8.6, 9.1]
+const ramp = (t: number, [a, b]: [number, number]) => Math.min(1, Math.max(0, (t - a) / (b - a)))
+function partAt(keys: Key[], t: number): [number, number] {
+  if (t <= keys[0][0]) return [keys[0][1], keys[0][2]]
+  for (let i = 1; i < keys.length; i++) {
+    const [t0, x0, y0] = keys[i - 1]
+    const [t1, x1, y1] = keys[i]
+    if (t <= t1) {
+      const k = (t - t0) / (t1 - t0)
+      return [x0 + (x1 - x0) * k, y0 + (y1 - y0) * k]
+    }
+  }
+  const [, x, y] = keys[keys.length - 1]
+  return [x, y]
+}
+
+function FilmScroll({ labeled }: { labeled: boolean }) {
   const sectionRef = useRef<HTMLElement | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const [scrub, setScrub] = useState(false)
   const [progress, setProgress] = useState(0)
+  /* the pinned viewport the film is drawn into, for placing the callouts */
+  const [vp, setVp] = useState(() => ({ w: document.documentElement.clientWidth, h: window.innerHeight }))
+  useEffect(() => {
+    if (!labeled) return
+    const on = () => setVp({ w: document.documentElement.clientWidth, h: window.innerHeight })
+    on()
+    window.addEventListener('resize', on)
+    return () => window.removeEventListener('resize', on)
+  }, [labeled])
 
   useEffect(() => {
     const video = videoRef.current
@@ -536,8 +586,37 @@ function FilmScroll() {
     }
   }, [])
 
+  /* The callouts. The film is drawn with object-fit: cover, so a point in
+     its frame maps to the screen by one scale and one offset. Each label
+     sits in a column at the right, level with its part where it can be,
+     at least 62px from the next, with a leader back to the part. */
+  const filmT = progress * (FILM_DUR - 0.05)
+  const headOpacity = 1 - ramp(filmT, HEAD_OUT)
+  const labelOpacity = ramp(filmT, LABELS_IN) * (1 - ramp(filmT, LABELS_OUT))
+  const s = Math.max(vp.w / FILM_W, vp.h / FILM_H)
+  const ox = (vp.w - FILM_W * s) / 2
+  const oy = (vp.h - FILM_H * s) / 2
+  const colX = vp.w - 32 - 240
+  const rows = FILM_PARTS
+    .map((part) => {
+      const [fx, fy] = partAt(part.at, filmT)
+      return { part, ax: ox + fx * s, ay: oy + fy * s, ly: 0 }
+    })
+    .sort((a, b) => a.ay - b.ay)
+  rows.forEach((r, i) => { r.ly = Math.max(r.ay, i ? rows[i - 1].ly + 48 : 112) })
+  for (let i = rows.length - 1; i >= 0; i--) {
+    rows[i].ly = Math.min(rows[i].ly, i < rows.length - 1 ? rows[i + 1].ly - 48 : vp.h - 64)
+  }
+
   return (
-    <section ref={sectionRef as never} className={`film ${scrub ? 'film--scrub' : ''}`} aria-label="An exploded view of the NERVA Ring, separating into the outer housing, the flex PCB carrying the sensors, and the inner shell.">
+    <section
+      ref={sectionRef as never}
+      id={labeled ? 'inside' : undefined}
+      className={`film ${scrub ? 'film--scrub' : ''} ${labeled ? 'film--labeled' : ''}`}
+      {...(labeled
+        ? { 'aria-labelledby': 'inside-title' }
+        : { 'aria-label': 'An exploded view of the NERVA Ring, separating into the outer housing, the flex PCB carrying the sensors, and the inner shell.' })}
+    >
       <div className="film__sticky">
         <video
           ref={videoRef}
@@ -548,6 +627,42 @@ function FilmScroll() {
           preload="none"
         />
         <div className="film__grade" aria-hidden="true" />
+        {labeled && (
+          <>
+            <div className="film__head" style={{ opacity: headOpacity }}>
+              <h2 id="inside-title" className="display display--light">Inside the band</h2>
+              <p>
+                A full sensing stack, wrapped to the inner circumference of a ring and
+                potted in RF-transparent resin. Sealed and waterproofed.
+              </p>
+            </div>
+            <div
+              className="film__labels"
+              style={{ opacity: labelOpacity, visibility: labelOpacity > 0 ? 'visible' : 'hidden' }}
+            >
+              <svg className="film__leaders" width={vp.w} height={vp.h} aria-hidden="true">
+                {rows.map((r) => (
+                  <g key={r.part.name}>
+                    <polyline points={`${r.ax},${r.ay} ${colX - 44},${r.ay} ${colX - 12},${r.ly}`} />
+                    <circle cx={r.ax} cy={r.ay} r="4" />
+                  </g>
+                ))}
+              </svg>
+              <ul className="film__parts">
+                {rows.map((r) => (
+                  <li key={r.part.name} style={{ left: colX, top: r.ly }}>
+                    <b>{r.part.name}</b> - {r.part.does}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* the full sentences, for a screen reader, which the callouts
+                leave out on screen */}
+            <ul className="sr-only">
+              {SPECS.map((sp) => <li key={sp.title}>{sp.title}, {sp.part}. {sp.body}</li>)}
+            </ul>
+          </>
+        )}
         <div className="film__ui">
           <span className="film__hint" style={scrub ? { opacity: Math.max(0, 1 - progress * 4) } : undefined}>
             {scrub ? 'Scroll to take it apart' : 'Every reading begins inside the band'}
@@ -606,6 +721,7 @@ const NAV = [
   { href: '#does', label: 'What it does' },
   { href: '#signals', label: 'Signals' },
   { href: '#inside', label: 'Inside' },
+  { href: '#build', label: 'Progress' },
   { href: '#finish', label: 'Finishes' },
 ]
 
@@ -711,9 +827,14 @@ function App() {
   /* at and below 1080px the feature cards are a row you swipe; it holds
      nothing focusable, so it takes focus itself and the arrow keys scroll it */
   const cardsSwipe = useMedia('(max-width: 1080px)')
+  /* a mouse, a wide screen and motion allowed: the film can carry its own labels */
+  const labeledFilm = useMedia('(pointer: fine) and (min-width: 1200px) and (prefers-reduced-motion: no-preference)')
   const [menuOpen, setMenuOpen] = useState(false)
   const [finish, setFinish] = useState<(typeof FINISHES)[number]['id']>('ceramic-black')
   const active = FINISHES.find((f) => f.id === finish)!
+  /* the finish only counts as a pick once someone has touched a swatch:
+     the black that shows by default is nobody's vote */
+  const [voted, setVoted] = useState(false)
   const [barShown, setBarShown] = useState(false)
 
   const headerRef = useRef<HTMLElement | null>(null)
@@ -906,10 +1027,16 @@ function App() {
           </div>
         </section>
 
-        {/* ---------------- CINEMATIC SENSOR FILM ---------------- */}
-        <FilmScroll />
+        {/* ---------------- CINEMATIC SENSOR FILM ----------------
+            On a desktop screen 1200px and up it carries Inside the band
+            itself: the head over the assembled ring, then a callout on each
+            part while it holds apart. Everywhere else (touch, narrower,
+            reduced motion) the film plays as before and the section below
+            lists the parts. */}
+        <FilmScroll labeled={labeledFilm} />
 
         {/* ---------------- INSIDE THE BAND (black) ---------------- */}
+        {!labeledFilm && (
         <section className="inside" id="inside">
           <div className="wrap">
             <Reveal className="head head--light">
@@ -943,6 +1070,50 @@ function App() {
                 ))}
               </div>
             </div>
+          </div>
+        </section>
+        )}
+
+        {/* ---------------- PROGRESS ----------------
+            The one photograph on this page: the bench prototype, set the way
+            the prototype page sets it, in Ryan's words and caption. No meter,
+            no status colours, no rules: Ryan had all of those taken off the
+            prototype page, and they stay off wherever the prototype appears.
+            The words come first and the photo sits right, so the picture
+            alternates sides with Inside and Finishes around it. */}
+        <section className="section build" id="build" aria-labelledby="build-title">
+          <div className="wrap build__grid">
+            <Reveal className="build__panel">
+              <h2 id="build-title" className="display build__title">The bench prototype is working.</h2>
+              <p className="build__date">Build update, 5 October 2026</p>
+              <p className="build__lede">
+                The flex PCB is assembled, wrapped inside a black ceramic housing, and
+                powered up with its green LED lit. Every other ring on this page is a
+                render of the CAD model. This is a photograph of the one on the bench.
+              </p>
+              <p className="build__lede">
+                Next we’re taking it to <abbr title="University of Vermont">UVM</abbr>’s
+                lab to test the Bluetooth on a vector network analyzer. After that, beta
+                testers.
+              </p>
+              <p className="build__more">
+                <a className="textlink" href="/prototype">See the bench prototype</a>
+              </p>
+            </Reveal>
+
+            <Reveal delay={90}>
+              <figure className="build__fig">
+                <img
+                  className="build__photo"
+                  src={benchPhoto}
+                  width={1200}
+                  height={1600}
+                  loading="lazy"
+                  alt="The NERVA Ring bench prototype standing on a dark table. Inside the black ceramic band, the flex PCB lines the inner wall with a lit green LED and two round gold contacts."
+                />
+                <figcaption>NERVA Ring Bench Prototype with Black Ceramic Housing</figcaption>
+              </figure>
+            </Reveal>
           </div>
         </section>
 
@@ -982,10 +1153,16 @@ function App() {
                       aria-label={f.label}
                       aria-pressed={finish === f.id}
                       style={{ background: f.swatch }}
-                      onClick={() => setFinish(f.id)}
+                      onClick={() => { setFinish(f.id); setVoted(true) }}
                     />
                   ))}
                 </div>
+                {/* draft copy for Ryan: the swatches double as a vote, so the
+                    Kickstarter can launch with the finishes people pick */}
+                <p className="config__vote">
+                  Pick the one you would back. It goes in with your email, so the
+                  Kickstarter launches with the finishes people want.
+                </p>
               </div>
 
               <div className="config__status">
@@ -1039,10 +1216,27 @@ function App() {
               <h2 className="display display--light">
                 See it go from a schematic to a working prototype.
               </h2>
+              {/* the same offer, in the same words, as /waitlist: the list is
+                  how the Kickstarter launch reaches people first */}
               <p className="cta__lede">
-                We’ll email you about new prototypes and project updates.
+                It launches on Kickstarter in early 2027.
               </p>
-              <Signup />
+              <ul className="perks">
+                <li>Hear about the launch before it goes public.</li>
+                <li>First pick of the limited early-bird tier.</li>
+                <li>
+                  Share your link to move up the list. The front of the list gets first
+                  pick of beta-tester spots.
+                </li>
+              </ul>
+              {voted && (
+                <p className="cta__pick">
+                  <span className="cta__pick-swatch" style={{ background: active.swatch }} aria-hidden="true" />
+                  <span>Your pick: <b>{active.label}</b></span>
+                  <a href="#finish">Change</a>
+                </p>
+              )}
+              <Signup extra={voted ? { 'fields[finish]': active.id } : undefined} />
               <p className="cta__fine">
                 Written by the person building it, no spam. Your address goes to
                 Kit and the waitlist’s own database, nowhere else.{' '}
@@ -1103,8 +1297,9 @@ function App() {
                 NERVA Ring is a wellness product, not a medical device. It is not
                 intended to diagnose, treat, cure, or prevent any disease, and nothing
                 on this site is for sale. Every ring image on this page is a render
-                of the CAD model; the prototype page shows photographs of the bench
-                prototype. The app screens are a design demo, not live data.{' '}
+                of the CAD model except the one labelled as a photograph of the bench
+                prototype; the prototype page has more of those. The app screens are
+                a design demo, not live data.{' '}
                 <a href="/privacy">Privacy and disclaimers</a>.
               </p>
             </div>
@@ -1120,7 +1315,7 @@ function App() {
         <div className="launchbar__inner">
           <p className="launchbar__txt">
             <b>NERVA Ring</b>
-            <span>In prototype. Not on sale yet.</span>
+            <span>Launches on Kickstarter in early 2027.</span>
           </p>
           <a className="btn btn--led" href="#follow">Get launch updates</a>
         </div>
