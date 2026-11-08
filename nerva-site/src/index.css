@@ -250,6 +250,21 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 }
 .mobile-menu .btn { margin-top: 12px; }
 
+/* the sub-pages' header links (SiteHeader in Chrome.tsx). Every page
+   that uses it reads them from here, so they cannot drift apart. */
+.subnav { display: flex; gap: clamp(18px, 2.4vw, 32px); margin-left: auto; margin-right: clamp(8px, 2vw, 24px); }
+.subnav a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s var(--ease);
+}
+.subnav a[aria-current='page'] { color: var(--ink); border-bottom-color: var(--ink); }
+@media (hover: hover) { .subnav a:hover { color: var(--ink); } }
+/* below this the header keeps the wordmark and the way back, and the
+   page links move to the foot of the page (SiteFooter) */
+@media (max-width: 720px) { .subnav { display: none; } }
+
 /* ============================================================
    HERO
 
@@ -936,6 +951,24 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 .shopfoot__link { border-bottom: 1px solid var(--line-2); color: var(--ink-2); }
 @media (hover: hover) { .shopfoot__link:hover { color: var(--ink); border-color: var(--ink); } }
 
+/* The sub-pages' footer (SiteFooter) also carries the site's pages, the
+   same ones the header lists. On a phone the header hides them, and
+   without these the only way from /science to /press went back through
+   the build. The wordmark and the links share a line; the fine print
+   takes the line under them. */
+.shopfoot--site .shopfoot__inner { row-gap: 10px; }
+.shopfoot__nav { display: flex; flex-wrap: wrap; column-gap: 24px; }
+.shopfoot__nav a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
+  transition: color 0.15s var(--ease);
+}
+.shopfoot__nav a[aria-current='page'] { color: var(--ink); }
+@media (hover: hover) { .shopfoot__nav a:hover { color: var(--ink); } }
+@media (min-width: 621px) {
+  .shopfoot--site .shopfoot__inner > p { flex-basis: 100%; }
+}
+
 
 /* ============================================================
    RESPONSIVE
@@ -960,10 +993,12 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
   /* a tablet still has room for the render beside its words, as on
      desktop. Finishes splits evenly so the panel keeps space for the
-     title and the four swatches. */
+     title and the four swatches. The signup bands (.cta__grid, here and
+     on /waitlist and /subscribed) keep their picture beside the form
+     too, stacking only at 760: stacked, the drawing ran the full width
+     of an iPad under a half-width form, taller than the form itself. */
   .config { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 
-  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
   .faq__grid { grid-template-columns: 1fr; gap: 28px; }
 
   /* every partial row of the title block (footer and sheet headers) is
@@ -991,6 +1026,8 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
   .config { grid-template-columns: 1fr; gap: 36px; }
   .config__panel { max-width: 560px; }
+
+  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
 }
 
 @media (max-width: 620px) {
@@ -1255,8 +1292,12 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 /* Landscape phones are wide and short: the stacked layout above gave the
    whole first screen to the ring's square and left the headline below
    the fold. They take the wide-screen arrangement instead, words on the
-   left and the ring on the right, placed with the same --box geometry. */
-@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px) {
+   left and the ring on the right, placed with the same --box geometry.
+   So do landscape tablets from 900px (an iPad held sideways is about
+   1080x740 in Safari), where the stack showed the ring and the headline
+   and pushed the lede, the button and the prototype link off screen. */
+@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px),
+       (min-width: 900px) and (max-width: 1080px) and (orientation: landscape) {
   [data-palette] .hero {
     --box: min(44vw, calc((100svh - var(--nav-h)) * 1.02));
     min-height: calc(100svh - var(--nav-h));
@@ -1272,6 +1313,15 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
     top: calc(50% - var(--box) * 0.495);
   }
   [data-palette] .hero__ripples { --cx: 74%; --cy: 50%; --rb: var(--box); }
+}
+/* A tablet has the height a phone lacks, so the words go back up toward
+   the desktop sizes. "nervous system." is about 6.8em wide: at these
+   sizes it ends 145px or more short of the disc from 900 to 1080 wide. */
+@media (min-width: 900px) and (max-width: 1080px) and (orientation: landscape) and (min-height: 561px) {
+  [data-palette] .hero__copy { padding-top: 40px; padding-bottom: 40px; }
+  [data-palette] .hero__title { font-size: clamp(2.6rem, 5.2vw, 3.4rem); }
+  [data-palette] .hero__lede { margin-top: 24px; max-width: 24em; font-size: 1.12rem; }
+  [data-palette] .hero__cta { margin-top: 30px; }
 }
 
 [data-palette] .hero__title { color: var(--pal-ink); }
@@ -1302,6 +1352,11 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 /* ---- what it does: the hero ground eases into the tint below ---- */
 [data-palette] .does {
   --sheet: color-mix(in srgb, var(--pal-bg) 75%, var(--pal-bg2));
+  /* The long fade-out was sized for the dark design, where charcoal runs
+     into light grey and no text may sit on the mid-tones. Here two pale
+     tints meet, so a shorter run reads just as soft, and the cards stop
+     leaving half a screen of empty colour above the Signals head. */
+  --fade-out: clamp(100px, 9vw, 140px);
   background: linear-gradient(to bottom,
     var(--pal-bg) 0,
     var(--sheet) var(--fade-in),
@@ -1349,7 +1404,22 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 [data-palette] .does .abbr { color: var(--pal-ink); }
 
 /* ---- the deep bands ---- */
-[data-palette] .inside { background: var(--pal-band); }
+/* Inside the band comes straight after the exploded-view film, which ends
+   on black. On the dark design Inside is black too; here it is the band
+   colour, so it eases up out of the film's black the way Signals eases
+   down into it (smoothstep at quarters, because a straight ramp bands)
+   instead of cutting from black to slate on a hard line. Only white type
+   sits on it, and white reads at every step of the fade. */
+[data-palette] .inside {
+  --fade-band: clamp(96px, 10vw, 150px);
+  background: linear-gradient(to bottom,
+    #000 0,
+    color-mix(in srgb, var(--pal-band) 16%, #000) calc(var(--fade-band) * 0.25),
+    color-mix(in srgb, var(--pal-band) 50%, #000) calc(var(--fade-band) * 0.5),
+    color-mix(in srgb, var(--pal-band) 84%, #000) calc(var(--fade-band) * 0.75),
+    var(--pal-band) var(--fade-band));
+  padding-top: calc(clamp(64px, 7vw, 108px) + var(--fade-band) * 0.4);
+}
 [data-palette] .cta { background: var(--pal-band); }
 [data-palette] .cta__sheet { background: color-mix(in srgb, var(--pal-band) 88%, #fff); }
 [data-palette] .cta .btn--led, [data-palette] .launchbar .btn--led { background: var(--pal-bg); color: var(--pal-ink); }

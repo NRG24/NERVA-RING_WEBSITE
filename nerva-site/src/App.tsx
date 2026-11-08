@@ -246,12 +246,11 @@ function SignalInstrument() {
 
    Played at the render's own speed (4s). A 2x slowdown was tried and
    dropped: the ring turns too far per frame, so interpolated frames smeared
-   the rim and blended ones ghosted it. */
-/* Spread rather than written as a prop: React forwards the lowercase DOM
-   attribute as-is, so this does not break the build the day @types/react
-   adds its own camelCase declaration for it. */
-const HIGH_PRIORITY: Record<string, string> = { fetchpriority: 'high' }
+   the rim and blended ones ghosted it.
 
+   The animated WebP asks for fetchPriority="high"; the <video> does not,
+   because browsers only honour that hint on images, links, scripts and
+   iframes (React 19 also warned about the lowercase spread used before). */
 /* Two renders of the flight: the black glass ring on black for the dark
    design, and the ceramic ring with a transparent background for the light
    palettes, so it sits straight on whatever colour the page is. */
@@ -347,7 +346,7 @@ function Hero() {
             alt="The NERVA Ring rising into view and turning to show the optical sensor and the gold electrodes on its inner band."
             onLoad={() => setAnimLoaded(true)}
             onError={toStill}
-            {...HIGH_PRIORITY}
+            fetchPriority="high"
           />
         ) : showFilm ? (
           <video
@@ -362,7 +361,6 @@ function Hero() {
             playsInline
             preload="auto"
             aria-label="The NERVA Ring rising out of the dark, turning to show the optical sensor and the gold electrodes on its inner band."
-            {...HIGH_PRIORITY}
           />
         ) : (
           <img

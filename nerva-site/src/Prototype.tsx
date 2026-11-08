@@ -13,8 +13,8 @@
 
 import benchPhoto from './assets/proto-bench.webp'
 import handPhoto from './assets/proto-hand.webp'
-import { CONTACT_EMAIL, Signup } from './Signup.tsx'
-import { SkipLink } from './Chrome.tsx'
+import { Signup } from './Signup.tsx'
+import { SiteHeader, SiteFooter, SkipLink } from './Chrome.tsx'
 
 const UPDATED = '5 October 2026'
 
@@ -48,15 +48,7 @@ export default function Prototype() {
   return (
     <>
       <SkipLink />
-      <header className="nav">
-        <div className="nav__inner">
-          <a className="brand" href="/" aria-label="NERVA Ring home">
-            <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA Ring
-          </a>
-          <a className="btn btn--ghost" href="/">Back to the build</a>
-        </div>
-      </header>
+      <SiteHeader current="/prototype" />
 
       <main id="main" className="proto">
         <div className="wrap">
@@ -140,21 +132,7 @@ export default function Prototype() {
         </section>
       </main>
 
-      <footer className="shopfoot">
-        <div className="wrap shopfoot__inner">
-          <a className="brand" href="/">
-            <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA Ring
-          </a>
-          <p>
-            © 2026 NERVA Ring - built by Ryan Schreiber. Not a medical device, and not
-            for sale.{' '}
-            <a className="shopfoot__link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-            {' - '}
-            <a className="shopfoot__link" href="/privacy">Privacy and disclaimers</a>
-          </p>
-        </div>
-      </footer>
+      <SiteFooter current="/prototype" />
     </>
   )
 }

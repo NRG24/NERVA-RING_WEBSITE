@@ -137,7 +137,7 @@ export default function Press() {
         </div>
       </main>
 
-      <SiteFooter />
+      <SiteFooter current="/press" />
     </>
   )
 }

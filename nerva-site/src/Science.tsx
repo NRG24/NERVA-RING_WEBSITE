@@ -259,7 +259,7 @@ export default function Science() {
         </section>
       </main>
 
-      <SiteFooter />
+      <SiteFooter current="/science" />
     </>
   )
 }

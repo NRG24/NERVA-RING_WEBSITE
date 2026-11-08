@@ -18,12 +18,12 @@
   font-size: 13px; color: rgba(214, 245, 226, 0.72);
 }
 
-/* on a phone the form has to be on screen without scrolling,
-   so the photo shrinks to a strip below it */
-@media (max-width: 1080px) {
-  .wait { align-items: flex-start; }
-  .wait__photo { max-width: 320px; }
-}
+/* a tablet keeps the photo beside the form, as on a desktop (index.css
+   holds .cta__grid at two columns down to 761px), just smaller */
+@media (max-width: 1080px) { .wait__photo { max-width: 320px; } }
+/* on a phone the form has to be on screen without scrolling, so the
+   column starts at the top and the photo follows the form */
+@media (max-width: 760px) { .wait { align-items: flex-start; } }
 
 /* what joining gets you: three plain lines, each keyed by a short
    stroke in the LED green (the site's no-icon rule) */

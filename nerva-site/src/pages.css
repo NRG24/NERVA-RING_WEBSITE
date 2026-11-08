@@ -5,20 +5,9 @@
    almond scheme: each page's html sets data-palette="almond".
    ============================================================ */
 
-/* ---------- header links ---------- */
-.subnav { display: flex; gap: clamp(18px, 2.4vw, 32px); margin-left: auto; margin-right: clamp(8px, 2vw, 24px); }
-.subnav a {
-  display: inline-flex; align-items: center; min-height: 44px;
-  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
-  border-bottom: 2px solid transparent;
-  transition: color 0.15s var(--ease);
-}
-.subnav a[aria-current='page'] { color: var(--ink); border-bottom-color: var(--ink); }
-@media (hover: hover) { .subnav a:hover { color: var(--ink); } }
-@media (max-width: 720px) {
-  .subnav { display: none; }
-  .nav__inner { padding: 0 20px; }
-}
+/* The header links (.subnav) and the footer's page links live in
+   index.css with the rest of the shared chrome, because /prototype and
+   /privacy use the same header and footer without this file. */
 
 /* ---------- the closing signup band ---------- */
 .science__cta { margin-top: clamp(40px, 5vw, 72px); }

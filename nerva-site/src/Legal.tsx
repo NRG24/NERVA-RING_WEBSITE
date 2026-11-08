@@ -14,7 +14,7 @@
    ------------------------------------------------------------------ */
 
 import type { ReactNode } from 'react'
-import { SkipLink } from './Chrome.tsx'
+import { SiteHeader, SiteFooter, SkipLink } from './Chrome.tsx'
 
 const CONTACT_EMAIL = 'nervaring@gmail.com'
 const UPDATED = '1 November 2026'
@@ -33,15 +33,7 @@ export default function Legal() {
   return (
     <>
       <SkipLink />
-      <header className="nav">
-        <div className="nav__inner">
-          <a className="brand" href="/" aria-label="NERVA Ring home">
-            <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA Ring
-          </a>
-          <a className="btn btn--ghost" href="/">Back to the build</a>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main id="main" className="sheet">
         <div className="wrap">
@@ -168,15 +160,7 @@ export default function Legal() {
         </div>
       </main>
 
-      <footer className="shopfoot">
-        <div className="wrap shopfoot__inner">
-          <a className="brand" href="/">
-            <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
-            NERVA Ring
-          </a>
-          <p>© 2026 NERVA Ring - built by Ryan Schreiber</p>
-        </div>
-      </footer>
+      <SiteFooter current="/privacy" />
     </>
   )
 }
