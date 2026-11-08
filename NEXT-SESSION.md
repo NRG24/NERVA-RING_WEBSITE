@@ -1,6 +1,6 @@
 # NERVA Website: Session Handoff
 
-_Last updated: 2026-11-03. Read this, then `CLAUDEwebdesign copy.md` (design law)
+_Last updated: 2026-11-08. Read this, then `CLAUDEwebdesign copy.md` (design law)
 and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
@@ -38,9 +38,15 @@ the sole builder. Contact is **nervaring@gmail.com**.
 - The signup form lives in `src/Signup.tsx` (with `CONTACT_EMAIL`), shared by
   the main page and the prototype page.
 - Styles: `src/index.css` holds the tokens and everything shared (buttons,
-  nav, `.titleblock`, `.shopfoot`, `.cta`). `buy.css`, `legal.css` and
+  nav, the sub-page header links `.subnav`, `.titleblock`, `.shopfoot`,
+  `.cta`). `buy.css`, `legal.css` and
   `prototype.css` hold only their own page's furniture and are imported
   *after* index.css.
+- **Shared sub-page chrome** (`src/Chrome.tsx`): `SiteHeader` and
+  `SiteFooter` are on /science, /updates, /press, /prototype, /privacy and
+  the 404. Both take `current` (a path) and mark that page. The page list
+  is `SITE_LINKS` in `src/siteLinks.ts`. /waitlist and /subscribed keep
+  their own bare header and footer on purpose (end of the funnel).
 - Typecheck `npx tsc -b --pretty false`, lint `npx oxlint`, build `npm run build`.
   All three are currently clean; keep them that way.
 - Dev server: `.claude/launch.json` runs on port 5188.
@@ -140,7 +146,8 @@ under 1080px. Every light section opens with a **centered** `.head`.
 7. **`#finish`.** A product configurator like the reference: render big on the
    left; name, circular swatches (`aria-pressed`), "Finish. {name}", the build
    meter (counted off `LEDGER`, so it cannot drift) and a black pill CTA.
-   Inside and Finishes keep their two columns down to 761px (Finishes
+   Inside, Finishes and the signup bands (`.cta__grid`: here, /waitlist
+   and /subscribed) keep their two columns down to 761px (Finishes
    splits 1:1 there) and stack at 760 and below. The Signals notes stay
    side by side until the 620px phone breakpoint. Stacking them at 1080
    (6 Nov 2026 fix) left half of each band empty on an iPad.
@@ -171,6 +178,7 @@ Linked from the hero by a line under the two CTAs, **"New: See real
 prototyping progress."** (Ryan's exact words; he had the green dot before
 "New:" taken off),
 and from the footer index. `prototype.html` hardcodes `data-palette="almond"`.
+Since 8 Nov 2026 it uses the shared `SiteHeader` / `SiteFooter`.
 Top to bottom: headline left with the dated lede beside it; the two photos
 (`src/assets/proto-bench.webp` large on the left, `proto-hand.webp` beside it)
 with Ryan's caption **"NERVA Ring Bench Prototype with Black Ceramic
@@ -288,6 +296,39 @@ threshold over the whole frame caught reflections and put it 3% right). The whit
   lifted `--pulse` / `--gold`. All clear 4.5:1. axe-core reports no
   violations on any page; keep it that way.
 - **320px**: sub-page headers tighten the back button below 361px.
+
+## Layout and navigation changes added 8 Nov 2026
+- **Landscape tablets** (900 to 1080px wide, landscape) get the
+  landscape-phone hero block too: words left, ring right. An iPad held
+  sideways is about 1080x740 in Safari, and the stacked hero there showed
+  only the ring and the headline. A second block raises the type for
+  heights of 561px and up; "nervous system." ends 145px or more short of
+  the disc across that range. **If the hero geometry changes, change both
+  landscape blocks.**
+- **Film into Inside** (palette schemes only): Inside eases up out of the
+  film's black into the band over `--fade-band`, smoothstep at quarters,
+  mirroring the Signals fade. It was a hard black-to-slate line. The dark
+  design is untouched (its Inside is black already).
+- **What it does into Signals** (palette schemes only): `--fade-out` is
+  `clamp(100px, 9vw, 140px)`, down from the dark design's 170 to 300px.
+  Two pale tints need no long run, and the cards had left about 450px of
+  empty colour above the Signals head at 1440.
+- **Signup bands on tablets**: see item 7 above. /waitlist centres its
+  column again from 761px up; only phones top-align it.
+- **Sub-page navigation**: /prototype and /privacy now use `SiteHeader`
+  and `SiteFooter`, so their header shows the page links like the others.
+  `SiteFooter` lists `SITE_LINKS` as well, because the header hides them
+  at 720px and below and phones had no way from one sub-page to another
+  except back through the build. The /updates link reads **"Build log"**
+  everywhere now (its title, and the main footer's word); "Updates" is
+  left to mean the email list. The `.subnav` rules moved from `pages.css`
+  to `index.css`, and the sub-page header keeps the 32px gutter down to
+  621px so it lines up with the page.
+- The hero's priority hint is `fetchPriority="high"` on the animated WebP
+  only (React 19 warned about the old lowercase spread, and browsers
+  ignore the hint on `<video>`).
+- axe-core still reports no violations on any page (1440, 390 and
+  1024x700).
 
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
