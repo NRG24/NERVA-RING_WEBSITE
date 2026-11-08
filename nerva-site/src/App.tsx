@@ -435,7 +435,7 @@ const FILM_H = 720
 type Key = [number, number, number]
 const FILM_PARTS: { name: string; does: string; at: Key[] }[] = [
   { name: 'Resin', does: 'waterproofing', at: [[5, 705, 136], [6.5, 720, 125], [8.5, 735, 120]] },
-  { name: 'Bluetooth module', does: 'connection', at: [[5, 527, 276], [6.5, 547, 280], [8.5, 580, 287]] },
+  { name: 'Bluetooth module', does: 'brain and connection', at: [[5, 527, 276], [6.5, 547, 280], [8.5, 580, 287]] },
   { name: 'Gold electrodes', does: 'stress', at: [[5, 583, 495], [6.5, 573, 500], [8.5, 607, 493]] },
   { name: 'Optical sensor', does: 'heart rate', at: [[5, 605, 589], [6.5, 620, 593], [8.5, 627, 593]] },
 ]
@@ -596,7 +596,7 @@ function FilmScroll({ labeled }: { labeled: boolean }) {
   const s = Math.max(vp.w / FILM_W, vp.h / FILM_H)
   const ox = (vp.w - FILM_W * s) / 2
   const oy = (vp.h - FILM_H * s) / 2
-  const colX = vp.w - 32 - 240
+  const colX = vp.w - 32 - 300
   const rows = FILM_PARTS
     .map((part) => {
       const [fx, fy] = partAt(part.at, filmT)
@@ -738,31 +738,26 @@ const SPECS = [
   {
     title: 'Optical sensing',
     part: 'MAXM86161',
-    channel: 'pulse',
     body: 'Pulse and SpO₂ read straight from the finger, run in a custom low-power polling mode rather than stock continuous mode to stretch the battery dramatically further.',
   },
   {
     title: 'Electrodermal front end',
-    part: '2× Au ELECTRODES',
-    channel: 'gold',
+    part: '2× Au electrodes',
     body: 'A custom transimpedance-amplifier circuit tuned for the low-current, low-noise range of skin conductance, read through two dry gold-plated electrodes built into the flex PCB.',
   },
   {
     title: 'Radio',
     part: 'ANNA-B402 - BLE 5',
-    channel: 'sensor',
     body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity.',
   },
   {
     title: 'Power',
     part: 'BQ25120A - 22 mAh',
-    channel: 'sensor',
     body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rail management and a low-voltage threshold target about a month of standby on a 22 mAh cell.',
   },
   {
     title: 'Sealed build',
-    part: 'RESIN-POTTED',
-    channel: 'neutral',
+    part: 'Resin-potted',
     body: 'The flex PCB wraps the inner circumference and is fully potted in RF-tuned resin. Charges on the provided charging case.',
   },
 ] as const
@@ -1064,7 +1059,7 @@ function App() {
                 {SPECS.map((s, i) => (
                   <Reveal key={s.title} className="spec" delay={i * 50}>
                     <h3>{s.title}</h3>
-                    <span className={`spec__part spec__part--${s.channel}`}>{s.part}</span>
+                    <span className="spec__part">{s.part}</span>
                     <p>{s.body}</p>
                   </Reveal>
                 ))}
