@@ -139,13 +139,24 @@ under 1080px. Every light section opens with a **centered** `.head`.
    "How is it different from other smart rings?".
 5. **`FilmScroll`.** A full-bleed **exploded view**, scroll-scrubbed on desktop
    (`currentTime` follows scroll), autoplay-loop on touch, poster only under
-   reduced motion. See the video notes below before touching it.
+   reduced motion. See the video notes below before touching it. **Since
+   8 Nov 2026, on desktops 1200px and up** (fine pointer, motion allowed;
+   `labeledFilm` in `App`) it carries Inside the band itself: the head
+   beside the assembled ring, then callouts while the ring holds apart
+   (see "Main page changes, 8 Nov 2026" below).
 6. **`#inside`** (black). The reference's "Inside Out": centered head, macro
    render on the left (sticky), plain headings + copy on the right, part
-   number small under each heading.
+   number small under each heading. Rendered only where the film is not
+   labelled (phones, tablets, narrower windows, reduced motion).
+6a. **`#build`, "Progress"** (added 8 Nov 2026). The one photograph on the
+   main page: the bench prototype with Ryan's caption, his headline and
+   lede from /prototype, what comes next, one link to /prototype. Words
+   left, photo right. Deliberately plain, see below.
 7. **`#finish`.** A product configurator like the reference: render big on the
    left; name, circular swatches (`aria-pressed`), "Finish. {name}", the build
    meter (counted off `LEDGER`, so it cannot drift) and a black pill CTA.
+   Since 8 Nov 2026 the swatches double as a vote that goes in with the
+   signup (`fields[finish]`).
    Inside, Finishes and the signup bands (`.cta__grid`: here, /waitlist
    and /subscribed) keep their two columns down to 761px (Finishes
    splits 1:1 there) and stack at 760 and below. The Signals notes stay
@@ -156,7 +167,9 @@ under 1080px. Every light section opens with a **centered** `.head`.
    `nerva-ring-overview.md` or the site's disclaimers; nothing about price,
    subscription or phone compatibility until those are decided.
 9. **`#follow`.** Kit email capture on the scheme's deep band (slate on
-   almond; the green ground is the `?palette=dark` design).
+   almond; the green ground is the `?palette=dark` design). Since 8 Nov 2026
+   it makes the same offer as /waitlist, in the same words: the Kickstarter
+   in early 2027 and the three perks (`.perks`, shared, in index.css).
 10. Footer as an engineering **title block**. Cell spans must tile each row of
    the 6-column grid exactly or the leftover gap prints as a solid hairline.
    From 621 to 1080px it is three equal columns, because every partial row
@@ -166,6 +179,7 @@ under 1080px. Every light section opens with a **centered** `.head`.
 11. **Launch bar.** Fixed to the bottom where the reference pins price and
     "Continue". Shows once the hero is gone; hides while `#follow` or the
     footer is on screen; `inert` while hidden. It must never show a price.
+    Its line reads "Launches on Kickstarter in early 2027." (8 Nov 2026).
 
 ## The prototype page (`/prototype`, added 5 Oct 2026)
 **Pitch video: taken down (3 Nov 2026).** A click-to-load Loom pitch sat
@@ -330,6 +344,39 @@ threshold over the whole frame caught reflections and put it 3% right). The whit
 - axe-core still reports no violations on any page (1440, 390 and
   1024x700).
 
+## Main page changes, 8 Nov 2026 (approved by Ryan)
+- **The labelled film.** `FILM_PARTS` in `App.tsx` lists each callout as a
+  part and what it does, with its position in the film's 1280x720 frame at
+  5, 6.5 and 8.5 s (read off the frames by hand; re-measure if the film is
+  re-rendered). The page maps them through the film's object-fit: cover
+  scale, puts the labels in a column at the right with a dark wash behind
+  it, and draws a leader to each part. Ryan asked for "the parts, a dash,
+  and what it does" in the page's own face and **white only**: the first
+  try used coloured Plex Mono part numbers and he read them as code. The
+  four callouts: Resin - waterproofing, Bluetooth module - connection, Gold
+  electrodes - stress, Optical sensor - heart rate. **The silver cylinder
+  is not the battery** (the battery stays inside the housing in this film),
+  so it has no callout. Open: Ryan used "brain" as an example; which chip
+  is the processor was not settled (the ANNA-B402 has its own, or another
+  chip). Ask before labelling one. With the film labelled, Inside is not
+  rendered, so the next section eases out of the film's black
+  (`.film--labeled + .section::before`).
+- **Progress (`#build`)** is plain on purpose. A first try put the full
+  build ledger beside the photo with a segmented meter, a coloured mark per
+  milestone and a rule under every row; Ryan called it AI-looking, and those
+  are exactly what he had taken off /prototype earlier. The meter lives in
+  Finishes only.
+- **The finish vote.** A swatch click sets `voted`; from then the signup
+  form carries `fields[finish]` (`ceramic-black`, `blue`, `coffee` or
+  `pink`), and the band shows "Your pick: {finish}" with a Change link. The
+  Worker passes it to Kit untouched in the 307 and does not store it in
+  D1. **Kit only keeps it once a custom field named `finish` exists**
+  (Subscribers, open any subscriber, Add a new field), the same as
+  `ref_code`. The Kit connector here needs a paid Kit plan, so Claude could
+  not add it. The privacy page already says the pick goes to Kit.
+- **Perks** (main page band and /waitlist): plain lines, no markers. The
+  short stroke that keyed each line read as an em dash.
+
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
 To look at one, `git checkout <commit>` then `npm run build`; to put one back
@@ -382,7 +429,11 @@ a re-encode waiting to happen.
   light/dark chip-cards, monospace pill chips, mono-UPPERCASE eyebrows on
   every section, `real`/`actually`/`genuine` intensifiers, "it's not X it's Y"
   stacks. Tie new sections to the physiology or the hardware, not to a
-  generic feature grid. No purple gradients.
+  generic feature grid. No purple gradients. Added 8 Nov 2026 after Ryan
+  flagged them: no progress meters, coloured status marks or ruled
+  checklists around the prototype; no dash-like list markers (they read as
+  em dashes); no coloured monospace labels outside the part numbers in
+  Inside the band (in the film they read as code).
 - **Pictures over paragraphs.** The last round cut the stress section from
   ~180 words to ~60 and added a render. If a section is turning into prose,
   that is the signal to draw it instead.
@@ -409,9 +460,10 @@ a re-encode waiting to happen.
 The battery is **22 mAh** and the target is **about a month of standby**, not
 "days" (`nerva-ring-overview.md` is the source of truth). App.tsx said 23 mAh
 and "days" until recently. The privacy page and the main footer note say
-**every ring image on the main page is a CAD render, and the photographs are
-on the prototype page** (and the waitlist page). If a photo lands anywhere else, fix both in the same
-commit.
+**every ring image on the main page is a CAD render except the one labelled
+as a photograph of the bench prototype (Progress), and the other photographs
+are on the prototype page** (and the waitlist page). If a photo lands
+anywhere else, fix both in the same commit.
 
 ## Waitlist and email signup (Worker + D1 + Kit)
 _Added 1 Nov 2026 on `claude/vigilant-goodall-6zcqsx`._ The plan and Ryan's
