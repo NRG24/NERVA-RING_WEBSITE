@@ -711,7 +711,7 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 /* a dark wash behind the label column, so a label never reads off the
    bright edge of the resin ring behind it */
 .film__labels::before {
-  content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 330px;
+  content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 380px;
   background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.62) 34%, rgba(0, 0, 0, 0.74));
 }
 .film__leaders { position: absolute; left: 0; top: 0; overflow: visible; }
@@ -762,15 +762,14 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   margin: 0; font-weight: 650;
   font-size: clamp(1.3rem, 1.1rem + 0.6vw, 1.6rem); letter-spacing: -0.024em;
 }
-/* the part number is marked in the channel that part belongs to */
+/* the part number under each heading, in the page's own face and in
+   white only. It used to be coloured mono, one colour per channel; Ryan
+   read that as code (8 Nov 2026), as he did in the exploded view. */
 .spec__part {
   display: block; margin-top: 6px;
-  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.02em;
+  font-size: 14.5px; font-weight: 500; letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, 0.74);
 }
-.spec__part--pulse   { color: var(--pulse); }
-.spec__part--gold    { color: var(--gold); }
-.spec__part--sensor  { color: var(--sensor); }
-.spec__part--neutral { color: rgba(255, 255, 255, 0.55); }
 .spec p { margin: 12px 0 0; color: rgba(255, 255, 255, 0.68); max-width: 46ch; font-size: 1.05rem; line-height: 1.6; }
 
 /* ============================================================
@@ -1545,15 +1544,6 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   --green-ink: #125a30;
   --gold-ink: #68470d;
 }
-/* The part numbers in Inside the band keep their channel colours, but
-   almond's slate band is lighter than the black they were picked for:
-   red read 3.3:1, gold and grey 4.3:1. Each is lifted just far enough to
-   clear 4.5:1 (green already does). */
-[data-palette='almond'] .inside {
-  --pulse: #ff8f8b;
-  --gold: #dba62e;
-}
-[data-palette='almond'] .spec__part--neutral { color: rgba(255, 255, 255, 0.62); }
 
 /* ---- the rest of the light sections ---- */
 [data-palette] .colophon { background: var(--pal-bg); }

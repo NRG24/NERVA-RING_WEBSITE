@@ -146,7 +146,8 @@ under 1080px. Every light section opens with a **centered** `.head`.
    (see "Main page changes, 8 Nov 2026" below).
 6. **`#inside`** (black). The reference's "Inside Out": centered head, macro
    render on the left (sticky), plain headings + copy on the right, part
-   number small under each heading. Rendered only where the film is not
+   number small under each heading (in the page's face and plain white
+   since 8 Nov 2026; it was coloured mono). Rendered only where the film is not
    labelled (phones, tablets, narrower windows, reduced motion).
 6a. **`#build`, "Progress"** (added 8 Nov 2026). The one photograph on the
    main page: the bench prototype with Ryan's caption, his headline and
@@ -306,8 +307,9 @@ threshold over the whole frame caught reflections and put it 3% right). The whit
 - **Phone menu**: Escape hands focus back to the toggle; tabbing out of the
   header closes the panel.
 - **Contrast on almond**: Finishes (the tint) has its own `--ink-3`,
-  `--green-ink` and `--gold-ink`; the part numbers on the slate band use
-  lifted `--pulse` / `--gold`. All clear 4.5:1. axe-core reports no
+  `--green-ink` and `--gold-ink`. All clear 4.5:1. (The part numbers on
+  the slate band used lifted `--pulse` / `--gold` until 8 Nov 2026; they
+  are plain white now.) axe-core reports no
   violations on any page; keep it that way.
 - **320px**: sub-page headers tighten the back button below 361px.
 
@@ -353,12 +355,11 @@ threshold over the whole frame caught reflections and put it 3% right). The whit
   it, and draws a leader to each part. Ryan asked for "the parts, a dash,
   and what it does" in the page's own face and **white only**: the first
   try used coloured Plex Mono part numbers and he read them as code. The
-  four callouts: Resin - waterproofing, Bluetooth module - connection, Gold
-  electrodes - stress, Optical sensor - heart rate. **The silver cylinder
-  is not the battery** (the battery stays inside the housing in this film),
-  so it has no callout. Open: Ryan used "brain" as an example; which chip
-  is the processor was not settled (the ANNA-B402 has its own, or another
-  chip). Ask before labelling one. With the film labelled, Inside is not
+  four callouts: Resin - waterproofing, Bluetooth module - brain and
+  connection (Ryan: the ANNA-B402 module is the brain), Gold electrodes -
+  stress, Optical sensor - heart rate. **The silver cylinder is not the
+  battery** (the battery stays inside the housing in this film), so it has
+  no callout. The label column is 300px wide at the right edge. With the film labelled, Inside is not
   rendered, so the next section eases out of the film's black
   (`.film--labeled + .section::before`).
 - **Progress (`#build`)** is plain on purpose. A first try put the full
@@ -432,8 +433,8 @@ a re-encode waiting to happen.
   generic feature grid. No purple gradients. Added 8 Nov 2026 after Ryan
   flagged them: no progress meters, coloured status marks or ruled
   checklists around the prototype; no dash-like list markers (they read as
-  em dashes); no coloured monospace labels outside the part numbers in
-  Inside the band (in the film they read as code).
+  em dashes); no coloured monospace labels anywhere (Ryan read them as
+  code, in the film and then in Inside the band, which went plain too).
 - **Pictures over paragraphs.** The last round cut the stress section from
   ~180 words to ~60 and added a render. If a section is turning into prose,
   that is the signal to draw it instead.
@@ -445,8 +446,9 @@ a re-encode waiting to happen.
   does not keep a stuck highlight.
 - **Shapes and type follow the references.** Pills for buttons, fields and
   swatches (`--radius-sm: 999px`); grey stages at `--radius-lg: 28px`. Hanken
-  Grotesk semibold (600) for heads, tight tracking; Plex Mono only for part
-  numbers and tick labels. An earlier pass tried square corners and a journal
+  Grotesk semibold (600) for heads, tight tracking; Plex Mono only for tick
+  labels and the SNS / PNS abbreviations (part numbers moved to the page's
+  face, in white, on 8 Nov 2026). An earlier pass tried square corners and a journal
   serif (Newsreader); Ryan read that as B2B. Do not bring either back.
 - **No stock icons.** The signal notes carry a swatch of their own trace as
   a legend key. (The feature cards used to carry a short coloured rule over
