@@ -48,7 +48,10 @@ function initialError() {
     : ''
 }
 
-export function Signup({ autoFocus = false }: { autoFocus?: boolean }) {
+/* `extra` rides along as more hidden fields, for something the visitor
+   chose elsewhere on the page (the main page sends the finish they would
+   back as fields[finish], a Kit custom field) */
+export function Signup({ autoFocus = false, extra }: { autoFocus?: boolean; extra?: Record<string, string> }) {
   const [email, setEmail] = useState('')
   const [err, setErr] = useState(initialError)
   const [source] = useState(signupSource)
@@ -106,6 +109,7 @@ export function Signup({ autoFocus = false }: { autoFocus?: boolean }) {
         <input type="hidden" name="fields[source]" value={source} />
         <input type="hidden" name="fields[ref_code]" value={code} />
         {ref && <input type="hidden" name="fields[referred_by]" value={ref} />}
+        {extra && Object.entries(extra).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
         <button className="btn btn--led btn--lg" type="submit">Notify me</button>
       </div>
       {err && <p className="signup__err" role="alert">{err}</p>}

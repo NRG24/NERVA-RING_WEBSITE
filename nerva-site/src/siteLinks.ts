@@ -1,7 +1,9 @@
-/* the pages every sub-page header links to, in order */
+/* the pages every sub-page header and footer links to, in order. /updates
+   is labelled by its own title, as the main page's footer already does,
+   so "Updates" is left to mean the email list. */
 export const SITE_LINKS = [
   { href: '/science', label: 'Science' },
-  { href: '/updates', label: 'Updates' },
+  { href: '/updates', label: 'Build log' },
   { href: '/prototype', label: 'Prototype' },
   { href: '/press', label: 'Press' },
 ] as const

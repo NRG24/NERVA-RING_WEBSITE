@@ -250,6 +250,21 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 }
 .mobile-menu .btn { margin-top: 12px; }
 
+/* the sub-pages' header links (SiteHeader in Chrome.tsx). Every page
+   that uses it reads them from here, so they cannot drift apart. */
+.subnav { display: flex; gap: clamp(18px, 2.4vw, 32px); margin-left: auto; margin-right: clamp(8px, 2vw, 24px); }
+.subnav a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s var(--ease);
+}
+.subnav a[aria-current='page'] { color: var(--ink); border-bottom-color: var(--ink); }
+@media (hover: hover) { .subnav a:hover { color: var(--ink); } }
+/* below this the header keeps the wordmark and the way back, and the
+   page links move to the foot of the page (SiteFooter) */
+@media (max-width: 720px) { .subnav { display: none; } }
+
 /* ============================================================
    HERO
 
@@ -678,6 +693,49 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   50% { transform: rotate(45deg) translate(2px, 2px); }
 }
 @media (prefers-reduced-motion: reduce) { .film__hint::after { animation: none; } }
+/* ---- the labelled film (desktop scrub, 1200px and up) ----
+   The film carries Inside the band: its head beside the assembled ring,
+   then, while the ring holds apart, a callout on each part in a column at
+   the right with a leader back to it. Positions come from App.tsx. */
+.film__head {
+  position: absolute; top: 50%; translate: 0 -50%;
+  left: max(32px, calc((100% - var(--wrap)) / 2 + 32px));
+  max-width: 30ch; pointer-events: none;
+}
+.film__head .display { font-size: clamp(2.6rem, 1.6rem + 2.4vw, 4rem); }
+.film__head p {
+  margin: 16px 0 0; max-width: 34ch;
+  font-size: 1.12rem; line-height: 1.55; color: rgba(255, 255, 255, 0.72);
+}
+.film__labels { position: absolute; inset: 0; pointer-events: none; }
+/* a dark wash behind the label column, so a label never reads off the
+   bright edge of the resin ring behind it */
+.film__labels::before {
+  content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 330px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.62) 34%, rgba(0, 0, 0, 0.74));
+}
+.film__leaders { position: absolute; left: 0; top: 0; overflow: visible; }
+.film__leaders polyline { fill: none; stroke: rgba(255, 255, 255, 0.55); stroke-width: 1; }
+.film__leaders circle { fill: #fff; stroke: rgba(0, 0, 0, 0.55); stroke-width: 2; }
+.film__parts { list-style: none; margin: 0; padding: 0; }
+/* one line each, the part then what it does, in the page's own face and
+   in white only: the coloured mono part numbers read as code here */
+.film__parts li {
+  position: absolute; translate: 0 -50%; white-space: nowrap;
+  font-size: 16px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3;
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.85);
+}
+.film__parts b { font-weight: 650; color: #fff; }
+/* With the film carrying Inside the band, the next section follows the
+   film's black directly, so it eases out of black the way Signals eases
+   into it (smoothstep at quarters), in extra padding with nothing on it. */
+.film--labeled + .section { position: relative; padding-top: calc(clamp(64px, 7vw, 108px) + 70px); }
+.film--labeled + .section::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 160px; pointer-events: none;
+  background: linear-gradient(to bottom,
+    #000 0, rgba(0, 0, 0, 0.84) 25%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.16) 75%, transparent 100%);
+}
 .film__progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.14); }
 .film__progress span { display: block; height: 100%; width: 100%; background: var(--sensor); transform-origin: left center; }
 
@@ -755,6 +813,9 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 }
 .swatch[aria-pressed='true'] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink); }
 @media (hover: hover) { .swatch:hover { transform: scale(1.05); } }
+/* the swatches double as a vote: whichever one is picked goes in with
+   the signup as fields[finish] */
+.config__vote { margin: 14px 0 0; max-width: 40ch; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
 
 .config__status { margin-top: clamp(32px, 4vw, 48px); padding-top: 26px; border-top: 1px solid var(--line); }
 .tally__bar { display: flex; gap: 4px; }
@@ -767,6 +828,34 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
 .config__cta { margin-top: 26px; }
 .config__fine { margin: 12px 0 0; font-size: 13.5px; color: var(--ink-3); text-align: center; }
+
+/* ============================================================
+   PROGRESS
+   The bench prototype as photographed, set the way the prototype page
+   sets it: the headline, the dated lede, the photo with Ryan's caption.
+   Deliberately plain. No meter, no status colours, no rules: Ryan had
+   those taken off the prototype page, and they stay off here too.
+   ============================================================ */
+.build__grid {
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(28px, 5vw, 96px); align-items: center;
+}
+.build__title { font-size: clamp(2.2rem, 1.5rem + 2.4vw, 3.4rem); max-width: 11ch; }
+.build__date { margin: 18px 0 10px; font-size: 14.5px; font-weight: 600; color: var(--ink-3); }
+.build__lede { margin: 0 0 14px; max-width: 44ch; color: var(--ink-2); font-size: 1.08rem; line-height: 1.6; text-wrap: pretty; }
+.build__lede abbr { text-decoration: none; }
+.build__more { margin: 10px 0 0; }
+.build__fig { margin: 0; }
+.build__photo {
+  width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover;
+  border-radius: var(--radius-lg);
+  /* the table's own grey, so nothing flashes almond while it decodes */
+  background: #3a3a3c;
+}
+.build__fig figcaption {
+  margin: 12px 0 0; font-size: 15px; font-weight: 600; line-height: 1.45;
+  letter-spacing: -0.012em; color: var(--ink);
+}
 
 /* ============================================================
    FAQ
@@ -814,7 +903,29 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 }
 .cta__lede { margin: 22px 0 0; color: rgba(255, 255, 255, 0.72); font-size: 1.12rem; max-width: 48ch; }
 
+/* what joining gets you, on the main page's band and on /waitlist: three
+   short plain lines with air between them. No markers: the short stroke
+   that keyed each line read as an em dash at a glance. */
+.perks { list-style: none; margin: 24px 0 0; padding: 0; max-width: 46ch; }
+.perks li { margin: 0 0 12px; font-size: 1rem; line-height: 1.45; color: rgba(255, 255, 255, 0.86); }
+.perks li:last-child { margin-bottom: 0; }
+
 .signup-wrap { margin: 34px 0 0; }
+/* the finish picked in Finishes, said back above the form it rides with */
+.cta__pick {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
+  margin: 26px 0 -14px; font-size: 15px; color: rgba(255, 255, 255, 0.86);
+}
+.cta__pick b { color: #fff; font-weight: 650; }
+.cta__pick-swatch {
+  width: 20px; height: 20px; border-radius: 50%; flex: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+}
+.cta__pick a {
+  display: inline-flex; align-items: center; min-height: 44px; margin: -12px 0;
+  color: #fff; text-decoration: underline; text-underline-offset: 4px;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+}
 .signup { display: flex; gap: 10px; max-width: 500px; }
 .signup__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .signup input {
@@ -936,6 +1047,24 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 .shopfoot__link { border-bottom: 1px solid var(--line-2); color: var(--ink-2); }
 @media (hover: hover) { .shopfoot__link:hover { color: var(--ink); border-color: var(--ink); } }
 
+/* The sub-pages' footer (SiteFooter) also carries the site's pages, the
+   same ones the header lists. On a phone the header hides them, and
+   without these the only way from /science to /press went back through
+   the build. The wordmark and the links share a line; the fine print
+   takes the line under them. */
+.shopfoot--site .shopfoot__inner { row-gap: 10px; }
+.shopfoot__nav { display: flex; flex-wrap: wrap; column-gap: 24px; }
+.shopfoot__nav a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 14.5px; font-weight: 500; color: var(--ink-2);
+  transition: color 0.15s var(--ease);
+}
+.shopfoot__nav a[aria-current='page'] { color: var(--ink); }
+@media (hover: hover) { .shopfoot__nav a:hover { color: var(--ink); } }
+@media (min-width: 621px) {
+  .shopfoot--site .shopfoot__inner > p { flex-basis: 100%; }
+}
+
 
 /* ============================================================
    RESPONSIVE
@@ -960,10 +1089,12 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
   /* a tablet still has room for the render beside its words, as on
      desktop. Finishes splits evenly so the panel keeps space for the
-     title and the four swatches. */
+     title and the four swatches. The signup bands (.cta__grid, here and
+     on /waitlist and /subscribed) keep their picture beside the form
+     too, stacking only at 760: stacked, the drawing ran the full width
+     of an iPad under a half-width form, taller than the form itself. */
   .config { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 
-  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
   .faq__grid { grid-template-columns: 1fr; gap: 28px; }
 
   /* every partial row of the title block (footer and sheet headers) is
@@ -991,6 +1122,12 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
   .config { grid-template-columns: 1fr; gap: 36px; }
   .config__panel { max-width: 560px; }
+
+  .build__grid { grid-template-columns: 1fr; gap: 32px; }
+  .build__fig { max-width: 560px; }
+  .build__photo { aspect-ratio: 4 / 5; }
+
+  .cta__grid { grid-template-columns: 1fr; gap: 44px; }
 }
 
 @media (max-width: 620px) {
@@ -1255,8 +1392,12 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 /* Landscape phones are wide and short: the stacked layout above gave the
    whole first screen to the ring's square and left the headline below
    the fold. They take the wide-screen arrangement instead, words on the
-   left and the ring on the right, placed with the same --box geometry. */
-@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px) {
+   left and the ring on the right, placed with the same --box geometry.
+   So do landscape tablets from 900px (an iPad held sideways is about
+   1080x740 in Safari), where the stack showed the ring and the headline
+   and pushed the lede, the button and the prototype link off screen. */
+@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px),
+       (min-width: 900px) and (max-width: 1080px) and (orientation: landscape) {
   [data-palette] .hero {
     --box: min(44vw, calc((100svh - var(--nav-h)) * 1.02));
     min-height: calc(100svh - var(--nav-h));
@@ -1272,6 +1413,15 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
     top: calc(50% - var(--box) * 0.495);
   }
   [data-palette] .hero__ripples { --cx: 74%; --cy: 50%; --rb: var(--box); }
+}
+/* A tablet has the height a phone lacks, so the words go back up toward
+   the desktop sizes. "nervous system." is about 6.8em wide: at these
+   sizes it ends 145px or more short of the disc from 900 to 1080 wide. */
+@media (min-width: 900px) and (max-width: 1080px) and (orientation: landscape) and (min-height: 561px) {
+  [data-palette] .hero__copy { padding-top: 40px; padding-bottom: 40px; }
+  [data-palette] .hero__title { font-size: clamp(2.6rem, 5.2vw, 3.4rem); }
+  [data-palette] .hero__lede { margin-top: 24px; max-width: 24em; font-size: 1.12rem; }
+  [data-palette] .hero__cta { margin-top: 30px; }
 }
 
 [data-palette] .hero__title { color: var(--pal-ink); }
@@ -1302,6 +1452,11 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 /* ---- what it does: the hero ground eases into the tint below ---- */
 [data-palette] .does {
   --sheet: color-mix(in srgb, var(--pal-bg) 75%, var(--pal-bg2));
+  /* The long fade-out was sized for the dark design, where charcoal runs
+     into light grey and no text may sit on the mid-tones. Here two pale
+     tints meet, so a shorter run reads just as soft, and the cards stop
+     leaving half a screen of empty colour above the Signals head. */
+  --fade-out: clamp(100px, 9vw, 140px);
   background: linear-gradient(to bottom,
     var(--pal-bg) 0,
     var(--sheet) var(--fade-in),
@@ -1349,7 +1504,22 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 [data-palette] .does .abbr { color: var(--pal-ink); }
 
 /* ---- the deep bands ---- */
-[data-palette] .inside { background: var(--pal-band); }
+/* Inside the band comes straight after the exploded-view film, which ends
+   on black. On the dark design Inside is black too; here it is the band
+   colour, so it eases up out of the film's black the way Signals eases
+   down into it (smoothstep at quarters, because a straight ramp bands)
+   instead of cutting from black to slate on a hard line. Only white type
+   sits on it, and white reads at every step of the fade. */
+[data-palette] .inside {
+  --fade-band: clamp(96px, 10vw, 150px);
+  background: linear-gradient(to bottom,
+    #000 0,
+    color-mix(in srgb, var(--pal-band) 16%, #000) calc(var(--fade-band) * 0.25),
+    color-mix(in srgb, var(--pal-band) 50%, #000) calc(var(--fade-band) * 0.5),
+    color-mix(in srgb, var(--pal-band) 84%, #000) calc(var(--fade-band) * 0.75),
+    var(--pal-band) var(--fade-band));
+  padding-top: calc(clamp(64px, 7vw, 108px) + var(--fade-band) * 0.4);
+}
 [data-palette] .cta { background: var(--pal-band); }
 [data-palette] .cta__sheet { background: color-mix(in srgb, var(--pal-band) 88%, #fff); }
 [data-palette] .cta .btn--led, [data-palette] .launchbar .btn--led { background: var(--pal-bg); color: var(--pal-ink); }

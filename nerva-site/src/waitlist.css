@@ -18,25 +18,15 @@
   font-size: 13px; color: rgba(214, 245, 226, 0.72);
 }
 
-/* on a phone the form has to be on screen without scrolling,
-   so the photo shrinks to a strip below it */
-@media (max-width: 1080px) {
-  .wait { align-items: flex-start; }
-  .wait__photo { max-width: 320px; }
-}
+/* a tablet keeps the photo beside the form, as on a desktop (index.css
+   holds .cta__grid at two columns down to 761px), just smaller */
+@media (max-width: 1080px) { .wait__photo { max-width: 320px; } }
+/* on a phone the form has to be on screen without scrolling, so the
+   column starts at the top and the photo follows the form */
+@media (max-width: 760px) { .wait { align-items: flex-start; } }
 
-/* what joining gets you: three plain lines, each keyed by a short
-   stroke in the LED green (the site's no-icon rule) */
-.wait__perks { list-style: none; margin: 26px 0 0; padding: 0; max-width: 46ch; }
-.wait__perks li {
-  position: relative; padding: 0 0 0 30px; margin: 0 0 10px;
-  font-size: 1rem; line-height: 1.45; color: rgba(255, 255, 255, 0.86);
-}
-.wait__perks li::before {
-  content: ''; position: absolute; left: 0; top: 0.72em;
-  width: 16px; height: 2px; border-radius: 2px; background: var(--sensor);
-}
-[data-palette] .wait__perks li::before { background: var(--pal-bg); }
+/* the perks list (.perks) is shared with the main page's signup band and
+   lives in index.css */
 
 .wait__count { margin: 14px 0 0; font-size: 14.5px; color: #fff; }
 

@@ -64,7 +64,7 @@ export default function Waitlist() {
               into burnout. It launches on Kickstarter in early 2027.
             </p>
 
-            <ul className="wait__perks">
+            <ul className="perks">
               <li>Hear about the launch before it goes public.</li>
               <li>First pick of the limited early-bird tier.</li>
               <li>

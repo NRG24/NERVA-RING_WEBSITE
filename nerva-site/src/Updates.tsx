@@ -57,7 +57,7 @@ export default function Updates() {
         </section>
       </main>
 
-      <SiteFooter />
+      <SiteFooter current="/updates" />
     </>
   )
 }
