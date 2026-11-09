@@ -413,9 +413,9 @@ be done. Where this section disagrees with an older note above, this wins.
   part does, in the film callouts' words, then the part number, so phone
   and desktop tell the same story.
 - **/buy is on the almond scheme** (`data-palette="almond"` in `buy.html`).
-- **Open question for Ryan**: the third card promises steps and calories,
-  and `nerva-ring-overview.md` lists no accelerometer. Either the part list
-  or the card needs to change.
+- **Steps and calories are real**: Ryan confirmed (9 Nov 2026) the ring has
+  an accelerometer. `nerva-ring-overview.md` does not list it yet; add the
+  part there once Ryan names it.
 
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
