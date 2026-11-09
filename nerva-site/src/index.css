@@ -1248,7 +1248,9 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
    47% / 50% of the frame and spans 55% of it. The disc is 70% wide, set a
    touch right of the ring's centre (49%) so its left edge clears the
    headline's "system." at every width (19px at 1440, the tight one). It is
-   the scheme's sage, flat, no gradient, and does not hover. */
+   the scheme's sage and does not hover. Since 9 Nov 2026 its edge, like
+   each ring's, is blended rather than cut (Ryan asked for the circles to
+   be more blended): see .hero__ripples below. */
 .hero__backdrop { display: none; }
 [data-palette] .hero__backdrop {
   display: block;
@@ -1261,7 +1263,7 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   width: 70%; aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: var(--pal-bg2);
+  --c: var(--pal-bg2); --s: 79.3%;
   opacity: 0; scale: 0.97;
   transition: opacity 2s ease, scale 2.6s var(--ease-out);
 }
@@ -1281,7 +1283,15 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
    box's width; each breakpoint below sets them to match the backdrop.
    Colours step from the disc's sage toward the ground. The mask fades
    them out before the hero's bottom edge, so no ring is cut flat where
-   the hero eases into the next section. */
+   the hero eases into the next section.
+
+   Each circle, the disc included, holds its colour out to --s of its
+   radius and then fades to clear at its edge, eased over four stops
+   (smoothstep, like the section fades: a straight ramp prints a ridge at
+   each end). The fade is 0.07 of the film box wide on the two inner rings,
+   0.09 on the disc and 0.14 on the outer ring, where it meets the ground:
+   wide enough to blend each band into the next, narrow enough that they
+   still read as rings. --s is (radius - fade) / radius. */
 .hero__ripples { display: none; }
 [data-palette] .hero__ripples {
   display: block;
@@ -1291,6 +1301,14 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 160px), transparent);
   mask-image: linear-gradient(to bottom, #000 calc(100% - 160px), transparent);
 }
+[data-palette] .hero__ripples i, [data-palette] .hero__backdrop > span {
+  background: radial-gradient(closest-side,
+    var(--c) var(--s),
+    color-mix(in srgb, var(--c) 84%, transparent) calc(var(--s) + (100% - var(--s)) * 0.25),
+    color-mix(in srgb, var(--c) 50%, transparent) calc(var(--s) + (100% - var(--s)) * 0.5),
+    color-mix(in srgb, var(--c) 16%, transparent) calc(var(--s) + (100% - var(--s)) * 0.75),
+    transparent 100%);
+}
 [data-palette] .hero__ripples i {
   position: absolute; left: var(--cx); top: var(--cy);
   aspect-ratio: 1 / 1; border-radius: 50%;
@@ -1298,9 +1316,9 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   opacity: 0;
   transition: opacity 2.6s ease 0.4s;
 }
-[data-palette] .hero__ripples i:nth-child(1) { width: calc(var(--rb) * 1.65); background: color-mix(in srgb, var(--pal-bg2) 25%, var(--pal-bg)); }
-[data-palette] .hero__ripples i:nth-child(2) { width: calc(var(--rb) * 1.45); background: color-mix(in srgb, var(--pal-bg2) 50%, var(--pal-bg)); }
-[data-palette] .hero__ripples i:nth-child(3) { width: calc(var(--rb) * 1.25); background: color-mix(in srgb, var(--pal-bg2) 75%, var(--pal-bg)); }
+[data-palette] .hero__ripples i:nth-child(1) { width: calc(var(--rb) * 1.65); --c: color-mix(in srgb, var(--pal-bg2) 25%, var(--pal-bg)); --s: 83%; }
+[data-palette] .hero__ripples i:nth-child(2) { width: calc(var(--rb) * 1.45); --c: color-mix(in srgb, var(--pal-bg2) 50%, var(--pal-bg)); --s: 90.3%; }
+[data-palette] .hero__ripples i:nth-child(3) { width: calc(var(--rb) * 1.25); --c: color-mix(in srgb, var(--pal-bg2) 75%, var(--pal-bg)); --s: 88.8%; }
 [data-palette] .hero.is-ready .hero__ripples i { opacity: 1; }
 /* They breathe rather than beat: one slow swell every 10 s (a calm
    breathing pace, in 4 s, out 6 s), each ring a beat behind the one

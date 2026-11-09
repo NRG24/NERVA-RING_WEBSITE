@@ -234,8 +234,13 @@ before the hero's bottom edge, breathing in one slow 10 s swell once the
 ring lands (paused off screen, still under reduced motion). They beat at
 72 bpm for an hour and Ryan found the hero too quick and stark, so the
 rings, LED glow, hover and disc rise were all softened the same day: keep
-hero motion slow and small. If the
-film or the backdrop geometry changes, change `--cx`/`--cy`/`--rb` too. Behind the ring is a flat sage disc (`.hero__backdrop`,
+hero motion slow and small. **Since 9 Nov 2026 the circles are blended**
+(Ryan: "make the green concentric circles more blended"): the disc and
+each ring hold their colour to `--s` of their radius, then fade to clear
+over four smoothstep stops, so each band runs into the next. A wider fade
+turned them into one glow and lost the rings; keep them reading as rings.
+If the
+film or the backdrop geometry changes, change `--cx`/`--cy`/`--rb` too. Behind the ring is a sage disc (soft-edged since 9 Nov 2026) (`.hero__backdrop`,
 `--pal-bg2`, 87% of the film frame) on its own layer, so it holds still while
 the ring hovers. On desktop the film frame and disc are **placed directly
 with left/top/width** (`--box`, the ring centre at 69% across and halfway
