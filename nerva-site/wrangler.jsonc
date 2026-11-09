@@ -16,11 +16,31 @@
     // public by design: it's in Kit's own form URL
     "KIT_FORM_ID": "10036721"
   },
-  // The signup store. No database_id: the first `wrangler deploy` creates
-  // the database and binds it. Pin the id it prints here afterwards so a
-  // later deploy can never make a second, empty one.
+  // Secrets, set once per account with `npx wrangler secret put <NAME>`,
+  // never written here. Listing one as required makes `wrangler deploy`
+  // stop with an error until it is set.
+  //   IP_SALT  random, at least 16 characters (`openssl rand -hex 32`).
+  //            Without it the Worker stores no IP hash at all and gives no
+  //            referral credit, because a hash with a known salt can be
+  //            reversed back to the IPv4 address in minutes.
+  "secrets": { "required": ["IP_SALT"] },
+  // The signup store.
+  // TODO: pin "database_id". Run `npx wrangler d1 list`, copy the id of
+  // nerva-waitlist, and add "database_id": "<that id>" to the entry below.
+  // Until then `wrangler deploy` works the database out at deploy time
+  // (keeping the one already bound, or creating one by this name), so a
+  // fresh account, a renamed database or a lost binding can quietly end
+  // up on a second, empty one.
   "d1_databases": [
     { "binding": "DB", "database_name": "nerva-waitlist" }
+  ],
+  // Per-IP limit on POST /api/join, checked before D1 is touched. The
+  // count is kept per Cloudflare location, so it is a brake on scripts,
+  // not an exact quota. namespace_id is any positive integer you choose,
+  // unique among rate limiters in the Cloudflare account. If this binding
+  // is missing the Worker carries on without it.
+  "ratelimits": [
+    { "name": "JOIN_LIMIT", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }
   ],
   "observability": { "enabled": true }
 }

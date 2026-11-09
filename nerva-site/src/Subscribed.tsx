@@ -8,7 +8,11 @@
    /api/join set an HttpOnly cookie on the way to Kit, so /api/me can
    say where this person is on the list and hand back their share
    link. If that call fails (no cookie, other browser, D1 down) the
-   page is what it always was: the confirmation and two links.
+   page is what it always was: the confirmation and two links, plus a
+   line saying where the place shows up. Someone typing an address that
+   is already on the list lands here too, without the cookie: /api/join
+   won't hand a place to whoever types an address, so the page can't
+   show one.
    ------------------------------------------------------------------ */
 
 import { useEffect, useState } from 'react'
@@ -20,14 +24,15 @@ const INSTAGRAM = 'https://www.instagram.com/nerva_ring/'
 
 type Place = { position: number; total: number; code: string; referrals: number; boost: number }
 
+/* undefined while /api/me is still answering, null once it has said no */
 function usePlace() {
-  const [place, setPlace] = useState<Place | null>(null)
+  const [place, setPlace] = useState<Place | null | undefined>(undefined)
   useEffect(() => {
     const ctl = new AbortController()
     fetch('/api/me', { signal: ctl.signal, credentials: 'same-origin' })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d: Place | null) => { if (d && typeof d.position === 'number') setPlace(d) })
-      .catch(() => {})
+      .then((d: Place | null) => setPlace(d && typeof d.position === 'number' ? d : null))
+      .catch(() => { if (!ctl.signal.aborted) setPlace(null) })
     return () => ctl.abort()
   }, [])
   return place
@@ -108,6 +113,13 @@ export default function Subscribed() {
                 </p>
                 <ShareLink code={place.code} />
               </>
+            )}
+
+            {place === null && (
+              <p className="cta__lede">
+                Your place on the list and your share link show in the browser you
+                first signed up from.
+              </p>
             )}
 
             <div className="subd__actions">

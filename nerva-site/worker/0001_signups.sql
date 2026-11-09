@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS signups (
   referred_by TEXT,                  -- the code of whoever shared the link
   credited    INTEGER NOT NULL DEFAULT 0,  -- 1 if that referrer got the credit
   referrals   INTEGER NOT NULL DEFAULT 0,  -- credited friends who joined via this code
-  ip_hash     TEXT,                  -- salted SHA-256 of the IP, for referral abuse only
+  ip_hash     TEXT,                  -- SHA-256 of IP_SALT secret + IP, for abuse limits; NULL if no secret
   created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS signups_ip ON signups (ip_hash, created_at);

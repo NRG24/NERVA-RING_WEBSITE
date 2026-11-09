@@ -17,7 +17,7 @@ import type { ReactNode } from 'react'
 import { SiteHeader, SiteFooter, SkipLink } from './Chrome.tsx'
 
 const CONTACT_EMAIL = 'nervaring@gmail.com'
-const UPDATED = '1 November 2026'
+const UPDATED = '9 November 2026'
 
 /* one hanging label, one block of document */
 function Clause({ label, children }: { label: string; children: ReactNode }) {
@@ -77,8 +77,10 @@ export default function Legal() {
               so the site can hold your place in line. Next to your address it keeps
               your referral code, whose link you joined through, how many friends
               joined through yours, and a one-way hash of your IP address. The hash
-              is there only to stop one person crediting their own link over and
-              over. Those two copies are the only ones.
+              is made with a secret key, so it can’t be turned back into your
+              address, and it is used only to stop one person crediting their own
+              link over and over and to slow down scripts that flood the list. Those
+              two copies are the only ones.
             </p>
             <p>
               Joining sets one cookie, <code>nerva_wl</code>, so the page you land on
@@ -104,7 +106,8 @@ export default function Legal() {
               <dd>
                 Hosts the site, and sees what any web host sees: your IP address, your
                 browser's user agent, and which file you asked for. It also stores the
-                waitlist database described above.
+                waitlist database described above, and counts signups per IP address
+                for a minute at a time so one network can’t send hundreds.
               </dd>
 
               <dt>Shopify</dt>

@@ -20,18 +20,30 @@
    REF_BOOST places. Credit is refused when the friend shares the
    referrer's network (same hashed IP) or that network has already
    made REF_IP_LIMIT signups in the last day, which stops one person
-   farming their own link from one browser.
+   farming their own link from one browser. With no IP_SALT secret
+   no IP hash is stored, so neither check can run and no credit is
+   given: a referral that can't be checked isn't paid.
+
+   Abuse limits on /api/join, both optional and both fail open:
+   JOIN_LIMIT (a Workers rate limit binding, per IP, per minute) and
+   JOIN_IP_HOURLY rows per hashed IP per hour, counted in D1. A person
+   who trips either lands back on /waitlist?err=busy with a message.
    ------------------------------------------------------------------ */
 
 export interface Env {
   ASSETS: Fetcher
   DB?: D1Database
   KIT_FORM_ID: string
+  // a secret (`wrangler secret put IP_SALT`), never a var: with a known
+  // salt every IPv4 hash can be reversed by trying all 2^32 addresses
   IP_SALT?: string
+  JOIN_LIMIT?: RateLimit
 }
 
 const REF_BOOST = 10
 const REF_IP_LIMIT = 3
+const JOIN_IP_HOURLY = 60 // new rows per hashed IP per hour; a campus or event can share one address
+const MIN_SALT = 16
 const COOKIE = 'nerva_wl'
 const CODE_ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789' // no 0/o, 1/l/i
 const CODE_RE = /^[a-hjkmnp-z2-9]{8}$/
@@ -79,6 +91,25 @@ async function join(request: Request, env: Env, url: URL): Promise<Response> {
     return toKit()
   }
 
+  // Only this site's own pages post here. A native form post always
+  // carries Origin (the site's Referrer-Policy keeps it), so a different
+  // one is another site using this as a signup proxy. No Origin at all
+  // (an old browser, curl) is let through to the other checks.
+  const origin = request.headers.get('Origin')
+  if (origin && origin !== 'null' && origin !== url.origin) {
+    return Response.redirect(new URL('/waitlist', url).toString(), 303)
+  }
+
+  const ip = request.headers.get('CF-Connecting-IP') ?? ''
+  const busy = () => Response.redirect(new URL('/waitlist?err=busy', url).toString(), 303)
+  if (ip && env.JOIN_LIMIT) {
+    try {
+      if (!(await env.JOIN_LIMIT.limit({ key: ip })).success) return busy()
+    } catch (err) {
+      console.error('join: rate limit binding failed, carrying on', err)
+    }
+  }
+
   const email = String(form.get('email_address') ?? '').trim().toLowerCase()
   if (String(form.get('company') ?? '') !== '') {
     // honeypot: answer like a success, record nothing, send nothing to Kit
@@ -98,15 +129,27 @@ async function join(request: Request, env: Env, url: URL): Promise<Response> {
     if (existing) {
       // Already on the list (and already sent to Kit the first time).
       // Re-posting would overwrite their ref_code in Kit with this page's
-      // new random one, so go straight to their place on the list.
-      return new Response(null, {
-        status: 303,
-        headers: { Location: '/subscribed', 'Set-Cookie': cookieFor(existing.token), 'Cache-Control': 'no-store' },
-      })
+      // new random one, so go straight to /subscribed instead.
+      // The cookie is NOT handed out here: typing an address proves
+      // nothing about owning it, so anyone could take someone else's
+      // place and share link. Only a browser that already holds this
+      // row's cookie sees the place; everyone else gets the plain page.
+      return Response.redirect(new URL('/subscribed', url).toString(), 303)
     }
 
-    const ip = request.headers.get('CF-Connecting-IP') ?? ''
-    const ipHash = ip ? await sha256(`${env.IP_SALT ?? 'nerva-waitlist'}:${ip}`) : null
+    const salt = env.IP_SALT && env.IP_SALT.length >= MIN_SALT ? env.IP_SALT : null
+    if (!salt) console.warn('join: IP_SALT secret missing or short; storing no IP hash, giving no referral credit')
+    const ipHash = ip && salt ? await sha256(`${salt}:${ip}`) : null
+
+    // One indexed read serves both the hourly cap and the referral check.
+    const recent = ipHash
+      ? await env.DB.prepare(
+          `SELECT COUNT(*) AS day,
+                  COALESCE(SUM(created_at > datetime('now', '-1 hour')), 0) AS hour
+           FROM signups WHERE ip_hash = ? AND created_at > datetime('now', '-1 day')`,
+        ).bind(ipHash).first<{ day: number; hour: number }>()
+      : null
+    if (recent && recent.hour >= JOIN_IP_HOURLY) return busy()
 
     // The page sends the code it put in Kit's ref_code field, so the
     // welcome email and this table agree. Make one up only if it's
@@ -121,16 +164,9 @@ async function join(request: Request, env: Env, url: URL): Promise<Response> {
     if (CODE_RE.test(refCode)) {
       referrer = await env.DB.prepare('SELECT * FROM signups WHERE code = ?').bind(refCode).first<Row>()
     }
-    let credit = false
-    if (referrer) {
-      const sameNetwork = ipHash !== null && referrer.ip_hash === ipHash
-      const recent = ipHash
-        ? ((await env.DB.prepare(
-            "SELECT COUNT(*) AS n FROM signups WHERE ip_hash = ? AND created_at > datetime('now', '-1 day')",
-          ).bind(ipHash).first<number>('n')) ?? 0)
-        : 0
-      credit = !sameNetwork && recent < REF_IP_LIMIT
-    }
+    // No hash means no way to tell a friend from the referrer on a
+    // second tab, so no credit. referred_by is still kept.
+    const credit = !!referrer && ipHash !== null && referrer.ip_hash !== ipHash && (recent?.day ?? 0) < REF_IP_LIMIT
 
     const token = randomHex(16)
     const source = String(form.get('fields[source]') ?? '').slice(0, 40) || null

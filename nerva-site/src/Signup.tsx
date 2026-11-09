@@ -41,11 +41,13 @@ function newCode() {
   return Array.from(bytes, (b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join('')
 }
 
-/* /api/join sends a script or a no-JS post back with ?err=email */
+/* /api/join sends a script or a no-JS post back with ?err=email, and
+   ?err=busy when one network has sent too many signups in a short time */
 function initialError() {
-  return new URLSearchParams(window.location.search).get('err') === 'email'
-    ? 'That email address doesn’t look right.'
-    : ''
+  const err = new URLSearchParams(window.location.search).get('err')
+  if (err === 'email') return 'That email address doesn’t look right.'
+  if (err === 'busy') return 'Too many signups from your network just now. Please try again in a little while.'
+  return ''
 }
 
 /* `extra` rides along as more hidden fields, for something the visitor

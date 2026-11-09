@@ -1,3 +1,39 @@
+# NERVA Ring site
+
+## Waitlist Worker: one-time setup
+
+`worker/index.ts` runs `/api/*` (the waitlist). Before the first deploy, and
+on any new Cloudflare account:
+
+1. **Set the IP salt secret (required).**
+
+   ```sh
+   openssl rand -hex 32          # copy the output
+   npx wrangler secret put IP_SALT
+   ```
+
+   `wrangler.jsonc` lists `IP_SALT` under `secrets.required`, so
+   `wrangler deploy` stops with an error until it is set. If it is ever
+   missing anyway, the Worker stores no IP hash and gives no referral credit,
+   rather than hashing with a salt anyone could guess. Never put it in
+   `vars`. Changing it later only means new hashes no longer match old ones
+   (old signups stop counting towards the per-network limits).
+
+   If the site ran before this secret existed, the stored hashes were made
+   with the old built-in salt and can be reversed. Clear them once:
+
+   ```sh
+   npx wrangler d1 execute nerva-waitlist --remote --command "UPDATE signups SET ip_hash = NULL"
+   ```
+
+2. **Pin the D1 database id.** Run `npx wrangler d1 list`, copy the id of
+   `nerva-waitlist`, and add it as `"database_id"` in `wrangler.jsonc`
+   (see the TODO there).
+
+3. **Rate limit.** The `JOIN_LIMIT` binding in `wrangler.jsonc` (5 posts per
+   IP per minute) needs no dashboard step. Its `namespace_id` only has to be
+   unique among the account's rate limiters; change it if `1001` is taken.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
