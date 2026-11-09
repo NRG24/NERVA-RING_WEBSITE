@@ -417,6 +417,21 @@ be done. Where this section disagrees with an older note above, this wins.
   an accelerometer. `nerva-ring-overview.md` does not list it yet; add the
   part there once Ryan names it.
 
+## 9 Nov 2026: the /preview trial (not live design)
+Ryan asked for something more radical that reads like Oura's page and not
+like a generated one. `preview.html` -> `src/preview-main.tsx` ->
+`src/Preview.tsx` + `src/preview.css`, served at **/preview**, noindex and
+linked from nowhere. It is the main page with most of it taken away: five
+sections (ring, signal, app, bench photo, signup), two grounds only (black
+and a warm bone, `#f2ede5`) on hard edges, Hanken at weight 400 and large,
+no glow rings, traces, pills, fades or sticky bar. The hero is the original
+`nerva-levitate.mp4` on pure black, so the hero ground must stay `#000`.
+All of its CSS is scoped under `.pv`; the live pages are untouched.
+**Waiting on Ryan:** whether to adopt it. If yes, it replaces `App.tsx`
+and needs the finish vote and the FAQ carried over; if no, delete those
+four files and the `preview` entry in `vite.config.ts`. It would be
+stronger with a photo of the ring on a finger and one wide dark shot.
+
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
 To look at one, `git checkout <commit>` then `npm run build`; to put one back

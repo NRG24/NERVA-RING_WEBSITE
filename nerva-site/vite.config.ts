@@ -90,6 +90,7 @@ export default defineConfig({
           ['updates', 'updates.html'],
           ['press', 'press.html'],
           ['notfound', '404.html'],
+          ['preview', 'preview.html'],
         ].map(([k, f]) => [k, fileURLToPath(new URL(`./${f}`, import.meta.url))]),
       ),
     },

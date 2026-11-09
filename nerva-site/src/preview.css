@@ -1,0 +1,171 @@
+/* ============================================================
+   DESIGN PREVIEW (/preview)
+   Only this page's styles, all under .pv so nothing here can reach
+   the live pages. index.css is imported first for the reset, the
+   fonts and the signup form; everything visible is redrawn here.
+
+   Two grounds: black (the hero film is shot on pure black, so the
+   hero has to be exactly #000) and a warm bone. They meet on hard
+   edges. No gradients between sections, no shadows, no glow.
+   Type is Hanken at 400, large, with room round it.
+   ============================================================ */
+
+.pv {
+  --bone: #f2ede5;
+  --deep: #0d0c0b;
+  --pv-ink: #191816;
+  --pv-ink-2: #5d5850;                     /* 6.2:1 on bone */
+  --pv-on-dark-2: rgba(255, 255, 255, 0.72);
+  --gutter: clamp(20px, 5vw, 72px);
+  background: var(--bone);
+  color: var(--pv-ink);
+}
+html:has(.pv) { background: #000; scroll-padding-top: 0; }
+
+.pv-wrap { max-width: 1320px; margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter); }
+
+.pv h1, .pv h2 {
+  margin: 0; font-weight: 400; letter-spacing: -0.035em; line-height: 1.02;
+  text-wrap: balance;
+}
+.pv h2 { font-size: clamp(2.3rem, 1.2rem + 4.4vw, 5rem); }
+.pv :where(p) { margin: 0; }
+
+/* the one underlined link each section gets */
+.pv-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-weight: 500; font-size: 1.02rem; color: inherit;
+  text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px;
+}
+@media (hover: hover) { .pv-link:hover { text-decoration-thickness: 2px; } }
+
+.pv-note { margin-top: 22px; max-width: 46ch; font-size: 13.5px; line-height: 1.5; }
+.pv-note a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+.pv :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; box-shadow: none; }
+
+/* ---------------- nav: two words over the film ---------------- */
+.pv-nav {
+  position: absolute; left: 0; right: 0; top: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px var(--gutter);
+  color: #fff;
+}
+.pv-nav a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; }
+.pv-nav__brand { font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; }
+.pv-nav__cta { font-weight: 500; font-size: 0.98rem; text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+
+/* ---------------- 1. hero ---------------- */
+.pv-hero {
+  position: relative; overflow: hidden;
+  min-height: 100svh;
+  background: #000; color: #fff;
+  display: flex; align-items: flex-end;
+}
+/* the film is a square on pure black, so it can be any size and its
+   edges never show: it stands as tall as the hero, right of centre */
+.pv-hero__film {
+  position: absolute; top: 50%; right: -4vw;
+  height: min(112%, 62vw); width: auto; aspect-ratio: 1 / 1; max-width: none;
+  transform: translateY(-50%);
+  object-fit: contain;
+}
+.pv-hero__copy {
+  position: relative;
+  padding: 0 var(--gutter) clamp(40px, 7vh, 88px);
+  max-width: min(56rem, 66vw);
+}
+.pv-hero h1 { font-size: clamp(2.7rem, 1rem + 5.6vw, 6.2rem); }
+.pv-hero__copy p {
+  margin-top: 26px; max-width: 30ch;
+  font-size: clamp(1.08rem, 1rem + 0.5vw, 1.35rem); line-height: 1.45; color: var(--pv-on-dark-2);
+}
+.pv-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-top: 34px; min-height: 54px; padding: 0 32px;
+  border-radius: 999px; background: var(--bone); color: var(--pv-ink);
+  font-weight: 600; font-size: 1.02rem; letter-spacing: -0.01em;
+  transition: background 0.18s var(--ease);
+}
+@media (hover: hover) { .pv-btn:hover { background: #fff; } }
+
+/* ---------------- 2. signal ---------------- */
+.pv-signal { padding: clamp(88px, 13vw, 200px) 0 clamp(56px, 7vw, 104px); }
+.pv-signal__grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 112px); align-items: end; }
+.pv-signal h2 { max-width: 13ch; }
+.pv-signal__txt p { max-width: 36ch; font-size: clamp(1.05rem, 1rem + 0.3vw, 1.22rem); line-height: 1.55; color: var(--pv-ink-2); }
+.pv-signal__txt .pv-link { margin-top: 18px; }
+/* the line runs the full width of the page, edge to edge */
+.pv-trace { margin: clamp(56px, 8vw, 120px) 0 0; }
+.pv-trace svg { display: block; width: 100%; height: clamp(110px, 15vw, 220px); overflow: visible; }
+.pv-trace path { fill: none; stroke: var(--pv-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.pv-trace figcaption { margin-top: 18px; font-size: 13.5px; color: var(--pv-ink-2); }
+
+/* ---------------- 3. app ---------------- */
+.pv-app { background: var(--deep); color: #fff; padding: clamp(80px, 11vw, 168px) 0; }
+.pv-app__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(36px, 6vw, 104px); align-items: center; }
+.pv-app h2 { max-width: 10ch; }
+.pv-app ul { list-style: none; margin: clamp(32px, 4vw, 56px) 0 0; padding: 0; max-width: 34ch; }
+.pv-app li { padding: 20px 0; border-top: 1px solid rgba(255, 255, 255, 0.16); font-size: 1.02rem; line-height: 1.5; color: var(--pv-on-dark-2); }
+.pv-app li b { display: block; margin-bottom: 4px; font-weight: 600; font-size: 1.12rem; letter-spacing: -0.015em; color: #fff; }
+.pv-app .pv-note { color: rgba(255, 255, 255, 0.62); }
+.pv-app__screens { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 1.4vw, 20px); }
+.pv-app__screens > * { display: block; width: 100%; height: auto; aspect-ratio: 746 / 932; object-fit: cover; border-radius: 20px; background: #000; }
+/* the second screen hangs lower, so the pair is not a row of two boxes */
+.pv-app__screens > :last-child { margin-top: 18%; }
+
+/* ---------------- 4. prototype ---------------- */
+.pv-proto { display: grid; grid-template-columns: 1fr 1fr; }
+.pv-proto__photo { display: block; width: 100%; height: 100%; min-height: min(100svh, 880px); max-height: 1000px; object-fit: cover; }
+.pv-proto__txt { align-self: center; padding: clamp(48px, 7vw, 120px) var(--gutter); max-width: 40rem; }
+.pv-kicker { font-size: 14px; font-weight: 500; color: var(--pv-ink-2); }
+.pv-proto h2 { margin-top: 14px; max-width: 11ch; font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.2rem); }
+.pv-proto__txt p + p, .pv-proto h2 + p { margin-top: 18px; }
+.pv-proto h2 + p { margin-top: 28px; }
+.pv-proto__txt > p:not(.pv-kicker) { max-width: 38ch; font-size: 1.08rem; line-height: 1.6; color: var(--pv-ink-2); }
+.pv-proto .pv-link { margin-top: 20px; }
+
+/* ---------------- 5. join ---------------- */
+.pv-join { background: #000; color: #fff; padding: clamp(88px, 12vw, 184px) 0; }
+.pv-join__grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 112px); align-items: end; }
+.pv-join h2 { max-width: 9ch; }
+.pv-join__lede { max-width: 34ch; font-size: clamp(1.05rem, 1rem + 0.3vw, 1.22rem); line-height: 1.55; color: var(--pv-on-dark-2); }
+.pv-join .pv-note { color: rgba(255, 255, 255, 0.66); }
+/* the shared form, redrawn for this page: neutral field, bone button */
+.pv-join .signup-wrap { margin-top: 28px; }
+.pv-join .signup input { border-color: rgba(255, 255, 255, 0.3); background: transparent; }
+.pv-join .signup input::placeholder { color: rgba(255, 255, 255, 0.5); }
+.pv-join .signup input:focus { border-color: #fff; }
+.pv-join .btn--led { background: var(--bone); color: var(--pv-ink); }
+@media (hover: hover) { .pv-join .btn--led:hover { background: #fff; } }
+
+/* ---------------- footer ---------------- */
+.pv-foot { background: #000; color: rgba(255, 255, 255, 0.66); border-top: 1px solid rgba(255, 255, 255, 0.14); padding: 28px 0 36px; font-size: 13.5px; line-height: 1.5; }
+.pv-foot__in { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 40px; }
+.pv-foot nav { display: flex; flex-wrap: wrap; gap: 0 24px; }
+.pv-foot nav a { display: inline-flex; align-items: center; min-height: 44px; color: #fff; }
+@media (hover: hover) { .pv-foot nav a:hover { text-decoration: underline; text-underline-offset: 4px; } }
+.pv-foot p { max-width: 58ch; }
+
+/* ---------------- tablets and phones ---------------- */
+@media (max-width: 900px) {
+  /* the ring takes the top of the screen and the words sit under it */
+  .pv-hero { flex-direction: column; justify-content: flex-end; }
+  .pv-hero__film {
+    top: 56px; right: auto; left: 50%;
+    width: min(118vw, 62svh); height: auto;
+    transform: translateX(-50%);
+  }
+  .pv-hero__copy { max-width: none; padding-bottom: clamp(28px, 5vh, 56px); }
+  .pv-btn { width: 100%; }
+
+  .pv-signal__grid, .pv-app__grid, .pv-join__grid { grid-template-columns: 1fr; align-items: start; }
+  .pv-app__screens { order: -1; }
+
+  .pv-proto { grid-template-columns: 1fr; }
+  .pv-proto__photo { min-height: 0; max-height: none; aspect-ratio: 4 / 5; }
+  .pv-proto__txt { max-width: none; }
+}
+@media (max-width: 760px) {
+  .pv-join .signup { flex-direction: column; }
+}
