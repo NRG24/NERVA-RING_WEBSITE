@@ -669,7 +669,7 @@ function FilmScroll({ labeled }: { labeled: boolean }) {
           </span>
         </div>
         {scrub && (
-          <div className="film__progress" aria-hidden="true">
+          <div className={`film__progress ${progress > 0.985 ? 'is-done' : ''}`} aria-hidden="true">
             <span style={{ transform: `scaleX(${progress})` }} />
           </div>
         )}
@@ -697,7 +697,7 @@ const DOES = [
     img: doesToday, w: 746, h: 932,
     alt: 'The NERVA app on a phone, the Today screen in its night theme, with demo data: back down in 9 minutes, a reserve of 39, today at 1.4 times the usual load, a week that has been running down, and two spikes in the day so far.',
     body: (
-      <> Measures how long your <b className="abbr">SNS</b> or <b className="abbr">PNS</b> is engaged so you keep a steady flow and avoid burnout.</>
+      <>Shows how long you have spent in fight-or-flight and how long at rest, so you keep a steady flow and avoid burnout.</>
     ),
   },
   {
@@ -713,7 +713,7 @@ const DOES = [
     channel: 'pulse',
     img: doesRing, w: 857, h: 1071,
     alt: 'The NERVA Ring in polished silver, its clear inner band showing the flex PCB and the optical sensor.',
-    body: <>All of the things you would expect in a premium wearable.</>,
+    body: <>The everyday numbers, kept next to your stress so you can see how one moves the other.</>,
   },
 ] as const
 
@@ -721,7 +721,7 @@ const NAV = [
   { href: '#does', label: 'What it does' },
   { href: '#signals', label: 'Signals' },
   { href: '#inside', label: 'Inside' },
-  { href: '#build', label: 'Progress' },
+  { href: '#build', label: 'Prototype' },
   { href: '#finish', label: 'Finishes' },
 ]
 
@@ -732,32 +732,34 @@ const FINISHES = [
   { id: 'pink', label: 'Pink', img: ringPink, swatch: 'linear-gradient(140deg,#f4c9d6,#d98fa6 72%)' },
 ] as const
 
-/* the sensing stack, read like a bill of materials: the part number owns
-   the left column, because it is the one thing here nobody could invent */
+/* The sensing stack, shown where the labelled film is not (phones, touch,
+   reduced motion). The line under each heading leads with what the part
+   does, in the words the film's callouts use, and then names the part, so
+   both layouts tell the same story at the same level. */
 const SPECS = [
   {
     title: 'Optical sensing',
-    part: 'MAXM86161',
+    part: 'Heart rate and blood oxygen · MAXM86161',
     body: 'Pulse and SpO₂ read straight from the finger, run in a custom low-power polling mode rather than stock continuous mode to stretch the battery dramatically further.',
   },
   {
     title: 'Electrodermal front end',
-    part: '2× Au electrodes',
+    part: 'Stress · two gold electrodes',
     body: 'A custom transimpedance-amplifier circuit tuned for the low-current, low-noise range of skin conductance, read through two dry gold-plated electrodes built into the flex PCB.',
   },
   {
     title: 'Radio',
-    part: 'ANNA-B402 - BLE 5',
+    part: 'Brain and connection · ANNA-B402, Bluetooth 5',
     body: 'An internal antenna paired with advanced geometry and layout for optimal Bluetooth connectivity.',
   },
   {
     title: 'Power',
-    part: 'BQ25120A - 22 mAh',
+    part: 'Battery and charging · BQ25120A, 22 mAh',
     body: 'One PMIC handles charging, monitoring, and safety. Efficient power-rail management and a low-voltage threshold target about a month of standby on a 22 mAh cell.',
   },
   {
     title: 'Sealed build',
-    part: 'Resin-potted',
+    part: 'Waterproofing · resin-potted',
     body: 'The flex PCB wraps the inner circumference and is fully potted in RF-tuned resin. Charges on the provided charging case.',
   },
 ] as const
@@ -869,7 +871,7 @@ function App() {
      top of the thing it points at. */
   useEffect(() => {
     const hero = document.querySelector('.hero')
-    const ends = [document.getElementById('follow'), document.querySelector('.colophon')]
+    const ends = [document.getElementById('follow'), document.querySelector('.colophon'), document.querySelector('.config__cta')]
     if (!hero || ends.some((el) => !el)) return
     let pastHero = false
     const atEnd = new Set<Element>()
@@ -1133,7 +1135,7 @@ function App() {
 
             <Reveal className="config__panel" delay={90}>
               <p className="config__name">NERVA Ring</p>
-              <h2 className="config__title">Ceramic in Four Finishes</h2>
+              <h2 className="config__title">Ceramic in four finishes</h2>
 
               <div className="config__opt">
                 <p className="config__label">Finish. <span>{active.label}</span></p>
@@ -1275,10 +1277,10 @@ function App() {
                   <a key={l.href} href={l.href}>{l.label}</a>
                 ))}
                 <a href="#faq">Questions</a>
-                <a href="#follow">Updates</a>
+                <a href="#follow">Get updates</a>
                 <a href="/science">Science</a>
                 <a href="/updates">Build log</a>
-                <a href="/prototype">Prototype</a>
+                <a href="/prototype">Prototype photos</a>
                 <a href="/press">Press</a>
                 <a href="/privacy">Privacy</a>
               </nav>

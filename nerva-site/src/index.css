@@ -542,13 +542,6 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.4rem); line-height: 1.2;
 }
 .card__txt p { margin: 10px 0 0; color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.6; }
-.does .abbr { color: #fff; }
-/* the two abbreviations are the only data labels in this section, so they
-   take the mono the rest of the page reserves for readings */
-.abbr {
-  font-family: var(--font-mono); font-weight: 600;
-  font-size: 0.86em; letter-spacing: 0.01em; color: var(--ink);
-}
 
 /* ------------------------------------------------------------
    THE READOUT
@@ -736,7 +729,13 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   background: linear-gradient(to bottom,
     #000 0, rgba(0, 0, 0, 0.84) 25%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.16) 75%, transparent 100%);
 }
-.film__progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.14); }
+.film__progress {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.14);
+  transition: opacity 0.3s var(--ease);
+}
+/* a finished bar is a green rule across the page, right on the seam with
+   the next section, so it goes once the film has played through */
+.film__progress.is-done { opacity: 0; }
 .film__progress span { display: block; height: 100%; width: 100%; background: var(--sensor); transform-origin: left center; }
 
 /* ============================================================
@@ -1177,6 +1176,10 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   /* one line on a phone: the name and the button */
   .launchbar__txt span { display: none; }
   .launchbar .btn { --pad-y: 10px; --pad-x: 18px; font-size: 14.5px; }
+  /* With the sticky header this bar is the second strip off a small
+     screen, so it is as short as a 44px button allows, and it clears the
+     home indicator instead of sitting under it. */
+  .launchbar__inner { padding-top: 6px; padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ============================================================
@@ -1406,6 +1409,16 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   }
   [data-palette] .hero__copy { margin-top: 0; padding-top: 12px; }
 }
+/* On a phone the rings at their desktop steps (1.25, 1.45 and 1.65 of the
+   box) came out 441px and 502px wide on a 390px screen: the two outer ones
+   ran off both sides, so the hero showed a flat-sided olive band instead
+   of rings. Stepped at 0.13 of the box they all fit inside the screen
+   (the outer one is 98vw) and still read as three rings round the disc. */
+@media (max-width: 620px) {
+  [data-palette] .hero__ripples i:nth-child(1) { width: calc(var(--rb) * 1.26); }
+  [data-palette] .hero__ripples i:nth-child(2) { width: calc(var(--rb) * 1.13); }
+  [data-palette] .hero__ripples i:nth-child(3) { width: calc(var(--rb) * 1); }
+}
 /* Landscape phones are wide and short: the stacked layout above gave the
    whole first screen to the ring's square and left the headline below
    the fold. They take the wide-screen arrangement instead, words on the
@@ -1491,7 +1504,14 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
    sage and 10% of the almond mixed in. More sage than that and it turns
    grey-green. */
 [data-palette='almond'] { --almond-blue: #dce1de; }
-[data-palette='almond'] .does { --sheet: #cdc6a5; --does-end: var(--almond-blue); }
+/* Since 9 Nov 2026 Signals is back on the almond ground: with the blue the
+   page changed colour at every section (almond, sage, blue, black, almond,
+   sage, almond, slate), and the blue was the one tint that belonged to no
+   other part of the site. Now sage marks What it does and Finishes, and
+   everything else light is almond. To put the blue back, set --signals-tint
+   to var(--almond-blue). */
+[data-palette='almond'] { --signals-tint: var(--pal-bg); }
+[data-palette='almond'] .does { --sheet: #cdc6a5; --does-end: var(--signals-tint); }
 /* A short fade from Signals into the black of the exploded-view film, so
    the page does not cut from pale blue to black. Eased over four stops
    (a straight ramp bands), in extra padding so no text sits in it. */
@@ -1508,17 +1528,16 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   padding-bottom: calc(clamp(64px, 7vw, 108px) + var(--fade-black));
 }
 /* after the rule above, which it has to beat at equal specificity */
-[data-palette='almond'] #signals { --signals-bg: var(--almond-blue); }
+[data-palette='almond'] #signals { --signals-bg: var(--signals-tint); }
 /* the readout's backing panel follows its section: a lighter blue, not the
    sand it had on the sage */
-[data-palette='almond'] #signals .stage { background: color-mix(in srgb, #fff 50%, var(--almond-blue)); }
+[data-palette='almond'] #signals .stage { background: color-mix(in srgb, #fff 50%, var(--signals-tint)); }
 [data-palette] .does .display--light { color: var(--pal-ink); }
 [data-palette] .does .head--light .head__sub { color: var(--ink-2); }
 [data-palette] .does__trace-ink { stroke: var(--pal-accent); filter: none; }
 [data-palette] .card__in { background: var(--paper); border-color: var(--line); }
 [data-palette] .card__txt h3 { color: var(--pal-ink); }
 [data-palette] .card__txt p { color: var(--ink-2); }
-[data-palette] .does .abbr { color: var(--pal-ink); }
 
 /* ---- the deep bands ---- */
 /* Inside the band comes straight after the exploded-view film, which ends

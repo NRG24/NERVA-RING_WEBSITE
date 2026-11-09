@@ -383,6 +383,40 @@ threshold over the whole frame caught reflections and put it 3% right). The whit
 - **Perks** (main page band and /waitlist): plain lines, no markers. The
   short stroke that keyed each line read as an em dash.
 
+## 9 Nov 2026: review pass (UI)
+Ryan asked for a review of the whole site and then for all the UI points to
+be done. Where this section disagrees with an older note above, this wins.
+
+- **Signals is on the almond ground**, not the blue. The page changed colour
+  at every section and the blue belonged to nothing else. Sage now marks What
+  it does and Finishes; every other light section is almond. One token puts
+  the blue back: `--signals-tint: var(--almond-blue)` in `index.css`. Both
+  seams round the exploded film are now the same almond-to-black fade.
+- **Hero rings on phones** step at 0.13 of the box (1.0, 1.13, 1.26) under
+  620px. At the desktop steps the outer two were wider than the screen and
+  showed as a flat-sided band. Desktop rings and disc are untouched (Ryan
+  tuned those on 9 Nov).
+- **The film's green progress bar fades out once the film has played**
+  (`.film__progress.is-done`). Left full, it sat as a green rule on the seam
+  with the prototype section.
+- **Launch bar**: shorter on phones (6px padding, clears the home indicator)
+  and it also steps aside while the Finishes button is on screen, which is
+  the same link.
+- **Labels**: the nav's `#build` link is "Prototype" (was "Progress"); in the
+  main footer `#follow` is "Get updates" and `/prototype` is "Prototype
+  photos", so no two links share a name.
+- **Copy**: the first card says "fight-or-flight" and "at rest" instead of
+  SNS / PNS (the `.abbr` mono style is gone with them); the third card's
+  body no longer says "everything you would expect in a premium wearable".
+  "Ceramic in four finishes" is sentence case like every other head.
+- **Phone "Inside" list**: the line under each heading leads with what the
+  part does, in the film callouts' words, then the part number, so phone
+  and desktop tell the same story.
+- **/buy is on the almond scheme** (`data-palette="almond"` in `buy.html`).
+- **Open question for Ryan**: the third card promises steps and calories,
+  and `nerva-ring-overview.md` lists no accelerometer. Either the part list
+  or the card needs to change.
+
 ## Earlier versions of the site
 Every earlier state is a commit in `main`'s history, so none of it is lost.
 To look at one, `git checkout <commit>` then `npm run build`; to put one back
