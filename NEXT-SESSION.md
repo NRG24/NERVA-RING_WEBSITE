@@ -1,6 +1,6 @@
 # NERVA Website: Session Handoff
 
-_Last updated: 2026-11-08. Read this, then `CLAUDEwebdesign copy.md` (design law)
+_Last updated: 2026-11-13. Read this, then `CLAUDEwebdesign copy.md` (design law)
 and `nerva-ring-overview.md` (product facts)._
 
 ## What this is
@@ -61,24 +61,34 @@ is what fixed it. Build toward those screenshots, not away from them.
 Sticky nav (What it does / Signals / Inside / Finishes) + hamburger
 under 1080px. Every light section opens with a **centered** `.head`.
 
-1. **Hero.** `nerva-levitate.mp4`: the ring rises out of the dark and settles,
-   played **once**, holding its last frame (no loop). It runs at the render's
-   own speed: 4.08s, 1080x1080, 24fps, re-encoded only for size (crf 22,
-   faststart, 777KB). A 2x slowdown went live briefly and Ryan asked for the
-   default speed back; interpolating it smeared the rim and blending ghosted
-   it, so slowing it cleanly needs a slower render, not ffmpeg. The still
-   (`nerva-levitate-still.webp`) is that last frame and shows under reduced
-   motion (film never fetched), refused autoplay, or a load error. The film is
-   square on pure black, standing as tall as the hero against the right edge;
-   on phones it runs across the top with its bottom edge feathered, because
-   the film opens with the ring rising in from below.
-   **After it lands** (`onEnded`, or at once on the still) the hero gets
-   `.is-resting`: the stage hovers a few pixels on a 7s cycle, and
-   `.hero__pulse` glows off the green LED at 72 bpm (heartbeat-shaped
-   keyframes, matching the readout's 72 bpm). The glow is pinned at
-   41.9% / 37% of the stage, where the light module sits in the last frame;
-   **re-measure it if the film changes.** Paused off screen; a steady faint
-   glow and no hover under reduced motion.
+1. **Hero (rebuilt 13 Nov 2026 after makoma.io, Ryan's reference).** A
+   full-screen film behind everything, dark in every colour scheme: the
+   headline centred at the top (no eyebrow above it: Ryan removed it) ("nervous system." in cream
+   on its own line, upright: Ryan dropped the italic as AI-looking), then all the free height, then the buttons at
+   the foot: "Get launch updates" full width, and "See what's inside" /
+   "See the prototype" splitting a row. A thin scroll cue under them and a
+   "Rendered film" label bottom right. The lede is gone. Colours in `.hero`
+   are literals (the palette tokens are light-ground colours); `--film-ink`
+   is the almond ground.
+   **Nav over the film:** the hero slides up under the sticky nav, and
+   `App.tsx` keeps `.nav--over` on the header until the film has scrolled
+   out from under it: transparent, white wordmark only, links / button /
+   toggle `visibility: hidden`. Rules at the end of `index.css`.
+   **Hero film:** Ryan's `04_NERVA_combined_edit_1920x1080.mp4` (18.75s,
+   31MB, not in the repo), cut twice into `public/`: `nerva-film-wide.mp4`
+   (1600x900, 4.7MB) and `nerva-film-tall.mp4` (centre 3:4, 720x960, 2.3MB,
+   used when the viewport is portrait). No sound, crf 27, faststart. Both
+   loop, with the last second cross-faded into the first inside the file:
+   `split`, `trim=1:18.75` as A, `trim=0:1` as B, then
+   `xfade=fade:duration=1:offset=16.75`. `-poster.webp` is the loop's first
+   frame; `-still.webp` (16s in, the lit ring) shows under reduced motion
+   (film never fetched), refused autoplay or a load error. The film pauses
+   off screen. The scrim (`.hero__scrim`) is what keeps the type legible
+   over the film's pale glow: re-check it if the film changes.
+   The old levitate films, the sage disc, the pulse rings and the LED glow
+   are gone from the code; the `nerva-levitate*` files are still in
+   `public/` but nothing references them. The hero notes further down
+   (light-scheme hero, disc, ripples, ceramic render) are **superseded**.
 2. **`#does`.** Charcoal (`--sheet: #1c1c1f`) with **no hard edge on either
    side**: the hero's black eases into it over `--fade-in`, and it eases into
    the light grey of `#signals` over `--fade-out`, in empty padding under the

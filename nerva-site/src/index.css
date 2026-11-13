@@ -174,7 +174,6 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   text-underline-offset: 5px;
   transition: text-decoration-color 0.18s var(--ease);
 }
-.textlink--onfilm { color: #fff; text-decoration-color: rgba(255, 255, 255, 0.4); }
 
 /* the lift belongs to a pointer. On a touchscreen there is nothing to
    un-hover, so a tapped button would keep the raised state. */
@@ -182,7 +181,6 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   .btn--ghost:hover { border-color: var(--ink); background: var(--paper); }
   .btn--accent:hover { background: var(--accent-dk); }
   .btn--led:hover { background: #5be07c; }
-  .textlink--onfilm:hover { text-decoration-color: #fff; }
 }
 
 :focus-visible { outline: 2.5px solid var(--green-ink); outline-offset: 3px; border-radius: 6px; }
@@ -268,144 +266,121 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 /* ============================================================
    HERO
 
-   The ring rises out of the dark once and rests on the film's last
-   frame. The still is that same frame, for anyone who never sees the
-   film, so every visitor ends on the same picture.
+   Laid out after makoma.io's landing (Ryan's reference, 13 Nov 2026):
+   the film fills the whole first screen, the headline sits centred at
+   the top, the calls to action are stacked at the foot (one
+   wide, then two splitting a row), and the nav shows only the wordmark
+   until the film has scrolled away (.nav--over, at the end of this file).
+
+   The film is dark in every colour scheme, so every colour here is a
+   literal: the palette tokens are light-ground colours.
    ============================================================ */
 .hero {
-  position: relative;
-  /* true black: the film is rendered on pure black, so anything lighter
-     here would outline its square as a box inside the hero */
-  background: #000;
-  min-height: 92vh;
-  display: flex; flex-direction: column;
+  --film-ink: #f0dcca;   /* the almond ground, used here as the light on the film */
+  position: relative; isolation: isolate;
+  /* slides up under the sticky nav (its height plus its hairline) */
+  margin-top: calc(-1 * (var(--nav-h) + 1px));
+  min-height: 100vh; min-height: 100svh;
+  display: flex;
   overflow: hidden;
+  background: #050506;
+  color: #fff;
 }
 .hero__film {
-  position: absolute; inset: 0;
+  position: absolute; inset: 0; z-index: -2;
   width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block; pointer-events: none;
 }
-/* The film is square and shot on pure black, the same black as the hero,
-   so its box has no edge to hide. On wide screens it stands as tall as the
-   hero against the right edge, and the ring comes to rest in its upper
-   right, clear of the headline. On a phone it runs across the top. */
-.hero__stage {
-  position: absolute; top: 0; right: 0; bottom: 0;
-  aspect-ratio: 1 / 1;
-  height: 100%;
-  max-width: 100%;
+/* Dark at both ends, where the type sits, and nearly clear across the
+   middle, where the ring is. The film has a pale glow and a tan wall in
+   it; the headline has to hold over both. */
+.hero__scrim {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(5, 5, 6, 0.8) 0%, rgba(5, 5, 6, 0.56) 26%,
+    rgba(5, 5, 6, 0.14) 46%, rgba(5, 5, 6, 0.2) 58%,
+    rgba(5, 5, 6, 0.7) 78%, rgba(5, 5, 6, 0.94) 100%);
 }
-.hero__film { object-fit: contain; object-position: right center; display: block; }
-
-/* ---- after it lands ----
-   The stage is square and the film fills it exactly, so a position in
-   the stage is a position in the frame. The light module sits at about
-   (452, 400) of the 1080px last frame. */
-.hero__pulse {
-  position: absolute; left: 41.9%; top: 37%;
-  width: 30%; aspect-ratio: 1 / 1;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 2.6s ease;
-}
-.hero__pulse > span {
-  position: absolute; inset: 0; border-radius: 50%;
-  /* a tight hot core on the LED window, falling off into a wide wash */
-  background:
-    radial-gradient(circle, rgba(120, 255, 150, 0.55) 0%, rgba(48, 209, 88, 0.32) 7%, transparent 18%),
-    radial-gradient(circle, rgba(48, 209, 88, 0.3) 0%, rgba(48, 209, 88, 0.11) 36%, transparent 68%);
-  mix-blend-mode: screen;
-}
-.is-resting .hero__pulse { opacity: 1; }
-
-/* One beat at 72 bpm (0.833s): a rise, a fall, the small second bump of
-   the dicrotic notch, then rest. The shape of the PPG trace the readout
-   draws, not a sine. Kept gentle at Ryan's ask (3 Nov 2026: the hero's
-   movements read as too quick and stark): a small swing in brightness
-   and almost no change in size. */
-.is-resting .hero__pulse > span { animation: heartbeat 0.833s infinite; }
-@keyframes heartbeat {
-  0%   { opacity: 0.5;  transform: scale(0.99); }
-  16%  { opacity: 0.82; transform: scale(1.012); }
-  32%  { opacity: 0.6;  transform: scale(1); }
-  42%  { opacity: 0.68; transform: scale(1.004); }
-  64%  { opacity: 0.52; transform: scale(0.992); }
-  100% { opacity: 0.5;  transform: scale(0.99); }
-}
-/* and the ring keeps hovering, a few pixels, slowly */
-.hero.is-resting .hero__stage { animation: hover 10s ease-in-out infinite; }
-@keyframes hover {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-0.8%) rotate(-0.25deg); }
-}
-.hero.is-offscreen .hero__stage,
-.hero.is-offscreen .hero__pulse > span { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) {
-  .hero.is-resting .hero__stage { animation: none; }
-  .is-resting .hero__pulse > span { animation: none; opacity: 0.55; }
-}
-.hero__grade {
-  position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(to bottom,
-    rgba(0, 0, 0, 0.42) 0%, transparent 30% 52%, rgba(0, 0, 0, 0.78) 88%);
-}
-
-.hero__copy {
+.hero__inner {
   position: relative;
-  max-width: var(--wrap); width: 100%;
-  margin: auto auto 0;
-  padding: 56px 32px clamp(48px, 8vh, 88px);
+  display: flex; flex-direction: column;
+  width: 100%; max-width: 940px; margin: 0 auto;
+  padding: calc(var(--nav-h) + clamp(28px, 6.5vh, 60px)) 24px clamp(14px, 2.6vh, 24px);
+  text-align: center;
 }
+/* all the free height goes between the headline and the buttons, so the
+   ring has the middle of the screen to itself */
+.hero__gap { flex: 1 1 0; min-height: 40px; }
 .hero__title {
-  margin: 0; max-width: 12ch;
-  font-weight: 600;
-  font-size: clamp(3rem, 1.5rem + 6vw, 6.6rem);
-  line-height: 0.98;
-  letter-spacing: -0.045em;
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 1.1rem + 5.6vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
   color: #fff;
   text-wrap: balance;
+  text-shadow: 0 2px 26px rgba(5, 5, 6, 0.55);
 }
-.hero__lede {
-  margin: 24px 0 0; max-width: 40ch;
-  font-size: clamp(1.08rem, 1rem + 0.45vw, 1.3rem);
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.8);
+/* the second phrase takes a line of its own at every width, as the
+   reference's does. Upright, not italic: Ryan found the italic read as
+   AI-made (13 Nov 2026). */
+.hero__title em { display: block; font-style: normal; color: var(--film-ink); white-space: nowrap; }
+
+.hero__acts {
+  display: grid; gap: 10px;
+  width: 100%; max-width: 440px; margin: 0 auto;
 }
-.hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin: 34px 0 0; }
-/* the way to the prototype photos, under the two calls to action. The link
-   keeps a 44px tap height. */
-.hero__news { margin: 12px 0 0; font-size: 15px; line-height: 1.4; color: rgba(255, 255, 255, 0.8); }
-.hero__news a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
-.hero__news b { font-weight: 700; color: #fff; }
-.hero__news span {
-  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
-  text-decoration-color: rgba(255, 255, 255, 0.35);
-  transition: text-decoration-color 0.18s var(--ease);
+.hero__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hero__acts .btn { min-width: 0; font-weight: 600; letter-spacing: 0; }
+.hero__cta {
+  --pad-y: 17px; font-size: 15.5px;
+  background: var(--film-ink); color: #17130f;
 }
-@media (hover: hover) { .hero__news a:hover span { text-decoration-color: currentColor; } }
-/* the prototype link as a pill, so it reads as a second way in rather
-   than a footnote: a filled arrow mark, then the line */
-.hero__news { margin-top: 26px; }
-.hero__proto {
-  display: inline-flex; align-items: center; gap: 12px;
-  min-height: 52px; padding: 6px 20px 6px 6px;
-  border-radius: 999px; text-decoration: none;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
+.hero__alt {
+  --pad-y: 15px; --pad-x: 8px; font-size: 14.5px;
+  border-color: rgba(240, 220, 202, 0.38); color: var(--film-ink);
+  text-shadow: 0 1px 12px rgba(5, 5, 6, 0.6);
 }
-.hero__news .hero__proto span { text-decoration: none; }
-.hero__proto-play {
-  flex: none; display: grid; place-items: center;
-  width: 40px; height: 40px; border-radius: 50%;
-  background: var(--sensor); color: #04231a;
-}
-.hero__proto-txt { line-height: 1.35; }
 @media (hover: hover) {
-  .hero__proto:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.32); }
+  .hero__cta:hover { background: #fff; }
+  .hero__alt:hover { border-color: rgba(240, 220, 202, 0.8); background: rgba(240, 220, 202, 0.07); color: #fff; }
 }
-.hero__title em { font-style: inherit; }
+/* says there is more below without being a fourth button */
+.hero__cue {
+  display: block; width: 1px; height: 26px;
+  margin: clamp(10px, 1.8vh, 16px) auto 0;
+  background: linear-gradient(rgba(240, 220, 202, 0), rgba(240, 220, 202, 0.55));
+  transform-origin: top;
+  animation: hero-cue 2.4s var(--ease) infinite;
+}
+@keyframes hero-cue {
+  0% { transform: scaleY(0.2); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .hero__cue { animation: none; } }
+/* the film is a render, not footage of the prototype, and says so */
+.hero__label {
+  position: absolute; right: 16px; bottom: 12px; margin: 0; pointer-events: none;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(240, 220, 202, 0.5);
+}
+/* short and wide (a phone on its side): the copy closes up into the
+   middle of the gradient, so the middle gets darker */
+@media (orientation: landscape) and (max-height: 560px) {
+  .hero__scrim {
+    background: linear-gradient(180deg,
+      rgba(5, 5, 6, 0.82) 0%, rgba(5, 5, 6, 0.6) 34%, rgba(5, 5, 6, 0.6) 62%, rgba(5, 5, 6, 0.92) 100%);
+  }
+  .hero__inner { padding-top: calc(var(--nav-h) + 8px); }
+  .hero__title { font-size: clamp(2rem, 5.4vw, 2.9rem); }
+  .hero__gap { min-height: 18px; }
+  .hero__acts { max-width: 560px; grid-template-columns: 1fr 1.2fr; }
+  .hero__cta { --pad-y: 13px; }
+  .hero__alt { --pad-y: 12px; }
+  .hero__label { display: none; }
+}
 
 /* ============================================================
    SECTIONS
@@ -1132,23 +1107,12 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 @media (max-width: 620px) {
   body { font-size: 16px; }
   .shopfoot__inner { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .wrap, .nav__inner, .hero__copy, .launchbar__inner { padding-left: 20px; padding-right: 20px; }
+  .wrap, .nav__inner, .launchbar__inner { padding-left: 20px; padding-right: 20px; }
 
   /* the wordmark, its stage, a CTA and the toggle do not fit one phone
      line. The menu this toggle opens carries the same CTA. */
   .nav__right .btn--accent { display: none; }
 
-  .hero { min-height: 92vh; }
-  /* on a phone the square ends mid-hero, and the film opens with the ring
-     rising in from below its bottom edge: feather that edge so the ring
-     comes up out of the dark instead of from behind a hard line */
-  .hero__stage {
-    bottom: auto; width: 100%; height: auto;
-    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
-    mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
-  }
-  .hero__title { font-size: clamp(2.7rem, 12vw, 3.6rem); }
-  .hero__cta .btn { flex: 1; }
 
   :root { --radius-lg: 22px; }
 
@@ -1230,241 +1194,8 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 
 [data-palette] .nav { background: color-mix(in srgb, var(--pal-bg) 90%, transparent); }
 
-/* ---- hero: the ring on the palette ground ---- */
-[data-palette] .hero { background: var(--pal-bg); }
-[data-palette] .hero__grade { display: none; }
-/* The light palettes play the ceramic render, whose background is
-   transparent (VP9 alpha WebM, or an animated WebP on WebKit), so the ring
-   sits straight on the palette colour with no blending. Its green LED is
-   at 42% / 36.2% of the frame, measured off a close-up of the LED itself
-   (a colour threshold over the whole frame also caught green reflections
-   and put it 3% right). The glow is tighter than on black: a wide wash
-   reads as light on black but as a stain on a light ground. */
-[data-palette] .hero__pulse { left: 42%; top: 36.2%; width: 24%; }
-
-/* The disc behind the ring. The backdrop box copies the stage's geometry
-   (same box, same translate and scale at every breakpoint), so a position
-   in it is a position in the film frame: the ring rests centred at about
-   47% / 50% of the frame and spans 55% of it. The disc is 70% wide, set a
-   touch right of the ring's centre (49%) so its left edge clears the
-   headline's "system." at every width (19px at 1440, the tight one). It is
-   the scheme's sage and does not hover. Since 9 Nov 2026 its edge, like
-   each ring's, is blended rather than cut (Ryan asked for the circles to
-   be more blended): see .hero__ripples below. */
-.hero__backdrop { display: none; }
-[data-palette] .hero__backdrop {
-  display: block;
-  position: absolute; top: 0; right: 0; bottom: 0;
-  aspect-ratio: 1 / 1; height: 100%; max-width: 100%;
-  pointer-events: none;
-}
-[data-palette] .hero__backdrop > span {
-  position: absolute; left: 49%; top: 49.5%;
-  width: 70%; aspect-ratio: 1 / 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  --c: var(--pal-bg2); --s: 79.3%;
-  opacity: 0; scale: 0.97;
-  transition: opacity 2s ease, scale 2.6s var(--ease-out);
-}
-/* phones: the stage runs full width across the top, so the backdrop does */
-@media (max-width: 620px) {
-  [data-palette] .hero__backdrop { bottom: auto; width: 100%; height: auto; }
-}
-/* it rises with the page rather than being there before the ring is */
-[data-palette] .hero.is-ready .hero__backdrop > span { opacity: 1; scale: 1; }
-@media (prefers-reduced-motion: reduce) {
-  [data-palette] .hero__backdrop > span { transition: none; opacity: 1; scale: 1; }
-}
-/* ---- ripples: three rings around the disc (direction D, 3 Nov 2026) ----
-   Their own hero-sized layer under the disc, so they can be centred on the
-   ring with the same geometry as the backdrop box and still be clipped to
-   the hero. --cx / --cy are the ring's resting centre and --rb the film
-   box's width; each breakpoint below sets them to match the backdrop.
-   Colours step from the disc's sage toward the ground. The mask fades
-   them out before the hero's bottom edge, so no ring is cut flat where
-   the hero eases into the next section.
-
-   Each circle, the disc included, holds its colour out to --s of its
-   radius and then fades to clear at its edge, eased over four stops
-   (smoothstep, like the section fades: a straight ramp prints a ridge at
-   each end). The fade is 0.07 of the film box wide on the two inner rings,
-   0.09 on the disc and 0.14 on the outer ring, where it meets the ground:
-   wide enough to blend each band into the next, narrow enough that they
-   still read as rings. --s is (radius - fade) / radius. */
-.hero__ripples { display: none; }
-[data-palette] .hero__ripples {
-  display: block;
-  position: absolute; inset: 0;
-  overflow: hidden; pointer-events: none;
-  --cx: 69%; --cy: 50%; --rb: min(78vw, 460px);
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 160px), transparent);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 160px), transparent);
-}
-[data-palette] .hero__ripples i, [data-palette] .hero__backdrop > span {
-  background: radial-gradient(closest-side,
-    var(--c) var(--s),
-    color-mix(in srgb, var(--c) 84%, transparent) calc(var(--s) + (100% - var(--s)) * 0.25),
-    color-mix(in srgb, var(--c) 50%, transparent) calc(var(--s) + (100% - var(--s)) * 0.5),
-    color-mix(in srgb, var(--c) 16%, transparent) calc(var(--s) + (100% - var(--s)) * 0.75),
-    transparent 100%);
-}
-[data-palette] .hero__ripples i {
-  position: absolute; left: var(--cx); top: var(--cy);
-  aspect-ratio: 1 / 1; border-radius: 50%;
-  translate: -50% -50%;
-  opacity: 0;
-  transition: opacity 2.6s ease 0.4s;
-}
-[data-palette] .hero__ripples i:nth-child(1) { width: calc(var(--rb) * 1.65); --c: color-mix(in srgb, var(--pal-bg2) 25%, var(--pal-bg)); --s: 83%; }
-[data-palette] .hero__ripples i:nth-child(2) { width: calc(var(--rb) * 1.45); --c: color-mix(in srgb, var(--pal-bg2) 50%, var(--pal-bg)); --s: 90.3%; }
-[data-palette] .hero__ripples i:nth-child(3) { width: calc(var(--rb) * 1.25); --c: color-mix(in srgb, var(--pal-bg2) 75%, var(--pal-bg)); --s: 88.8%; }
-[data-palette] .hero.is-ready .hero__ripples i { opacity: 1; }
-/* They breathe rather than beat: one slow swell every 10 s (a calm
-   breathing pace, in 4 s, out 6 s), each ring a beat behind the one
-   inside it so the swell travels outward. The 72 bpm beat lived here
-   first and read as too quick and stark (Ryan, 3 Nov 2026); the LED
-   glow carries the heartbeat on its own. */
-[data-palette] .hero.is-resting .hero__ripples i { animation: ripple 10s ease-in-out infinite; }
-[data-palette] .hero.is-resting .hero__ripples i:nth-child(2) { animation-delay: 0.6s; }
-[data-palette] .hero.is-resting .hero__ripples i:nth-child(1) { animation-delay: 1.2s; }
-@keyframes ripple {
-  0%, 100% { scale: 1; }
-  40%      { scale: 1.016; }
-}
-[data-palette] .hero.is-offscreen .hero__ripples i { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) {
-  [data-palette] .hero__ripples i { transition: none; opacity: 1; }
-  [data-palette] .hero.is-resting .hero__ripples i { animation: none; }
-}
-
-/* ---- the light-scheme hero, laid out after Ryan's reference ----
-   The headline in the site's own sans with its last phrase bold, the
-   lede, a dark pill and an underlined link, all centred in the hero. On wide screens the ring sits right of the words
-   inside the sage disc, sized so ring and disc keep the reference's
-   proportions (ring about 0.63 of the disc). */
-[data-palette] .hero__title {
-  max-width: 12ch;
-  font-weight: 500;
-  /* a size down from the reference's: the bold last line is the widest,
-     and at this size it clears the disc from 1100 to 1920 wide */
-  font-size: clamp(2.9rem, 1.5rem + 3.3vw, 4.7rem);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-}
-/* the last phrase set bold, at Ryan's ask, and kept on one line */
-[data-palette] .hero__title em { font-style: normal; font-weight: 750; white-space: nowrap; }
-[data-palette] .hero__lede {
-  margin-top: 30px; max-width: 27em;
-  font-size: clamp(1.08rem, 1rem + 0.35vw, 1.28rem); line-height: 1.6;
-}
-[data-palette] .hero__cta { margin-top: 36px; }
-[data-palette] .hero__cta .btn--led { background: var(--pal-ink); }
-
-
-@media (min-width: 1081px) {
-  [data-palette] .hero {
-    --strip: 0px; /* the four-fact strip under the hero was removed 3 Nov 2026 */
-    /* the box the film frame is drawn in: the ring spans 55% of it */
-    --box: min(46vw, calc((100svh - var(--nav-h) - var(--strip)) * 1.02));
-    min-height: max(640px, calc(100svh - var(--nav-h)));
-  }
-  /* the words sit centred in the space above the strip */
-  [data-palette] .hero__copy { margin: auto; padding-top: 40px; padding-bottom: 40px; }
-  /* The film frame and the disc are placed directly: the ring rests at
-     47.3% / 49.5% of the frame, so these put its centre at 69% across and
-     halfway down the space above the strip. Not transform or translate:
-     the resting hover animates transform on the stage. */
-  [data-palette] .hero__stage, [data-palette] .hero__backdrop {
-    width: var(--box); height: var(--box); max-width: none; aspect-ratio: auto;
-    right: auto; bottom: auto;
-    left: calc(69% - var(--box) * 0.473);
-    top: calc((100% - var(--strip)) / 2 - var(--box) * 0.495);
-  }
-  [data-palette] .hero__backdrop > span { left: 47.3%; width: 87%; }
-  [data-palette] .hero__ripples { --cx: 69%; --cy: calc((100% - var(--strip)) / 2); --rb: var(--box); }
-}
-@media (max-width: 1080px) {
-  [data-palette] .hero__title { font-size: clamp(2.3rem, 10.6vw, 3.6rem); }
-  /* the ring and its disc take a square of their own at the top, and the
-     words start below it: layered, the headline sat up
-     under the ring */
-  [data-palette] .hero { padding-top: min(78vw, 460px); }
-  [data-palette] .hero__stage, [data-palette] .hero__backdrop {
-    top: 8px; bottom: auto; right: auto; left: 50%;
-    width: min(78vw, 460px); height: auto; aspect-ratio: 1 / 1; max-width: none;
-    translate: -50% 0;
-    -webkit-mask-image: none; mask-image: none;
-  }
-  [data-palette] .hero__backdrop > span { left: 47.3%; width: 87%; }
-  /* the box is min(78vw, 460px) wide, centred, 8px down; the ring rests
-     at 47.3% / 49.5% of it */
-  [data-palette] .hero__ripples {
-    --rb: min(78vw, 460px);
-    --cx: calc(50% - 0.027 * min(78vw, 460px));
-    --cy: calc(8px + 0.495 * min(78vw, 460px));
-  }
-  [data-palette] .hero__copy { margin-top: 0; padding-top: 12px; }
-}
-/* Landscape phones are wide and short: the stacked layout above gave the
-   whole first screen to the ring's square and left the headline below
-   the fold. They take the wide-screen arrangement instead, words on the
-   left and the ring on the right, placed with the same --box geometry.
-   So do landscape tablets from 900px (an iPad held sideways is about
-   1080x740 in Safari), where the stack showed the ring and the headline
-   and pushed the lede, the button and the prototype link off screen. */
-@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px),
-       (min-width: 900px) and (max-width: 1080px) and (orientation: landscape) {
-  [data-palette] .hero {
-    --box: min(44vw, calc((100svh - var(--nav-h)) * 1.02));
-    min-height: calc(100svh - var(--nav-h));
-    padding-top: 0;
-  }
-  [data-palette] .hero__copy { margin: auto; padding-top: 24px; padding-bottom: 24px; }
-  [data-palette] .hero__title { font-size: clamp(2rem, 5vw, 2.9rem); }
-  [data-palette] .hero__lede { margin-top: 18px; max-width: 22em; font-size: 1.02rem; }
-  [data-palette] .hero__cta { margin-top: 22px; }
-  [data-palette] .hero__stage, [data-palette] .hero__backdrop {
-    width: var(--box); height: var(--box); translate: none;
-    left: calc(74% - var(--box) * 0.473);
-    top: calc(50% - var(--box) * 0.495);
-  }
-  [data-palette] .hero__ripples { --cx: 74%; --cy: 50%; --rb: var(--box); }
-}
-/* A tablet has the height a phone lacks, so the words go back up toward
-   the desktop sizes. "nervous system." is about 6.8em wide: at these
-   sizes it ends 145px or more short of the disc from 900 to 1080 wide. */
-@media (min-width: 900px) and (max-width: 1080px) and (orientation: landscape) and (min-height: 561px) {
-  [data-palette] .hero__copy { padding-top: 40px; padding-bottom: 40px; }
-  [data-palette] .hero__title { font-size: clamp(2.6rem, 5.2vw, 3.4rem); }
-  [data-palette] .hero__lede { margin-top: 24px; max-width: 24em; font-size: 1.12rem; }
-  [data-palette] .hero__cta { margin-top: 30px; }
-}
-
-[data-palette] .hero__title { color: var(--pal-ink); }
-[data-palette] .hero__lede { color: var(--ink-2); }
 [data-palette] .btn--led { background: var(--pal-band); color: var(--pal-bg); }
 @media (hover: hover) { [data-palette] .btn--led:hover { background: var(--accent-dk); } }
-[data-palette] .textlink--onfilm { color: var(--pal-ink); text-decoration-color: color-mix(in srgb, var(--pal-ink) 40%, transparent); }
-@media (hover: hover) { [data-palette] .textlink--onfilm:hover { text-decoration-color: var(--pal-ink); } }
-[data-palette] .hero__news { color: var(--ink-2); }
-[data-palette] .hero__news b { color: var(--pal-ink); }
-[data-palette] .hero__news span { text-decoration-color: color-mix(in srgb, var(--pal-ink) 40%, transparent); }
-[data-palette] .hero__proto {
-  background: color-mix(in srgb, var(--pal-bg2) 55%, var(--pal-bg));
-  border-color: color-mix(in srgb, var(--pal-ink) 14%, transparent);
-  color: var(--pal-ink);
-}
-[data-palette] .hero__proto-play { background: var(--pal-band); color: var(--pal-bg); }
-@media (hover: hover) {
-  [data-palette] .hero__proto:hover {
-    background: var(--pal-bg2);
-    border-color: color-mix(in srgb, var(--pal-ink) 26%, transparent);
-  }
-}
-[data-palette] .hero :focus-visible { outline-color: var(--pal-band); box-shadow: none; }
-/* a screen-blended glow disappears on a light ground; lay it on instead */
-[data-palette] .hero__pulse > span { mix-blend-mode: normal; opacity: 0.8; }
 
 /* ---- what it does: the hero ground eases into the tint below ---- */
 [data-palette] .does {
@@ -1581,3 +1312,21 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   transition: transform 0.18s var(--ease);
 }
 .skip:focus-visible { transform: none; outline-offset: 2px; }
+
+/* ------------------------------------------------------------
+   The nav over the hero film (main page only; App.tsx sets .nav--over
+   until the film has scrolled out from under it). Just the wordmark, in
+   white, on nothing. The links, the button and the menu toggle are
+   hidden rather than faded so the keyboard skips them too; they are all
+   one scroll away, and the hero carries its own way to each.
+   ------------------------------------------------------------ */
+.nav { transition: background-color 0.2s linear, border-color 0.2s linear; }
+.nav .brand, .nav .brand__tag { transition: color 0.2s linear, border-color 0.2s linear; }
+.nav.nav--over, [data-palette] .nav.nav--over {
+  background: transparent; border-bottom-color: transparent;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.nav--over .brand { color: #fff; }
+.nav--over .brand__tag { color: rgba(255, 255, 255, 0.72); border-left-color: rgba(255, 255, 255, 0.3); }
+.nav--over .nav__links, .nav--over .nav__right, .nav--over .mobile-menu { visibility: hidden; }
+.nav--over :focus-visible { outline-color: #fff; }
