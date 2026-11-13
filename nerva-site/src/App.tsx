@@ -307,7 +307,6 @@ function Hero() {
         <img className="hero__film" src={HERO_STILL} alt="" />
       )}
       <div className="hero__scrim" aria-hidden="true" />
-      <p className="hero__label">Rendered film</p>
 
       <div className="hero__inner">
         <h1 className="hero__title" id="hero-title">

@@ -66,8 +66,8 @@ under 1080px. Every light section opens with a **centered** `.head`.
    headline centred at the top (no eyebrow above it: Ryan removed it) ("nervous system." in cream
    on its own line, upright: Ryan dropped the italic as AI-looking), then all the free height, then the buttons at
    the foot: "Get launch updates" full width, and "See what's inside" /
-   "See the prototype" splitting a row. A thin scroll cue under them and a
-   "Rendered film" label bottom right. The lede is gone. Colours in `.hero`
+   "See the prototype" splitting a row. A thin scroll cue under them. No mono
+   text in the hero: Ryan removed the eyebrow and the "Rendered film" label. The lede is gone. Colours in `.hero`
    are literals (the palette tokens are light-ground colours); `--film-ink`
    is the almond ground.
    **Nav over the film:** the hero slides up under the sticky nav, and
@@ -461,9 +461,10 @@ a re-encode waiting to happen.
   does not keep a stuck highlight.
 - **Shapes and type follow the references.** Pills for buttons, fields and
   swatches (`--radius-sm: 999px`); grey stages at `--radius-lg: 28px`. Hanken
-  Grotesk semibold (600) for heads, tight tracking; Plex Mono only for tick
-  labels and the SNS / PNS abbreviations (part numbers moved to the page's
-  face, in white, on 8 Nov 2026). An earlier pass tried square corners and a journal
+  Grotesk semibold (600) for heads, tight tracking. It is the only face:
+  Plex Mono came off the site on 13 Nov 2026 at Ryan's ask (tick labels,
+  the SNS / PNS abbreviations and the /science axis are in Hanken now;
+  part numbers moved on 8 Nov). Don't bring a mono back. An earlier pass tried square corners and a journal
   serif (Newsreader); Ryan read that as B2B. Do not bring either back.
 - **No stock icons.** The signal notes carry a swatch of their own trace as
   a legend key. (The feature cards used to carry a short coloured rule over
