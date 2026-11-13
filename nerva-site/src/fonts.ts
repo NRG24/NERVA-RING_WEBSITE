@@ -5,6 +5,8 @@
    Hanken      everything, heads set semibold and tight.
    Plex Mono   readings, units, and part numbers. */
 import '@fontsource-variable/hanken-grotesk/index.css'
+/* the italic is for one phrase: the second half of the hero headline */
+import '@fontsource-variable/hanken-grotesk/wght-italic.css'
 import '@fontsource/ibm-plex-mono/400.css'
 import '@fontsource/ibm-plex-mono/500.css'
 import '@fontsource/ibm-plex-mono/600.css'

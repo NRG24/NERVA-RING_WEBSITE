@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { lightHero } from './palette.ts'
 import { CONTACT_EMAIL, Signup } from './Signup.tsx'
 import { FAQ } from './faq.ts'
 import { SkipLink } from './Chrome.tsx'
@@ -239,173 +238,93 @@ function SignalInstrument() {
 }
 
 /* ---------- HERO ----------
-   The ring rises out of the dark and settles, once. No loop: the film ends
-   on its last frame and simply stays there, so the page opens on motion
-   and rests on the product. The still is that same last frame, so a
-   visitor who never sees the film (reduced motion, refused autoplay, a
-   failed load) lands on exactly the picture everyone else ends on.
+   Laid out after makoma.io's landing (Ryan's reference, 13 Nov 2026): the
+   film fills the first screen, the headline sits at the top and the three
+   ways on sit at the foot, so the ring has the middle to itself.
 
-   Played at the render's own speed (4s). A 2x slowdown was tried and
-   dropped: the ring turns too far per frame, so interpolated frames smeared
-   the rim and blended ones ghosted it.
+   The film is `04_NERVA_combined_edit`, re-encoded without sound in two
+   cuts: the 16:9 original for wide screens, and its centre 3:4 for
+   upright ones, where `cover` would otherwise throw away three quarters
+   of every frame after downloading it. Both loop, and the last second is
+   cross-faded into the first inside the file, so the seam never shows.
+   The poster is the loop's first frame, so the hand-off from poster to
+   film is invisible too. To re-cut it, see "Hero film" in NEXT-SESSION.md.
 
-   The animated WebP asks for fetchPriority="high"; the <video> does not,
-   because browsers only honour that hint on images, links, scripts and
-   iframes (React 19 also warned about the lowercase spread used before). */
-/* Two renders of the flight: the black glass ring on black for the dark
-   design, and the ceramic ring with a transparent background for the light
-   palettes, so it sits straight on whatever colour the page is. */
-const LIGHT = lightHero()
-const HERO_FILM = LIGHT ? '/nerva-levitate-ceramic.webm' : '/nerva-levitate.mp4'
-const HERO_POSTER = LIGHT ? undefined : '/nerva-levitate-poster.webp'
-const HERO_STILL = LIGHT ? '/nerva-levitate-ceramic-still.webp' : '/nerva-levitate-still.webp'
-/* Safari, and every browser on an iPhone or iPad (they all run WebKit),
-   plays a VP9 WebM but throws its transparency away and paints the ring on
-   a black square. There the flight plays as an animated WebP instead,
-   which WebKit does draw transparently. It plays once and holds its last
-   frame, like the film. */
-const HERO_ANIM = '/nerva-levitate-ceramic.webp'
-const HERO_ANIM_MS = 4100
-const WEBKIT_ONLY = (() => {
-  const ua = navigator.userAgent
-  if (/iPhone|iPad|iPod/.test(ua)) return true
-  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return true // iPadOS as a Mac
-  return /AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|OPR|Android/.test(ua)
-})()
-const USE_ANIM = LIGHT && WEBKIT_ONLY
+   The still is the lit ring near the end of the film. It stands in for
+   anyone who never sees the film: reduced motion (decided before first
+   paint, so the film is never fetched), a refused autoplay (iOS Low Power
+   Mode is the usual one), or a failed load. */
+const HERO_CUT = window.matchMedia('(orientation: portrait)').matches ? 'tall' : 'wide'
+const HERO_FILM = `/nerva-film-${HERO_CUT}.mp4`
+const HERO_POSTER = `/nerva-film-${HERO_CUT}-poster.webp`
+const HERO_STILL = `/nerva-film-${HERO_CUT}-still.webp`
 
 function Hero() {
-  /* Reduced motion skips the film outright: decided before first paint,
-     so the still never swaps in after the fact and the film is never
-     fetched. */
   const [playFilm] = useState(
     () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   )
   const [filmFailed, setFilmFailed] = useState(false)
-  const [filmEnded, setFilmEnded] = useState(false)
-  const [onScreen, setOnScreen] = useState(true)
-  /* one frame after mount, so the backdrop disc can ease in */
-  const [ready, setReady] = useState(false)
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setReady(true))
-    return () => cancelAnimationFrame(id)
-  }, [])
   const filmRef = useRef<HTMLVideoElement | null>(null)
   const heroRef = useRef<HTMLElement | null>(null)
-
-  /* A browser that refuses the autoplay (iOS Low Power Mode is the usual
-     one) rejects this promise, and the hero would otherwise hold the near
-     black first frame for the life of the page. */
-  const toStill = () => setFilmFailed(true)
-  useEffect(() => { if (!USE_ANIM) filmRef.current?.play().catch(toStill) }, [])
-
   const showFilm = playFilm && !filmFailed
 
-  /* the animated WebP has no ended event: count its length from when it
-     has loaded and started drawing */
-  const [animLoaded, setAnimLoaded] = useState(false)
-  useEffect(() => {
-    if (!animLoaded) return
-    const t = window.setTimeout(() => setFilmEnded(true), HERO_ANIM_MS)
-    return () => window.clearTimeout(t)
-  }, [animLoaded])
-  /* Once the ring has landed it stays alive: a slow hover, and the green
-     sensor light pulsing at 72 bpm, the same pulse the readout further
-     down draws. Anyone on the still lands straight in this state. */
-  const resting = !showFilm || filmEnded
-
-  /* the loop is cheap, but there is no reason to run it off screen */
+  /* Plays while the hero is on screen and pauses when it is not: an 18 s
+     loop has no reason to keep decoding behind the rest of the page. The
+     first play() is also where a refused autoplay shows up. */
   useEffect(() => {
     const el = heroRef.current
-    if (!el) return
-    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting))
+    if (!el || !showFilm) return
+    const io = new IntersectionObserver(([e]) => {
+      const film = filmRef.current
+      if (!film) return
+      if (e.isIntersecting) film.play().catch(() => setFilmFailed(true))
+      else film.pause()
+    })
     io.observe(el)
     return () => io.disconnect()
-  }, [])
+  }, [showFilm])
 
   return (
-    <section
-      ref={heroRef}
-      className={`hero ${ready ? 'is-ready' : ''} ${resting ? 'is-resting' : ''} ${onScreen ? '' : 'is-offscreen'}`}
-    >
-      {/* a flat disc behind where the ring comes to rest, on its own layer so
-          it holds still while the ring hovers in front of it (light schemes
-          only; CSS hides it on the dark design) */}
-      {/* three rings spreading out from the disc in steps from sage toward the
-          ground, swelling with the LED at 72 bpm once the ring lands (Ryan
-          picked this, direction D, 3 Nov 2026). Their own layer, under the
-          disc, clipped to the hero and faded out before its bottom edge. */}
-      <div className="hero__ripples" aria-hidden="true"><i /><i /><i /></div>
-      <div className="hero__backdrop" aria-hidden="true"><span /></div>
-      <div className="hero__stage">
-        {showFilm && USE_ANIM ? (
-          <img
-            className="hero__film"
-            src={HERO_ANIM}
-            width={810}
-            height={810}
-            alt="The NERVA Ring rising into view and turning to show the optical sensor and the gold electrodes on its inner band."
-            onLoad={() => setAnimLoaded(true)}
-            onError={toStill}
-            fetchPriority="high"
-          />
-        ) : showFilm ? (
-          <video
-            ref={filmRef}
-            className="hero__film"
-            src={HERO_FILM}
-            poster={HERO_POSTER}
-            onError={toStill}
-            onEnded={() => setFilmEnded(true)}
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            aria-label="The NERVA Ring rising out of the dark, turning to show the optical sensor and the gold electrodes on its inner band."
-          />
-        ) : (
-          <img
-            className="hero__film"
-            src={HERO_STILL}
-            width={1080}
-            height={1080}
-            alt="The NERVA Ring held in the dark, its inner band showing the green and red optical sensor and a gold electrode."
-          />
-        )}
-        {/* the glow off the green LED, pinned to where the light module sits
-            in the last frame. The outer span fades it in when the ring lands;
-            the inner one carries the beat. */}
-        <span className="hero__pulse" aria-hidden="true"><span /></span>
-      </div>
-      <div className="hero__grade" aria-hidden="true" />
+    <section ref={heroRef} className="hero" aria-labelledby="hero-title">
+      {/* decoration: the headline says what the film shows */}
+      {showFilm ? (
+        <video
+          ref={filmRef}
+          className="hero__film"
+          src={HERO_FILM}
+          poster={HERO_POSTER}
+          onError={() => setFilmFailed(true)}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          tabIndex={-1}
+          disablePictureInPicture
+        />
+      ) : (
+        <img className="hero__film" src={HERO_STILL} alt="" />
+      )}
+      <div className="hero__scrim" aria-hidden="true" />
+      <p className="hero__label">Rendered film</p>
 
-      <div className="hero__copy">
-        {/* the fact strip below is light-scheme furniture; CSS hides it on
-            the dark design */}
-        <h1 className="hero__title">The ring that reads your <em>nervous system.</em></h1>
-        <p className="hero__lede">
-          Helping you understand and manage stress in real time with EDA sensors.
-        </p>
-        {/* one button, one link: the page asks for one thing, and the way
-            down to the hardware is a place to go, not a second offer */}
-        <div className="hero__cta">
-          <a className="btn btn--led btn--lg" href="#follow">Get launch updates</a>
-          <a className="textlink textlink--onfilm" href="#inside">See what’s inside</a>
+      <div className="hero__inner">
+        <p className="hero__eyebrow">Early prototype · in the build</p>
+        <h1 className="hero__title" id="hero-title">
+          The ring that reads your <em>nervous system.</em>
+        </h1>
+        <i className="hero__gap" aria-hidden="true" />
+        {/* one ask, full width, then the two places to go, splitting a row */}
+        <div className="hero__acts">
+          <a className="btn hero__cta" href="#follow">Get launch updates</a>
+          <div className="hero__pair">
+            <a className="btn hero__alt" href="#inside">See what’s inside</a>
+            <a className="btn hero__alt" href="/prototype">See the prototype</a>
+          </div>
         </div>
-        {/* points at the prototype page, the one page with photographs
-            instead of renders. Set as a pill (3 Nov 2026) so it reads as more
-            than a footnote; the pitch video it also pointed to is down until
-            Ryan records a new one. */}
-        <p className="hero__news">
-          <a className="hero__proto" href="/prototype">
-            <span className="hero__proto-play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
-            </span>
-            <span className="hero__proto-txt"><b>New:</b> See real prototyping progress.</span>
-          </a>
-        </p>
+        <span className="hero__cue" aria-hidden="true" />
       </div>
-
     </section>
   )
 }
@@ -884,11 +803,32 @@ function App() {
     return () => { heroIo.disconnect(); endIo.disconnect() }
   }, [])
 
+  /* Over the hero film the nav is only the wordmark, in white; it becomes
+     the full bar once the film has scrolled out from under it. */
+  const [overHero, setOverHero] = useState(true)
+  useEffect(() => {
+    const hero = document.querySelector<HTMLElement>('.hero')
+    const header = headerRef.current
+    if (!hero || !header) return
+    const sync = () => {
+      const over = hero.getBoundingClientRect().bottom > header.offsetHeight
+      setOverHero(over)
+      if (over) setMenuOpen(false)
+    }
+    sync()
+    window.addEventListener('scroll', sync, { passive: true })
+    window.addEventListener('resize', sync)
+    return () => {
+      window.removeEventListener('scroll', sync)
+      window.removeEventListener('resize', sync)
+    }
+  }, [])
+
   return (
     <>
       <SkipLink to="#top" />
       {/* ---------------- NAV ---------------- */}
-      <header className="nav" ref={headerRef}>
+      <header className={`nav ${overHero ? 'nav--over' : ''}`} ref={headerRef}>
         <div className="nav__inner">
           <a className="brand" href="#top" aria-label="NERVA Ring Prototype, top of page">
             <img className="brand__mark" src="/favicon.png" alt="" width={22} height={22} />
