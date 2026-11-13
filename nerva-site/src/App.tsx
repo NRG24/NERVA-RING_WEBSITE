@@ -310,7 +310,6 @@ function Hero() {
       <p className="hero__label">Rendered film</p>
 
       <div className="hero__inner">
-        <p className="hero__eyebrow">Early prototype · in the build</p>
         <h1 className="hero__title" id="hero-title">
           The ring that reads your <em>nervous system.</em>
         </h1>

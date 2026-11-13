@@ -62,8 +62,8 @@ Sticky nav (What it does / Signals / Inside / Finishes) + hamburger
 under 1080px. Every light section opens with a **centered** `.head`.
 
 1. **Hero (rebuilt 13 Nov 2026 after makoma.io, Ryan's reference).** A
-   full-screen film behind everything, dark in every colour scheme: mono
-   eyebrow and the headline centred at the top ("nervous system." in cream
+   full-screen film behind everything, dark in every colour scheme: the
+   headline centred at the top (no eyebrow above it: Ryan removed it) ("nervous system." in cream
    on its own line, upright: Ryan dropped the italic as AI-looking), then all the free height, then the buttons at
    the foot: "Get launch updates" full width, and "See what's inside" /
    "See the prototype" splitting a row. A thin scroll cue under them and a

@@ -267,8 +267,8 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
    HERO
 
    Laid out after makoma.io's landing (Ryan's reference, 13 Nov 2026):
-   the film fills the whole first screen, the eyebrow and headline sit
-   centred at the top, the calls to action are stacked at the foot (one
+   the film fills the whole first screen, the headline sits centred at
+   the top, the calls to action are stacked at the foot (one
    wide, then two splitting a row), and the nav shows only the wordmark
    until the film has scrolled away (.nav--over, at the end of this file).
 
@@ -312,12 +312,6 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
 /* all the free height goes between the headline and the buttons, so the
    ring has the middle of the screen to itself */
 .hero__gap { flex: 1 1 0; min-height: 40px; }
-.hero__eyebrow {
-  margin: 0 0 clamp(14px, 2.6vh, 22px);
-  font-family: var(--font-mono); font-size: 11px; font-weight: 400;
-  letter-spacing: 0.26em; text-transform: uppercase;
-  color: rgba(240, 220, 202, 0.82);
-}
 .hero__title {
   margin: 0;
   font-weight: 500;
