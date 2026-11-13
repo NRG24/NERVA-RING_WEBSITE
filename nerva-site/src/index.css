@@ -329,8 +329,9 @@ html { scroll-padding: calc(var(--nav-h) + 20px) 0 96px; }
   text-shadow: 0 2px 26px rgba(5, 5, 6, 0.55);
 }
 /* the second phrase takes a line of its own at every width, as the
-   reference's does */
-.hero__title em { display: block; font-style: italic; font-weight: 400; color: var(--film-ink); white-space: nowrap; }
+   reference's does. Upright, not italic: Ryan found the italic read as
+   AI-made (13 Nov 2026). */
+.hero__title em { display: block; font-style: normal; color: var(--film-ink); white-space: nowrap; }
 
 .hero__acts {
   display: grid; gap: 10px;
